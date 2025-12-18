@@ -1,0 +1,44 @@
+# 站点基本信息
+title: 豆包风格 Jekyll 博客
+email: your-email@example.com
+description: "基于 Jekyll + GitHub Pages 构建的博客，支持标签/分页/代码高亮"
+baseurl: "" # 若部署在项目页（如 https://xxx.github.io/blog/），则填 "/blog"
+url: "https://<你的用户名>.github.io" # 替换为你的 GitHub Pages 地址
+twitter_username: yourname
+github_username: 你的GitHub用户名
+
+# 构建配置
+markdown: kramdown
+highlighter: rouge # 代码高亮（Jekyll 原生支持）
+permalink: /posts/:title/ # 文章永久链接格式
+timezone: Asia/Shanghai # 时区
+
+# 分页配置（使用 jekyll-paginate-v2，GitHub Pages 兼容）
+pagination:
+  enabled: true
+  debug: false
+  collection: "posts"
+  per_page: 3 # 每页显示3篇文章
+  permalink: "/page/:num/" # 分页链接格式
+  title: ":title - 第 :num 页"
+  limit: 0
+  sort_field: "date"
+  sort_reverse: true # 按时间倒序
+
+# 标签配置
+collections:
+  tags:
+    output: true
+    permalink: /tags/:name/
+
+# GitHub Pages 兼容插件（必须声明，否则部署报错）
+plugins:
+  - jekyll-paginate-v2
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# 代码高亮样式（适配豆包风格）
+kramdown:
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false # 关闭行号（可选）

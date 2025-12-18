@@ -1,0 +1,26 @@
+<header class="sticky top-0 z-10 bg-white shadow-sm">
+  <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+    <a href="{{ site.baseurl }}/" class="text-2xl font-bold text-primary">
+      {{ site.title }}
+    </a>
+    <!-- 标签筛选区 -->
+    <div class="flex items-center gap-2">
+      <span class="text-gray-600">标签：</span>
+      <div class="flex flex-wrap gap-2">
+        <!-- 全部标签 -->
+        <a href="{{ site.baseurl }}/" class="tag-item {% if page.url == '/' %}tag-active{% endif %}">
+          全部
+        </a>
+        <!-- 遍历所有标签 -->
+        {% assign tags = site.tags | sort %}
+        {% for tag in tags %}
+          {% assign tag_name = tag[0] %}
+          <a href="{{ site.baseurl }}/tags/{{ tag_name | slugify }}/" 
+             class="tag-item {% if page.tag == tag_name %}tag-active{% endif %}">
+            {{ tag_name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</header>
