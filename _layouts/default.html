@@ -7,23 +7,29 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 代码框：无任何边框，仅轻微背景色 */
-    .highlight, .highlight pre, .highlight code {
-      background: #f8f9fa !important; /* 极浅背景，无区分也可改为transparent */
-      color: #24292e !important;
-      border: none !important; /* 彻底移除所有边框 */
+    /* ========== 代码块核心样式（解决换行/滚动/字体） ========== */
+    .code-block, .highlight, .highlight pre, .highlight code {
+      /* 字体调大：0.95rem（比之前大） */
+      font-size: 0.95rem !important;
+      line-height: 1.5 !important; /* 行高优化 */
+      /* 超长代码：横向滚动 + 自动换行（兼顾可读性） */
+      white-space: pre-wrap !important; /* 自动换行 */
+      word-wrap: break-word !important; /* 长单词换行 */
+      overflow-x: auto !important; /* 横向滚动（仅超宽时显示） */
+      /* 无任何边框 */
+      border: none !important;
       outline: none !important;
       box-shadow: none !important;
-      border-radius: 0 !important; /* 无圆角 */
-      padding: 0.2rem 0.4rem !important; /* 极简内边距 */
-      margin: 0.4rem 0 !important;
-      font-size: 0.8rem !important;
-      line-height: 1.3 !important;
+      border-radius: 4px !important; /* 豆包同款圆角 */
+      /* 背景+内边距 */
+      background: #f6f8fa !important;
+      color: #24292e !important;
+      padding: 0.8rem !important;
+      margin: 0.8rem 0 !important;
       max-width: 100% !important;
-      max-height: 400px !important;
     }
 
-    /* 代码高亮配色（去边框后仍清晰） */
+    /* 代码高亮配色（适配大字体） */
     .highlight .c { color: #6a737d !important; }
     .highlight .k { color: #d73a4a !important; }
     .highlight .o { color: #6f42c1 !important; }
@@ -35,47 +41,50 @@
     .highlight .nc { color: #22863a !important; }
     .highlight .nv { color: #e36209 !important; }
 
-    /* 豆包风格复制按钮（强制显示） */
+    /* ========== 豆包同款复制按钮（仅1个） ========== */
     .copy-btn {
+      /* 豆包样式：24px圆形，浅蓝底色 */
       position: absolute !important;
-      top: 2px !important;
-      right: 2px !important;
-      width: 22px !important;
-      height: 22px !important;
+      top: 8px !important;
+      right: 8px !important;
+      width: 24px !important;
+      height: 24px !important;
+      border-radius: 50% !important; /* 圆形 */
       background: #4096ff !important;
       border: none !important;
-      border-radius: 2px !important;
-      cursor: pointer !important;
       color: #fff !important;
+      cursor: pointer !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      z-index: 9999 !important;
-      font-size: 11px !important;
+      z-index: 10 !important;
       padding: 0 !important;
+      font-size: 12px !important;
       opacity: 0.8 !important;
+      /* 避免重复 */
+      pointer-events: auto !important;
     }
     .copy-btn:hover {
       opacity: 1 !important;
-      background: #1879ff !important;
+      background: #1879ff !important; /* 豆包hover色 */
     }
     .copy-btn.copied {
-      background: #52c41a !important;
+      background: #52c41a !important; /* 复制成功色 */
     }
     .copy-btn i {
       margin: 0 !important;
-      font-size: 11px !important;
+      font-size: 12px !important;
     }
 
-    /* Banner：高度300px，宽度和文章一致（max-w-4xl） */
+    /* ========== Banner样式（300px高，和文章同宽） ========== */
     .banner-container {
-      max-width: 4xl; /* 和文章宽度一致 */
+      max-width: 4xl;
       margin: 0 auto 2rem auto !important;
       width: 100% !important;
     }
     .banner {
       width: 100% !important;
-      height: 300px !important; /* 调整为300px */
+      height: 300px !important;
       background: url('{{ site.banner.image }}') no-repeat center center !important;
       background-size: cover !important;
       display: flex !important;
@@ -83,19 +92,22 @@
       justify-content: center !important;
       color: white !important;
       text-shadow: 0 2px 4px rgba(0,0,0,0.6) !important;
-      border-radius: 0.5rem !important;
+      border-radius: 8px !important;
     }
     .banner-content {
       text-align: center !important;
       padding: 0 1rem !important;
     }
 
-    /* 自定义工具类 */
-    @layer utilities {
-      .tag-item { @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-primary/10; }
-      .tag-active { @apply bg-primary text-white hover:bg-primary/90; }
-      .page-item { @apply w-9 h-9 flex items-center justify-center rounded-md border border-gray-200 cursor-pointer transition-all hover:border-primary hover:text-primary; }
-      .page-active { @apply bg-primary text-white border-primary hover:bg-primary/90; }
+    /* ========== 标签样式 ========== */
+    .tag-item { 
+      @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-primary/10; 
+    }
+    .page-item { 
+      @apply w-9 h-9 flex items-center justify-center rounded-md border border-gray-200 cursor-pointer transition-all hover:border-primary hover:text-primary; 
+    }
+    .page-active { 
+      @apply bg-primary text-white border-primary hover:bg-primary/90; 
     }
   </style>
   <script>
@@ -122,44 +134,32 @@
   </main>
   {% include footer.html %}
 
-  <!-- 终极修复：强制显示复制按钮，确保执行 -->
+  <!-- ========== 复制按钮核心逻辑（仅1个） ========== -->
   <script>
-    // 页面加载完成后立即执行，DOMContentLoaded可能失效，改用load
-    window.onload = function() {
-      console.log('初始化复制按钮...'); // 调试日志
-      // 选择所有可能的代码块（兼容所有结构）
-      const allCodeBlocks = document.querySelectorAll('.highlight, pre code, pre');
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. 精准选择：仅最外层的代码块（避免嵌套重复）
+      const codeBlocks = document.querySelectorAll('.highlight:not(.highlight .highlight)');
       
-      // 去重：每个代码块只处理一次
-      const uniqueBlocks = [];
-      allCodeBlocks.forEach(block => {
-        if (!uniqueBlocks.includes(block) && !block.closest('.copy-btn')) {
-          uniqueBlocks.push(block);
-        }
-      });
-
-      // 遍历添加按钮
-      uniqueBlocks.forEach(block => {
-        // 强制设置为相对定位（按钮需要）
+      // 2. 遍历每个代码块，仅创建1个按钮
+      codeBlocks.forEach(block => {
+        // 标记已处理，避免重复
+        if (block.dataset.copyBtnAdded) return;
+        block.dataset.copyBtnAdded = 'true';
+        
+        // 必须设置相对定位
         block.style.position = 'relative';
         
-        // 移除已有按钮
-        const oldBtn = block.querySelector('.copy-btn');
-        if (oldBtn) oldBtn.remove();
-
-        // 创建按钮
+        // 3. 创建豆包同款复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         block.appendChild(copyBtn);
-        console.log('为代码块添加复制按钮'); // 调试日志
-
-        // 复制逻辑
-        copyBtn.onclick = function() {
-          let code = '';
-          // 精准获取代码内容
-          const codeEl = block.querySelector('code') || block;
-          code = codeEl.textContent.trim().replace(/[\n\r]/g, '\n');
+        
+        // 4. 复制逻辑
+        copyBtn.addEventListener('click', function() {
+          // 精准获取代码内容（排除按钮）
+          const codeEl = block.querySelector('code');
+          const code = codeEl ? codeEl.textContent.trim() : block.textContent.trim();
           
           // 复制到剪贴板
           navigator.clipboard.writeText(code).then(() => {
@@ -170,11 +170,11 @@
               copyBtn.classList.remove('copied');
             }, 1500);
           }).catch(err => {
-            alert('复制失败，请手动复制：' + err);
+            alert('复制失败：' + err.message);
           });
-        };
+        });
       });
-    };
+    });
   </script>
 </body>
 </html>

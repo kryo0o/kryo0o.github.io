@@ -3,7 +3,7 @@ layout: default
 title: 首页
 ---
 
-<!-- Banner：宽度和文章一致（max-w-4xl），高度300px -->
+<!-- Banner -->
 <div class="max-w-4xl mx-auto banner-container">
   <div class="banner">
     <div class="banner-content">
@@ -13,29 +13,42 @@ title: 首页
   </div>
 </div>
 
-<!-- 文章列表（纵向布局+10篇/页+无阅读按钮） -->
+<!-- 调试：输出标签数量（确认是否有标签） -->
+<!-- 生产环境可删除 -->
+<div class="max-w-4xl mx-auto mb-4 text-sm text-gray-500">
+  调试：当前站点标签总数 = {{ site.tags.size }}
+  {% if site.tags.size == 0 %}
+    <span class="text-red-500">⚠️ 无标签！请检查文章front-matter是否添加tags字段</span>
+  {% endif %}
+</div>
+
+<!-- 文章列表（10篇/页 + 标签显示修复） -->
 <div class="max-w-4xl mx-auto mb-8 space-y-6">
   {% if paginator.posts.size > 0 %}
     {% for post in paginator.posts %}
       <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-100">
         <div class="p-6 md:p-8">
-          <!-- 标题可点击（移除阅读按钮） -->
+          <!-- 标题可点击 -->
           <h2 class="text-2xl font-bold text-dark hover:text-primary transition-colors mb-4 cursor-pointer">
-            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
           </h2>
           
-          <!-- 元信息 -->
+          <!-- 元信息 + 标签显示修复 -->
           <div class="flex flex-wrap gap-3 mb-4 text-sm text-gray-500 border-b border-gray-100 pb-3">
             <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
             <div class="flex gap-2">
-              {% for tag in post.tags limit:3 %}
-                <!-- 标签路径终极修复：使用绝对URL -->
-                <a href="{{ site.url }}/tags/{{ tag | slugify: 'raw' }}/" class="tag-item bg-gray-100">
-                  {{ tag }}
-                </a>
-              {% endfor %}
-              {% if post.tags.size > 3 %}
-                <span class="tag-item bg-gray-100">+{{ post.tags.size - 3 }}</span>
+              <!-- 修复：遍历文章标签，确保显示 -->
+              {% if post.tags.size > 0 %}
+                {% for tag in post.tags limit:3 %}
+                  <a href="{{ site.url }}/tags/{{ tag | slugify: 'raw' }}/" class="tag-item bg-gray-100">
+                    {{ tag }}
+                  </a>
+                {% endfor %}
+                {% if post.tags.size > 3 %}
+                  <span class="tag-item bg-gray-100">+{{ post.tags.size - 3 }}</span>
+                {% endif %}
+              {% else %}
+                <span class="tag-item bg-gray-100">无标签</span>
               {% endif %}
             </div>
           </div>
@@ -55,7 +68,7 @@ title: 首页
   {% endif %}
 </div>
 
-<!-- 分页组件 -->
+<!-- 分页 -->
 <div class="max-w-4xl mx-auto">
   {% include pagination.html %}
 </div>

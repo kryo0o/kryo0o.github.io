@@ -2,15 +2,21 @@
 layout: default
 ---
 
-<!-- 标签页面头部 -->
+<!-- 标签详情页头部 -->
 <div class="mb-10 text-center max-w-4xl mx-auto">
   <h1 class="text-3xl font-bold text-dark mb-2">标签：{{ page.title }}</h1>
-  <p class="text-gray-600">共 {{ site.tags[page.title].size }} 篇相关文章</p>
+  
+  <!-- 验证标签是否有文章 -->
+  {% assign tag_posts = site.tags[page.title] | default: empty %}
+  {% if tag_posts.size > 0 %}
+    <p class="text-gray-600">共 {{ tag_posts.size }} 篇相关文章</p>
+  {% else %}
+    <p class="text-gray-600">该标签下暂无文章</p>
+  {% endif %}
 </div>
 
-<!-- 标签下的文章列表（纵向布局） -->
+<!-- 标签下的文章列表 -->
 <div class="max-w-4xl mx-auto space-y-6">
-  {% assign tag_posts = site.tags[page.title] %}
   {% if tag_posts.size > 0 %}
     {% for post in tag_posts %}
       <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-100">
@@ -20,16 +26,6 @@ layout: default
           </h3>
           <div class="flex flex-wrap gap-3 mb-4 text-sm text-gray-500 border-b border-gray-100 pb-3">
             <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
-            <div class="flex gap-2">
-              {% for tag in post.tags limit:3 %}
-                <a href="{{ site.url }}/tags/{{ tag | slugify: 'raw' }}/" class="tag-item bg-gray-100">
-                  {{ tag }}
-                </a>
-              {% endfor %}
-              {% if post.tags.size > 3 %}
-                <span class="tag-item bg-gray-100">+{{ post.tags.size - 3 }}</span>
-              {% endif %}
-            </div>
           </div>
           <div class="text-gray-700 leading-relaxed">
             {{ post.content | strip_html | truncate: 200, "..." }}
@@ -40,7 +36,7 @@ layout: default
   {% else %}
     <div class="text-center py-12 text-gray-500 bg-white rounded-lg shadow-sm border border-gray-100">
       <i class="fa-solid fa-file-alt text-4xl mb-4"></i>
-      <p>该标签下暂无文章</p>
+      <p>暂无相关文章</p>
     </div>
   {% endif %}
 </div>

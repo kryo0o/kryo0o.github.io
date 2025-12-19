@@ -1,5 +1,5 @@
 # 站点基本信息
-title: 豆包风格 Jekyll 博客
+title: kryo
 email: wpforwg@gmail.com
 description: "基于 Jekyll + GitHub Pages 构建的博客"
 baseurl: ""
@@ -18,7 +18,7 @@ lsi: false
 paginate: 10
 paginate_path: "/page/:num/"
 
-# 标签功能（终极修复：强制生成tag页面）
+# 标签功能（核心：确保Jekyll正确识别标签）
 collections:
   tags:
     output: true
@@ -27,34 +27,36 @@ tag_dir: tags
 defaults:
   - scope:
       path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
       type: "tags"
     values:
       layout: "tag"
 
-# 插件（仅保留GitHub Pages原生支持）
+# 插件
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-github-metadata
 
-# 代码高亮（去边框配置）
+# 代码样式配置（关键：字体/换行/滚动）
 kramdown:
   input: GFM
   syntax_highlighter_opts:
     block:
       line_numbers: false
       wrap: div
-      css_class: "" # 清空默认类，避免边框
+      css_class: "code-block" # 自定义唯一类名
   auto_ids: true
   footnote_nr: 1
   entity_output: as_char
-  toc_levels: 1..6
-  smart_quotes: lsquo,rsquo,ldquo,rdquo
-  enable_coderay: false
 
-# 自定义配置（banner）
+# Banner配置
 banner:
-  image: "https://picsum.photos/1920/500" # 替换为你的背景图
+  image: "https://picsum.photos/1920/500"
   title: "技术笔记与实用教程"
   subtitle: "持续分享，共同成长"
