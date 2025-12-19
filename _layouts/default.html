@@ -134,7 +134,7 @@
       border: none;
       color: var(--color-text-light);
       cursor: pointer;
-      display: flex !important; /* 强制显示，避免隐藏 */
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 99;
@@ -142,7 +142,6 @@
       font-size: 12px;
       opacity: 0.5;
       transition: opacity 0.2s ease;
-      pointer-events: auto; /* 确保可点击 */
     }
 
     .highlight:hover .copy-btn,
@@ -289,23 +288,20 @@
   </main>
 
   <script>
-    // 初始化复制按钮（确保每个代码块仅一个按钮，功能正常）
+    // 初始化复制按钮（仅为无按钮的代码块创建，不清除旧按钮）
     function initCopyButtons() {
-      // 第一步：清除所有已存在的复制按钮，避免重复
-      document.querySelectorAll('.copy-btn').forEach(btn => btn.remove());
+      // 遍历所有代码块，仅为没有复制按钮的块创建
+      document.querySelectorAll('.highlight, .code-block').forEach(block => {
+        // 检查是否已有复制按钮，有则跳过
+        if (block.querySelector('.copy-btn')) return;
 
-      // 第二步：为每个代码块添加唯一的复制按钮
-      const codeBlocks = document.querySelectorAll('.highlight, .code-block');
-      codeBlocks.forEach(block => {
-        // 创建按钮元素
+        // 创建复制按钮（样式与原有一致）
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-        
-        // 将按钮添加到代码块
         block.appendChild(copyBtn);
 
-        // 复制成功的状态切换
+        // 复制成功状态切换
         const copySuccess = () => {
           copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
           copyBtn.classList.add('copied');
@@ -315,69 +311,37 @@
           }, 1500);
         };
 
-        // 复制失败的提示
+        // 复制失败提示
         const copyFail = (err) => {
-          alert(`复制失败：${err.message || '请手动复制代码'}`);
+          alert(`复制失败：${err.message || '复制功能异常'}`);
         };
 
-        // 绑定点击事件（确保能触发）
-        copyBtn.addEventListener('click', function() {
-          // 获取代码内容（优先取pre/code，确保保留换行）
+        // 绑定点击事件（仅使用现代浏览器Clipboard API）
+        copyBtn.addEventListener('click', async () => {
+          // 获取代码内容（优先pre标签，确保换行完整保留）
           const preEl = block.querySelector('pre');
           const codeEl = block.querySelector('code');
-          let code = '';
-          
-          if (preEl) {
-            code = preEl.textContent; // pre标签能更好保留换行/空格
-          } else if (codeEl) {
-            code = codeEl.textContent;
-          } else {
-            code = block.textContent;
-          }
+          const code = preEl ? preEl.textContent : (codeEl ? codeEl.textContent : block.textContent);
 
           if (!code.trim()) {
             return copyFail(new Error('未检测到可复制的代码内容'));
           }
 
-          // 现代浏览器剪贴板API（支持换行复制）
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(code)
-              .then(copySuccess)
-              .catch(copyFail);
-          } else {
-            // 兼容旧浏览器的复制方案
-            const textarea = document.createElement('textarea');
-            textarea.value = code; // 直接赋值保留原始换行
-            textarea.style.position = 'fixed';
-            textarea.style.left = '-9999px';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            
-            // 选中并复制
-            textarea.select();
-            textarea.setSelectionRange(0, code.length); // 兼容移动端
-            
-            try {
-              const success = document.execCommand('copy');
-              success ? copySuccess() : copyFail(new Error('浏览器不支持复制功能'));
-            } catch (err) {
-              copyFail(err);
-            } finally {
-              document.body.removeChild(textarea);
-            }
+          try {
+            // 现代浏览器剪贴板API（原生支持换行复制）
+            await navigator.clipboard.writeText(code);
+            copySuccess();
+          } catch (err) {
+            copyFail(err);
           }
         });
       });
     }
 
-    // 页面加载完成后立即初始化
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCopyButtons);
-    } else {
-      initCopyButtons(); // 若页面已加载完成，直接执行
-    }
+    // 页面加载完成后初始化（仅执行一次，无重复清除）
+    document.addEventListener('DOMContentLoaded', initCopyButtons);
 
-    // 暴露全局方法，支持动态加载内容后重新初始化
+    // 暴露全局方法（如需动态添加代码块后手动初始化）
     window.initCopyButtons = initCopyButtons;
   </script>
 </body>
