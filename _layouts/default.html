@@ -3,18 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- SEO元标签优化 -->
-  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description | default: '技术博客分享' }}{% endif %}">
-  <meta name="author" content="{{ site.author | default: 'kryo' }}">
-  <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-  
-  <!-- 锁定资源版本，提升稳定性 -->
-  <script src="https://cdn.tailwindcss.com/v3.3.5"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-  
-  <!-- 网站图标 -->
-  <link rel="icon" href="{{ site.favicon | default: '/favicon.ico' }}">
-
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --color-text-main: #24292e;
@@ -52,15 +43,8 @@
     a {
       text-decoration: none;
       color: inherit;
-      transition: color 0.2s ease;
     }
 
-    a:focus {
-      outline: 2px solid #4096ff;
-      outline-offset: 2px;
-    }
-
-    /* 头部导航优化 */
     header.header-wrapper {
       width: 100%;
       background: #fff;
@@ -77,31 +61,19 @@
       padding: 0 20px;
     }
 
-    .site-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
     .site-title {
       font-size: 20px;
       font-weight: 600;
       color: #333;
     }
 
-    .site-title[aria-current="page"] {
-      color: #4096ff;
-      font-weight: 700;
-    }
-
     main.container-main {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
-      content-visibility: auto; /* 提升渲染性能 */
     }
 
-    /* 代码样式优化（合并重复定义） */
+    /* 行内代码样式 */
     .container-main p > code,
     .container-main li > code,
     .container-main span > code,
@@ -117,6 +89,7 @@
       margin: 0 2px;
     }
 
+    /* 代码块核心样式 */
     .code-block, .highlight {
       background: var(--color-bg-code-block);
       border: 1px solid var(--color-border);
@@ -125,25 +98,53 @@
       margin: 16px 0;
       overflow-x: auto;
       overflow-y: hidden;
-      position: relative;
+      position: relative; /* 新增：为粘贴按钮提供定位基准 */
       font-size: 14px;
       line-height: 1.6;
       max-width: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--color-border) var(--color-bg-code-block);
-      tabindex: 0; /* 支持键盘滚动 */
     }
 
+    /* 代码块粘贴按钮 */
+    .code-copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--border-radius-sm);
+      background-color: var(--color-bg-copy-btn);
+      border: none;
+      color: var(--color-text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .code-copy-btn:hover {
+      background-color: var(--color-bg-copy-btn-hover);
+      transform: scale(1.05);
+    }
+
+    .code-copy-btn i {
+      font-size: 16px;
+    }
+
+    /* 滚动条样式 */
     .code-block::-webkit-scrollbar, .highlight::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
-
     .code-block::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb {
       background-color: var(--color-border);
       border-radius: var(--border-radius-sm);
     }
 
+    /* 代码块内文本样式 */
     .code-block pre, .code-block code,
     .highlight pre, .highlight code {
       background: transparent;
@@ -157,7 +158,7 @@
       white-space: pre;
     }
 
-    /* Banner样式 */
+    /* 其他样式 */
     .banner {
       width: 100%;
       min-height: 200px;
@@ -189,7 +190,6 @@
       margin: 0;
     }
 
-    /* 文章列表样式 */
     .post-item {
       padding: 16px 0;
       border-bottom: 1px solid var(--color-border);
@@ -218,8 +218,7 @@
       margin: 0;
     }
 
-    /* 标签样式（精准隐藏，避免误操作） */
-    .post-tags, .tag-list, .tags-container {
+    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
       display: none;
     }
 
@@ -230,7 +229,6 @@
       margin: 0;
     }
 
-    /* 分页样式（增强可访问性） */
     .pagination {
       display: flex;
       justify-content: center;
@@ -262,7 +260,7 @@
       font-weight: 600;
     }
 
-    /* 通知提示框（自动消失动画） */
+    /* 通知提示框 */
     .notification {
       position: fixed;
       top: 20px;
@@ -285,32 +283,19 @@
     }
 
     @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @keyframes fadeOut {
       from { opacity: 1; }
       to { opacity: 0; visibility: hidden; }
-    }
-
-    /* 响应式多断点适配 */
-    @media (max-width: 1024px) {
-      .container-main {
-        padding: 0 16px;
-      }
-      .banner-content h1 {
-        font-size: 32px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header-inner {
-        padding: 0 12px;
-      }
-      .post-title {
-        font-size: 18px;
-      }
     }
 
     @media (max-width: 480px) {
@@ -319,10 +304,10 @@
         font-size: 12px;
       }
       .banner-content h1 {
-        font-size: 24px;
+        font-size: 28px;
       }
       .banner-content p {
-        font-size: 14px;
+        font-size: 16px;
       }
     }
   </style>
@@ -330,17 +315,9 @@
 <body>
   <header class="header-wrapper">
     <div class="header-inner">
-      <nav class="site-nav" aria-label="主导航">
-        <a href="{{ '/' | relative_url }}" class="site-title" aria-current="{% if page.url == '/' %}page{% endif %}">
-          {{ site.title }}
-        </a>
-        <!-- 可扩展导航项 -->
-        <div class="nav-links">
-          <a href="{{ '/tags.html' | relative_url }}" class="nav-link" aria-label="标签页">
-            <i class="fa-solid fa-tags mr-1"></i> 标签
-          </a>
-        </div>
-      </nav>
+      <a href="{{ '/' | relative_url }}" class="site-title">
+        {{ site.title }}
+      </a>
     </div>
   </header>
 
@@ -348,7 +325,59 @@
     {{ content }}
   </main>
 
-  <!-- 引入页脚组件 -->
-  {% include footer.html %}
+  <script>
+    // 页面加载完成后初始化代码块粘贴功能
+    document.addEventListener('DOMContentLoaded', () => {
+      // 为所有代码块添加粘贴按钮
+      const codeBlocks = document.querySelectorAll('.code-block, .highlight');
+      codeBlocks.forEach(block => {
+        // 创建粘贴按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'code-copy-btn';
+        copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>'; // 使用剪贴板图标模拟豆包粘贴图标
+        copyBtn.title = '复制代码';
+        
+        // 添加点击事件
+        copyBtn.addEventListener('click', () => {
+          // 获取代码块内的文本内容
+          const codeElement = block.querySelector('code') || block.querySelector('pre');
+          const codeText = codeElement?.textContent || '';
+          
+          if (codeText) {
+            // 复制到剪贴板
+            navigator.clipboard.writeText(codeText).then(() => {
+              showNotification('复制成功', 'success');
+              // 临时更改图标显示成功状态
+              copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
+              }, 1500);
+            }).catch(err => {
+              showNotification('复制失败，请手动复制', 'error');
+              console.error('复制失败:', err);
+            });
+          } else {
+            showNotification('没有可复制的内容', 'error');
+          }
+        });
+        
+        // 将按钮添加到代码块
+        block.appendChild(copyBtn);
+      });
+      
+      // 显示通知提示
+      function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // 3秒后自动移除通知
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+    });
+  </script>
 </body>
 </html>
