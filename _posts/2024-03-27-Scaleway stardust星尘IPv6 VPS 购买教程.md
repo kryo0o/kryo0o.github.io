@@ -3,7 +3,6 @@ layout: post
 title: Scaleway stardust星尘IPv6 VPS 购买教程
 date: 2024-3-27
 categories: blog
-tags: [loc]
 description: Scaleway stardust星尘IPv6 VPS 购买教程。
 author: 'kryo'
 ---

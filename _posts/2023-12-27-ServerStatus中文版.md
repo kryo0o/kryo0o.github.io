@@ -3,7 +3,6 @@ layout: post
 title: ServerStatus中文版
 date: 2022-12-27
 categories: blog
-tags: [loc]
 description: ServerStatus中文版
 author: 'kryo'
 ---

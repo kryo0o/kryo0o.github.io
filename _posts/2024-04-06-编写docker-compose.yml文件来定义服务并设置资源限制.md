@@ -3,7 +3,6 @@ layout: post
 title: 编写docker-compose.yml文件来定义服务并设置资源限制 
 date: 2024-3-27
 categories: blog
-tags: [loc]
 description: 编写docker-compose.yml文件来定义服务并设置资源限制
 author: 'kryo'
 ---
