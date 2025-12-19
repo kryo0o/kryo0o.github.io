@@ -382,8 +382,9 @@
       // 创建复制按钮
       const copyBtn = document.createElement('button');
       copyBtn.className = 'code-copy-btn';
-      copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+      copyBtn.innerHTML = '<i class="fa-solid fa-copy" aria-hidden="true"></i>';
       copyBtn.setAttribute('aria-label', '复制代码');
+      copyBtn.setAttribute('title', '复制代码');
 
       // 添加到代码块
       block.appendChild(copyBtn);
@@ -391,12 +392,16 @@
 
       // 复制成功状态
       const copySuccess = () => {
-        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        copyBtn.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
+        copyBtn.setAttribute('aria-label', '已复制代码');
+        copyBtn.setAttribute('title', '已复制代码');
         copyBtn.classList.add('copied');
         copyBtn.classList.remove('error');
         showNotification('代码已复制到剪贴板！', 'success');
         setTimeout(() => {
-          copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+          copyBtn.innerHTML = '<i class="fa-solid fa-copy" aria-hidden="true"></i>';
+          copyBtn.setAttribute('aria-label', '复制代码');
+          copyBtn.setAttribute('title', '复制代码');
           copyBtn.classList.remove('copied');
         }, 1500);
       };
@@ -404,7 +409,9 @@
       // 复制失败状态
       const copyFail = (err) => {
         console.error('[CopyBtn] 复制失败：', err);
-        copyBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
+        copyBtn.innerHTML = '<i class="fa-solid fa-times" aria-hidden="true"></i>';
+        copyBtn.setAttribute('aria-label', '复制失败');
+        copyBtn.setAttribute('title', '复制失败');
         copyBtn.classList.add('error');
         copyBtn.classList.remove('copied');
         let errorMessage = '复制失败，请手动复制代码';
@@ -415,7 +422,9 @@
         }
         showNotification(errorMessage, 'error');
         setTimeout(() => {
-          copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+          copyBtn.innerHTML = '<i class="fa-solid fa-copy" aria-hidden="true"></i>';
+          copyBtn.setAttribute('aria-label', '复制代码');
+          copyBtn.setAttribute('title', '复制代码');
           copyBtn.classList.remove('error');
         }, 1500);
       };
