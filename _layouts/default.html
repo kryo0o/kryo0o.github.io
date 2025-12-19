@@ -237,48 +237,47 @@
       margin: 0;
     }
 
-    /* 隐藏标签的增强规则 - 新增 */
+    /* 更精确的标签隐藏规则 - 修复 */
+    /* 通用标签隐藏 */
     .tag-item, .tags, .post-tags, 
     [class*="tag"], [id*="tag"],
-    .post-meta a[href*="/tag/"],
-    .post-meta a[href*="/tags/"],
-    .post-header a[href*="/tag/"],
-    .post-header a[href*="/tags/"],
-    .post-meta span:not(.post-date),
-    .post-header span:not(.post-date) {
-      display: none !important;
-    }
-
-    /* 如果标签是直接显示在日期旁边的文本，添加这些规则 */
-    .post-meta .label,
-    .post-header .label,
+    /* 标签链接隐藏 */
+    a[href*="/tag/"],
+    a[href*="/tags/"],
+    a[href*="/categories/"],
+    a[href*="/category/"],
+    /* 标签类元素隐藏 */
+    .label, .category, .categories,
+    /* 特定位置的标签隐藏 */
+    .post-meta .tag,
+    .post-header .tag,
+    .post-meta .tags,
+    .post-header .tags,
     .post-meta .category,
-    .post-header .category {
+    .post-header .category,
+    .post-meta .categories,
+    .post-header .categories,
+    /* 标签图标或文字 */
+    .fa-tag, .fa-tags, .fa-folder,
+    /* 标签分隔符 */
+    .post-meta .separator + a:not([href*="/page/"]) {
       display: none !important;
     }
 
-    /* 确保只显示日期 */
-    .post-meta,
-    .post-header {
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
-
-    .post-meta > *:not(.post-date),
-    .post-header > *:not(.post-date) {
-      display: none !important;
-    }
-
-    /* 如果标签是链接形式 */
-    .post-meta a:not([href*="/page"]),
-    .post-header a:not([href*="/page"]) {
-      display: none !important;
-    }
-
+    /* 但保留日期显示 */
+    .post-date,
     .post-meta .post-date,
     .post-header .post-date {
       display: block !important;
+    }
+
+    /* 确保post-meta中只显示日期 */
+    .post-meta {
+      display: block !important;
+    }
+    
+    .post-meta > *:not(.post-date) {
+      display: none !important;
     }
 
     .post-excerpt {
@@ -453,12 +452,34 @@
           if (codeElements.length > 0) {
             // 获取最后一个code元素的内容（通常是最内层的）
             const lastCode = codeElements[codeElements.length - 1];
-            codeText = lastCode.textContent || lastCode.innerText;
+            
+            // 使用innerHTML或textContent获取内容
+            codeText = lastCode.innerHTML || lastCode.textContent || lastCode.innerText;
+            
+            // 转换HTML实体
+            codeText = codeText.replace(/&lt;/g, '<')
+                               .replace(/&gt;/g, '>')
+                               .replace(/&amp;/g, '&')
+                               .replace(/&quot;/g, '"')
+                               .replace(/&#39;/g, "'");
+            
+            // 确保换行符正确处理
+            codeText = codeText.replace(/<br\s*\/?>/gi, '\n')
+                               .replace(/<\/p>|<\/div>|<\/pre>/gi, '\n')
+                               .replace(/\n\s*\n/g, '\n');
           } 
           // 方法2: 如果没有code标签，找pre标签
           else if (codeBlock.querySelector('pre')) {
             const preElement = codeBlock.querySelector('pre');
-            codeText = preElement.textContent || preElement.innerText;
+            codeText = preElement.innerHTML || preElement.textContent || preElement.innerText;
+            
+            // 转换HTML实体
+            codeText = codeText.replace(/&lt;/g, '<')
+                               .replace(/&gt;/g, '>')
+                               .replace(/&amp;/g, '&')
+                               .replace(/&quot;/g, '"')
+                               .replace(/&#39;/g, "'")
+                               .replace(/<br\s*\/?>/gi, '\n');
           } 
           // 方法3: 直接获取代码块的内容
           else {
@@ -473,6 +494,11 @@
           
           // 清理文本（去除首尾空白）
           codeText = codeText.trim();
+          
+          // 确保文本以换行符结尾（对于nano等编辑器很重要）
+          if (!codeText.endsWith('\n')) {
+            codeText += '\n';
+          }
           
           // 复制到剪贴板
           navigator.clipboard.writeText(codeText).then(function() {
@@ -558,30 +584,6 @@
       
       // 输出调试信息
       console.log(`找到 ${outerCodeBlocks.length} 个最外层代码块，已添加复制按钮`);
-      
-      // 额外处理：手动隐藏任何可能漏掉的标签元素
-      setTimeout(function() {
-        // 查找并隐藏所有可能包含标签的元素
-        const possibleTagElements = document.querySelectorAll(
-          'span, a, div, li'
-        );
-        
-        possibleTagElements.forEach(function(el) {
-          const text = el.textContent || el.innerText || '';
-          const html = el.innerHTML || '';
-          
-          // 如果元素包含"标签"、"tag"、"分类"等关键词，且不在代码块中
-          if (
-            (text.includes('标签') || text.includes('Tag') || text.includes('tag') || 
-             text.includes('分类') || text.includes('Category') || text.includes('category') ||
-             html.includes('/tag/') || html.includes('/tags/') || html.includes('/category/')) &&
-            !el.closest('.code-block') && !el.closest('.highlight') &&
-            el !== document.querySelector('.post-date')
-          ) {
-            el.style.display = 'none';
-          }
-        });
-      }, 100);
     });
   </script>
 </body>
