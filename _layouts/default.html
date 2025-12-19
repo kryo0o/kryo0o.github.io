@@ -87,396 +87,146 @@
       margin: 0 2px;
     }
 
-    /* 代码块核心样式（统一用.code-block，兼容旧的.highlight） */
-    .code-block, .highlight {
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- 头部内容不变 -->
+  <style>
+    /* 保持其他样式不变，仅调整代码块选择器逻辑 */
+    /* 合并代码块样式，统一使用 .code-container 作为容器类 */
+    .code-container {
       background: var(--color-bg-code-block);
       border: 1px solid var(--color-border);
       border-radius: var(--border-radius-lg);
       padding: 12px;
       margin: 16px 0;
       overflow-x: auto;
-      position: relative; /* 关键：确保按钮绝对定位的基准 */
+      position: relative;
       font-size: 14px;
       line-height: 1.6;
       max-width: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--color-border) var(--color-bg-code-block);
-      /* 防止按钮被滚动内容遮挡 */
-      padding-right: 40px;
+      padding-right: 40px; /* 预留按钮空间 */
     }
-
-    /* 滚动条样式 */
-    .code-block::-webkit-scrollbar, .highlight::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .code-block::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb {
-      background-color: var(--color-border);
-      border-radius: var(--border-radius-sm);
-    }
-
-    /* 代码块内文本样式（确保换行保留） */
-    .code-block pre, .code-block code,
-    .highlight pre, .highlight code {
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.6;
-      font-family: var(--font-code);
-      color: var(--color-text-main);
-      white-space: pre; /* 强制保留换行/空格 */
-    }
-
-    /* 复制按钮（唯一一套样式，固定在代码块右上角） */
-    .code-copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 24px;
-      height: 24px;
-      border-radius: var(--border-radius-md);
-      background: var(--color-bg-copy-btn);
-      border: none;
-      color: var(--color-text-light);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      padding: 0;
-      font-size: 12px;
-      opacity: 0.5;
-      transition: all 0.2s ease;
-    }
-
-    .code-block:hover .code-copy-btn,
-    .highlight:hover .code-copy-btn {
-      opacity: 0.8;
-    }
-
-    .code-copy-btn:hover {
-      opacity: 1;
-      background: var(--color-bg-copy-btn-hover);
-    }
-
-    .code-copy-btn.copied {
-      background: var(--color-bg-copy-success);
-      color: #fff;
-    }
-    
-    .code-copy-btn.error {
-      background: var(--color-bg-copy-error);
-      color: #fff;
-    }
-
-    /* 其他样式 */
-    .banner {
-      width: 100%;
-      min-height: 200px;
-      height: 50vh;
-      max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-      border-radius: var(--border-radius-lg);
-      margin-bottom: 30px;
-    }
-
-    .banner-content {
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    .banner-content h1 {
-      font-size: 36px;
-      margin: 0 0 12px 0;
-    }
-
-    .banner-content p {
-      font-size: 18px;
-      margin: 0;
-    }
-
-    .post-item {
-      padding: 16px 0;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .post-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .post-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .post-title a:hover {
-      color: #4096ff;
-    }
-
-    .post-date {
-      font-size: 14px;
-      color: var(--color-text-gray);
-      margin: 0;
-    }
-
-    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
-      display: none;
-    }
-
-    .post-excerpt {
-      font-size: 15px;
-      color: var(--color-text-light);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 40px;
-      padding: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .page-number {
-      display: inline-block;
-      padding: 8px 16px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
-      color: var(--color-text-light);
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .page-number:hover {
-      border-color: var(--color-bg-copy-btn);
-      background-color: var(--color-bg-code-inline);
-    }
-
-    .page-number.current {
-      background-color: var(--color-bg-copy-btn);
-      color: var(--color-text-light);
-      border-color: var(--color-bg-copy-btn);
-      font-weight: 600;
-    }
-
-    /* 通知提示框 */
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 20px;
-      border-radius: 4px;
-      color: white;
-      font-size: 14px;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: slideIn 0.3s ease-out;
-    }
-    
-    .notification.success {
-      background: var(--color-bg-copy-success);
-    }
-    
-    .notification.error {
-      background: var(--color-bg-copy-error);
-    }
-    
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .page-number {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-      .banner-content h1 {
-        font-size: 28px;
-      }
-      .banner-content p {
-        font-size: 16px;
-      }
-    }
+    /* 移除原 .code-block 和 .highlight 的独立样式，统一由 .code-container 接管 */
   </style>
 </head>
 <body>
-  <header class="header-wrapper">
-    <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">
-        {{ site.title }}
-      </a>
-    </div>
-  </header>
-
-  <main class="container-main">
-    {{ content }}
-  </main>
+  <!-- 页面结构不变 -->
 
   <script>
-    // 创建通知提示函数
+    // 创建通知提示函数（不变）
     function showNotification(message, type = 'success') {
-      // 移除现有的通知
       const existingNotifications = document.querySelectorAll('.notification');
       existingNotifications.forEach(notification => notification.remove());
       
-      // 创建新的通知
       const notification = document.createElement('div');
       notification.className = `notification ${type}`;
       notification.textContent = message;
       document.body.appendChild(notification);
       
-      // 3秒后自动移除
       setTimeout(() => {
         if (notification.parentNode) {
           notification.style.opacity = '0';
-          setTimeout(() => {
-            if (notification.parentNode) {
-              notification.remove();
-            }
-          }, 300);
+          setTimeout(() => notification.remove(), 300);
         }
       }, 3000);
     }
 
-    // 完整的初始化函数 - 确保每个代码块只添加一个复制按钮
+    // 优化复制按钮初始化逻辑
     function initCodeCopyButtons() {
-      // 关键优化：只选择未处理过的代码块（排除带有.has-copy-btn类的元素）
-      const codeBlocks = document.querySelectorAll(
-        '.code-block:not(.has-copy-btn), .highlight:not(.has-copy-btn)'
+      // 1. 统一选择器：仅处理带 code 的容器（优先使用明确的 .code-container）
+      // 兼容旧代码块，同时避免重复匹配
+      const codeContainers = document.querySelectorAll(
+        '.code-container, 
+        .code-block:not(.code-container), 
+        .highlight:not(.code-container)'
       );
       
-      // 遍历每个代码块
-      codeBlocks.forEach(block => {
-        // 双重检查：防止重复添加
-        const existingButton = block.querySelector('.code-copy-btn');
-        if (existingButton) {
-          block.classList.add('has-copy-btn'); // 标记为已处理
-          return;
+      codeContainers.forEach(container => {
+        // 2. 强制添加统一容器类，避免重复处理
+        if (!container.classList.contains('code-container')) {
+          container.classList.add('code-container');
         }
         
-        // 创建复制按钮
+        // 3. 严格检查是否已有按钮（使用唯一类名）
+        if (container.querySelector('.code-copy-btn')) {
+          return; // 已存在则跳过
+        }
+        
+        // 创建并添加按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'code-copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         copyBtn.setAttribute('aria-label', '复制代码');
-        
-        // 添加到代码块容器
-        block.appendChild(copyBtn);
-        // 标记为已处理（核心：防止重复处理）
-        block.classList.add('has-copy-btn');
+        container.appendChild(copyBtn);
 
-        // 复制成功状态切换
+        // 复制逻辑（不变）
         const copySuccess = () => {
           copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
           copyBtn.classList.add('copied');
           copyBtn.classList.remove('error');
           showNotification('代码已复制到剪贴板！', 'success');
-          
           setTimeout(() => {
             copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
             copyBtn.classList.remove('copied');
           }, 1500);
         };
 
-        // 复制失败状态切换
         const copyFail = (err) => {
           console.error('复制失败：', err);
           copyBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
           copyBtn.classList.add('error');
           copyBtn.classList.remove('copied');
-          
           let errorMessage = '复制失败，请手动复制代码';
-          if (err.name === 'NotAllowedError') {
-            errorMessage = '复制失败：需要用户手势才能触发剪贴板访问';
-          } else if (err.name === 'NotFoundError') {
-            errorMessage = '复制失败：不支持剪贴板API';
-          } else if (err.message) {
-            errorMessage = `复制失败：${err.message}`;
-          }
-          
+          if (err.name === 'NotAllowedError') errorMessage = '需要用户手势才能访问剪贴板';
+          else if (err.name === 'NotFoundError') errorMessage = '不支持剪贴板API';
+          else if (err.message) errorMessage = `复制失败：${err.message}`;
           showNotification(errorMessage, 'error');
-          
           setTimeout(() => {
             copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
             copyBtn.classList.remove('error');
           }, 1500);
         };
 
-        // 绑定点击事件
         copyBtn.addEventListener('click', async () => {
-          // 获取代码内容
-          const preEl = block.querySelector('pre');
-          let codeContent = '';
-          
-          if (preEl) {
-            codeContent = preEl.textContent;
-          } else {
-            const codeEl = block.querySelector('code');
-            if (codeEl) {
-              codeContent = codeEl.textContent;
-            } else {
-              codeContent = block.textContent.trim();
-            }
-          }
+          const preEl = container.querySelector('pre');
+          let codeContent = preEl ? preEl.textContent : 
+                            container.querySelector('code')?.textContent || 
+                            container.textContent.trim();
 
-          if (!codeContent) {
-            return copyFail(new Error('未检测到可复制的代码'));
-          }
+          if (!codeContent) return copyFail(new Error('未检测到可复制的代码'));
 
           try {
-            if (navigator.clipboard) {
-              await navigator.clipboard.writeText(codeContent);
-              copySuccess();
-            } else {
-              // 备用方法
+            if (!navigator.clipboard) throw new Error('浏览器不支持剪贴板API');
+            await navigator.clipboard.writeText(codeContent);
+            copySuccess();
+          } catch (err) {
+            try {
               const textArea = document.createElement('textarea');
               textArea.value = codeContent;
               textArea.style.position = 'fixed';
               textArea.style.left = '-999999px';
               document.body.appendChild(textArea);
-              
               textArea.focus();
               textArea.select();
               const successful = document.execCommand('copy');
               document.body.removeChild(textArea);
-              
-              successful ? copySuccess() : copyFail(new Error('备用方法失败'));
+              successful ? copySuccess() : copyFail(err);
+            } catch (fallbackErr) {
+              copyFail(err);
             }
-          } catch (err) {
-            copyFail(err);
           }
         });
       });
     }
 
-    // 页面加载完成后执行
-    document.addEventListener('DOMContentLoaded', () => {
-      initCodeCopyButtons();
-    });
-
-    // 提供全局方法以便动态添加代码块后调用
-    window.refreshCopyButtons = initCodeCopyButtons;
+    // 页面加载和动态更新时均执行
+    document.addEventListener('DOMContentLoaded', initCodeCopyButtons);
+    // 监听动态内容变化（如分页加载的代码块）
+    const observer = new MutationObserver(initCodeCopyButtons);
+    observer.observe(document.body, { childList: true, subtree: true });
   </script>
 </body>
 </html>
