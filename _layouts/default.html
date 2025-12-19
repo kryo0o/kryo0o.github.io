@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 保持原有样式不变 */
     :root {
       --color-text-main: #24292e;
       --color-text-light: #666;
@@ -120,9 +119,10 @@
       line-height: 1.6;
       font-family: var(--font-code);
       color: var(--color-text-main);
-      white-space: pre; /* 确保代码块保留原始换行和空格 */
+      white-space: pre; /* 确保保留换行和空格 */
     }
 
+    /* 复制按钮样式（完全保留原有样式） */
     .copy-btn {
       position: absolute;
       top: 8px;
@@ -134,7 +134,7 @@
       border: none;
       color: var(--color-text-light);
       cursor: pointer;
-      display: flex;
+      display: flex !important; /* 强制显示，避免隐藏 */
       align-items: center;
       justify-content: center;
       z-index: 99;
@@ -142,6 +142,7 @@
       font-size: 12px;
       opacity: 0.5;
       transition: opacity 0.2s ease;
+      pointer-events: auto; /* 确保可点击 */
     }
 
     .highlight:hover .copy-btn,
@@ -219,7 +220,7 @@
     }
 
     .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
-      display: none !important;
+      display: none;
     }
 
     .post-excerpt {
@@ -288,22 +289,23 @@
   </main>
 
   <script>
-    // 优化复制按钮逻辑，确保每个代码块只存在一个按钮
+    // 初始化复制按钮（确保每个代码块仅一个按钮，功能正常）
     function initCopyButtons() {
-      // 1. 先彻底清除所有现有复制按钮
+      // 第一步：清除所有已存在的复制按钮，避免重复
       document.querySelectorAll('.copy-btn').forEach(btn => btn.remove());
 
-      // 2. 为每个代码块添加唯一按钮
-      document.querySelectorAll('.highlight, .code-block').forEach(block => {
-        // 防止嵌套代码块重复添加
-        if (block.closest('.highlight, .code-block')) return;
-
+      // 第二步：为每个代码块添加唯一的复制按钮
+      const codeBlocks = document.querySelectorAll('.highlight, .code-block');
+      codeBlocks.forEach(block => {
+        // 创建按钮元素
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+        
+        // 将按钮添加到代码块
         block.appendChild(copyBtn);
 
-        // 复制成功处理
+        // 复制成功的状态切换
         const copySuccess = () => {
           copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
           copyBtn.classList.add('copied');
@@ -313,35 +315,47 @@
           }, 1500);
         };
 
-        // 复制失败处理
+        // 复制失败的提示
         const copyFail = (err) => {
-          console.error('复制失败:', err);
-          alert(`复制失败：${err.message || '请手动复制'}`);
+          alert(`复制失败：${err.message || '请手动复制代码'}`);
         };
 
-        // 复制逻辑
-        copyBtn.addEventListener('click', () => {
-          // 优先从pre标签获取内容（更准确保留格式）
+        // 绑定点击事件（确保能触发）
+        copyBtn.addEventListener('click', function() {
+          // 获取代码内容（优先取pre/code，确保保留换行）
           const preEl = block.querySelector('pre');
           const codeEl = block.querySelector('code');
-          const code = preEl ? preEl.textContent : (codeEl ? codeEl.textContent : '');
+          let code = '';
           
-          if (!code) return copyFail(new Error('未找到代码内容'));
+          if (preEl) {
+            code = preEl.textContent; // pre标签能更好保留换行/空格
+          } else if (codeEl) {
+            code = codeEl.textContent;
+          } else {
+            code = block.textContent;
+          }
 
-          // 现代浏览器Clipboard API
+          if (!code.trim()) {
+            return copyFail(new Error('未检测到可复制的代码内容'));
+          }
+
+          // 现代浏览器剪贴板API（支持换行复制）
           if (navigator.clipboard) {
             navigator.clipboard.writeText(code)
               .then(copySuccess)
               .catch(copyFail);
-          } 
-          // 兼容旧浏览器
-          else {
+          } else {
+            // 兼容旧浏览器的复制方案
             const textarea = document.createElement('textarea');
-            textarea.value = code; // 直接赋值保留换行
+            textarea.value = code; // 直接赋值保留原始换行
             textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
             textarea.style.opacity = '0';
             document.body.appendChild(textarea);
+            
+            // 选中并复制
             textarea.select();
+            textarea.setSelectionRange(0, code.length); // 兼容移动端
             
             try {
               const success = document.execCommand('copy');
@@ -356,23 +370,15 @@
       });
     }
 
-    // 确保只在DOM加载完成后执行一次
+    // 页面加载完成后立即初始化
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initCopyButtons);
     } else {
-      initCopyButtons();
+      initCopyButtons(); // 若页面已加载完成，直接执行
     }
 
-    // 暴露全局方法，但添加防重复执行控制
-    let lastInitTime = 0;
-    window.initCopyButtons = () => {
-      const now = Date.now();
-      // 限制300ms内只能执行一次，防止快速多次调用
-      if (now - lastInitTime > 300) {
-        initCopyButtons();
-        lastInitTime = now;
-      }
-    };
+    // 暴露全局方法，支持动态加载内容后重新初始化
+    window.initCopyButtons = initCopyButtons;
   </script>
 </body>
 </html>
