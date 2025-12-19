@@ -1,13 +1,14 @@
 <header class="sticky top-0 z-10 bg-white shadow-sm mb-6">
   <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-    <a href="{{ site.url }}/" class="text-2xl font-bold text-primary">
+    <a href="{{ site.url }}/" class="text-2xl font-bold text-gray-800">
       {{ site.title }}
     </a>
     <div class="flex items-center gap-6">
-      <a href="{{ site.url }}/" class="text-gray-700 hover:text-primary transition-colors">
+      <!-- 导航按钮：深灰色，非浅蓝 -->
+      <a href="{{ site.url }}/" class="nav-btn text-lg">
         <i class="fa-solid fa-home mr-1"></i> 首页
       </a>
-      <a href="{{ site.url }}/tags/" class="text-gray-700 hover:text-primary transition-colors">
+      <a href="{{ site.url }}/tags.html" class="nav-btn text-lg">
         <i class="fa-solid fa-tags mr-1"></i> 标签
       </a>
     </div>

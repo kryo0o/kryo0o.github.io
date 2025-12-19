@@ -1,0 +1,66 @@
+---
+layout: default
+title: 所有标签
+---
+
+<!-- 标签页面头部 -->
+<div class="mb-10 text-center max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold text-gray-800 mb-2">所有标签</h1>
+  <p class="text-gray-600">共 {{ site.tags.size }} 个标签（点击查看对应文章）</p>
+</div>
+
+<!-- 标签列表（原生遍历，无冲突） -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-12 max-w-4xl mx-auto">
+  {% if site.tags.size > 0 %}
+    {% assign sorted_tags = site.tags | sort %}
+    {% for tag in sorted_tags %}
+      {% assign tag_name = tag[0] %}
+      {% assign tag_posts = tag[1] %}
+      <a href="#{{ tag_name | replace: ' ', '-' }}" 
+         class="bg-white border border-gray-200 rounded-lg p-4 text-center hover:border-gray-500 hover:shadow-md transition-all">
+        <span class="text-xl font-medium text-gray-800">{{ tag_name }}</span>
+        <span class="block mt-2 text-sm text-gray-600">
+          <i class="fa-solid fa-file-alt mr-1"></i> {{ tag_posts.size }} 篇
+        </span>
+      </a>
+    {% endfor %}
+  {% else %}
+    <div class="col-span-full text-center py-12 text-gray-500">
+      <i class="fa-solid fa-tags text-4xl mb-4"></i>
+      <p>暂无标签</p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- 标签对应的文章列表（锚点跳转） -->
+<div class="max-w-4xl mx-auto">
+  {% if site.tags.size > 0 %}
+    {% assign sorted_tags = site.tags | sort %}
+    {% for tag in sorted_tags %}
+      {% assign tag_name = tag[0] %}
+      {% assign tag_posts = tag[1] %}
+      <div id="{{ tag_name | replace: ' ', '-' }}" class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-200">
+          标签：{{ tag_name }}（{{ tag_posts.size }} 篇）
+        </h2>
+        <div class="space-y-6">
+          {% for post in tag_posts %}
+            <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-100">
+              <div class="p-6 md:p-8">
+                <h3 class="text-xl font-bold text-gray-800 hover:text-gray-700 transition-colors mb-4">
+                  <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+                </h3>
+                <div class="flex gap-3 mb-4 text-sm text-gray-600">
+                  <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+                </div>
+                <div class="text-gray-700 leading-relaxed">
+                  {{ post.content | strip_html | truncate: 150, "..." }}
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>

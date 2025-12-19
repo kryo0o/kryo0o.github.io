@@ -7,50 +7,55 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ========== 代码块核心样式（解决换行/滚动/字体） ========== */
-    .code-block, .highlight, .highlight pre, .highlight code {
-      /* 字体调大：0.95rem（比之前大） */
-      font-size: 0.95rem !important;
-      line-height: 1.5 !important; /* 行高优化 */
-      /* 超长代码：横向滚动 + 自动换行（兼顾可读性） */
-      white-space: pre-wrap !important; /* 自动换行 */
-      word-wrap: break-word !important; /* 长单词换行 */
-      overflow-x: auto !important; /* 横向滚动（仅超宽时显示） */
-      /* 无任何边框 */
+    /* ========== 代码块核心修复（换行/间距/叠字） ========== */
+    /* 代码框：极小间距，解决间距过大 */
+    .code-block, .highlight {
+      background: {{ site.custom_colors.code_bg }} !important;
+      color: {{ site.custom_colors.code_text }} !important;
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
-      border-radius: 4px !important; /* 豆包同款圆角 */
-      /* 背景+内边距 */
-      background: #f6f8fa !important;
-      color: #24292e !important;
-      padding: 0.8rem !important;
-      margin: 0.8rem 0 !important;
+      border-radius: 4px !important;
+      /* 核心：减少间距（解决过大问题） */
+      padding: 0.4rem !important;    /* 大幅减少内边距 */
+      margin: 0.5rem 0 !important;   /* 减少外边距 */
       max-width: 100% !important;
+      overflow-x: auto !important;   /* 横向滚动 */
+      position: relative !important; /* 按钮定位 */
     }
 
-    /* 代码高亮配色（适配大字体） */
-    .highlight .c { color: #6a737d !important; }
-    .highlight .k { color: #d73a4a !important; }
-    .highlight .o { color: #6f42c1 !important; }
-    .highlight .m { color: #005cc5 !important; }
-    .highlight .s { color: #032f62 !important; }
-    .highlight .na { color: #22863a !important; }
-    .highlight .nb { color: #6f42c1 !important; }
-    .highlight .nf { color: #6f42c1 !important; }
-    .highlight .nc { color: #22863a !important; }
-    .highlight .nv { color: #e36209 !important; }
+    /* 代码内容：修复换行叠字 */
+    .highlight pre, .highlight code {
+      background: transparent !important; /* 继承父背景，无额外间距 */
+      padding: 0 !important;             /* 彻底移除代码内间距 */
+      margin: 0 !important;              /* 彻底移除代码外间距 */
+      font-size: 0.9rem !important;      /* 合适字体大小 */
+      line-height: 1.6 !important;       /* 行高1.6，避免叠字 */
+      white-space: pre-wrap !important;  /* 自动换行，不叠字 */
+      word-wrap: break-word !important;  /* 长单词换行 */
+      word-break: break-all !important;  /* 强制换行，避免溢出 */
+    }
 
-    /* ========== 豆包同款复制按钮（仅1个） ========== */
+    /* 代码高亮配色（适配修复后样式） */
+    .highlight .c { color: #6a737d !important; line-height: 1.6 !important; }
+    .highlight .k { color: #d73a4a !important; line-height: 1.6 !important; }
+    .highlight .o { color: #6f42c1 !important; line-height: 1.6 !important; }
+    .highlight .m { color: #005cc5 !important; line-height: 1.6 !important; }
+    .highlight .s { color: #032f62 !important; line-height: 1.6 !important; }
+    .highlight .na { color: #22863a !important; line-height: 1.6 !important; }
+    .highlight .nb { color: #6f42c1 !important; line-height: 1.6 !important; }
+    .highlight .nf { color: #6f42c1 !important; line-height: 1.6 !important; }
+
+    /* ========== 按钮颜色修复（非浅蓝，深灰色系） ========== */
+    /* 代码复制按钮（深灰色） */
     .copy-btn {
-      /* 豆包样式：24px圆形，浅蓝底色 */
       position: absolute !important;
-      top: 8px !important;
-      right: 8px !important;
+      top: 4px !important;
+      right: 4px !important;
       width: 24px !important;
       height: 24px !important;
-      border-radius: 50% !important; /* 圆形 */
-      background: #4096ff !important;
+      border-radius: 50% !important;
+      background: {{ site.custom_colors.button_primary }} !important; /* 深灰 */
       border: none !important;
       color: #fff !important;
       cursor: pointer !important;
@@ -61,19 +66,27 @@
       padding: 0 !important;
       font-size: 12px !important;
       opacity: 0.8 !important;
-      /* 避免重复 */
-      pointer-events: auto !important;
     }
     .copy-btn:hover {
       opacity: 1 !important;
-      background: #1879ff !important; /* 豆包hover色 */
+      background: {{ site.custom_colors.button_hover }} !important; /* hover深灰 */
     }
     .copy-btn.copied {
-      background: #52c41a !important; /* 复制成功色 */
+      background: {{ site.custom_colors.button_success }} !important; /* 成功绿 */
     }
     .copy-btn i {
       margin: 0 !important;
       font-size: 12px !important;
+    }
+
+    /* 主页导航按钮（深灰色，非浅蓝） */
+    .nav-btn {
+      color: {{ site.custom_colors.button_primary }} !important;
+      transition: color 0.2s ease !important;
+    }
+    .nav-btn:hover {
+      color: {{ site.custom_colors.button_hover }} !important;
+      text-decoration: none !important;
     }
 
     /* ========== Banner样式（300px高，和文章同宽） ========== */
@@ -99,15 +112,17 @@
       padding: 0 1rem !important;
     }
 
-    /* ========== 标签样式 ========== */
+    /* ========== 通用样式 ========== */
     .tag-item { 
-      @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-primary/10; 
+      @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-gray-100; 
+      color: #333 !important;
     }
     .page-item { 
-      @apply w-9 h-9 flex items-center justify-center rounded-md border border-gray-200 cursor-pointer transition-all hover:border-primary hover:text-primary; 
+      @apply w-9 h-9 flex items-center justify-center rounded-md border border-gray-200 cursor-pointer transition-all hover:border-gray-500 hover:text-gray-700; 
+      color: #333 !important;
     }
     .page-active { 
-      @apply bg-primary text-white border-primary hover:bg-primary/90; 
+      @apply bg-gray-800 text-white border-gray-800 hover:bg-gray-700; 
     }
   </style>
   <script>
@@ -115,7 +130,7 @@
       theme: {
         extend: {
           colors: {
-            primary: '#4096ff',
+            primary: '#333333', // 深灰色（非浅蓝）
             dark: '#1f2937',
             light: '#f9fafb'
           },
@@ -134,34 +149,28 @@
   </main>
   {% include footer.html %}
 
-  <!-- ========== 复制按钮核心逻辑（仅1个） ========== -->
+  <!-- ========== 复制按钮逻辑（仅1个，无重复） ========== -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. 精准选择：仅最外层的代码块（避免嵌套重复）
+      // 仅选择最外层代码块，避免嵌套
       const codeBlocks = document.querySelectorAll('.highlight:not(.highlight .highlight)');
       
-      // 2. 遍历每个代码块，仅创建1个按钮
       codeBlocks.forEach(block => {
         // 标记已处理，避免重复
         if (block.dataset.copyBtnAdded) return;
         block.dataset.copyBtnAdded = 'true';
         
-        // 必须设置相对定位
-        block.style.position = 'relative';
-        
-        // 3. 创建豆包同款复制按钮
+        // 创建复制按钮（深灰色）
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         block.appendChild(copyBtn);
         
-        // 4. 复制逻辑
+        // 复制逻辑
         copyBtn.addEventListener('click', function() {
-          // 精准获取代码内容（排除按钮）
           const codeEl = block.querySelector('code');
           const code = codeEl ? codeEl.textContent.trim() : block.textContent.trim();
           
-          // 复制到剪贴板
           navigator.clipboard.writeText(code).then(() => {
             copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
             copyBtn.classList.add('copied');
