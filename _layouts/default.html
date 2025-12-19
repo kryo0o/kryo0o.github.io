@@ -346,8 +346,8 @@
     {{ content }}
   </main>
 
-  <script>
-    // 创建通知提示函数
+<script>
+    // 创建通知提示函数 (保持不变)
     function showNotification(message, type = 'success') {
       // 移除现有的通知
       const existingNotifications = document.querySelectorAll('.notification');
@@ -377,57 +377,67 @@
         // --- 强化检查：确保按钮唯一性 ---
         // 方法1: 检查自定义数据属性 (推荐)
         if (block.dataset.copyBtnAdded === 'true') {
-            console.warn("复制按钮已存在于代码块:", block);
+            console.warn("[CopyBtn] 按钮已标记为已添加，跳过:", block);
             return; // 已经处理过，直接返回
         }
 
-        // 方法2 (备用): 再次查询按钮是否存在 (增加健壮性)
-        const existingBtn = block.querySelector('.code-copy-btn');
-        if (existingBtn) {
-             console.warn("检测到现有按钮，跳过添加:", block);
-             // 为了彻底防止，可以强制移除旧的再添加新的，或直接返回
-             // existingBtn.remove(); // 可选：移除旧的
-             return; // 推荐：直接返回，避免重复
+        // 方法2 (增强): 检查预期的按钮ID是否存在 (更可靠)
+        const expectedBtnId = block.dataset.expectedCopyBtnId;
+        if (expectedBtnId) {
+            const existingBtnById = document.getElementById(expectedBtnId);
+            if (existingBtnById && existingBtnById.closest('.code-block, .highlight') === block) {
+                 console.warn("[CopyBtn] 按钮ID已存在，跳过:", expectedBtnId, block);
+                 return; // 按钮已存在且属于此块
+            } else {
+                // ID存在但按钮不存在或不属于此块 -> 可能是残留数据，清理掉
+                console.warn("[CopyBtn] 按钮ID存在但按钮不存在或不匹配，清理ID:", expectedBtnId);
+                delete block.dataset.expectedCopyBtnId;
+            }
+        }
+
+        // 方法3 (备用): 再次查询按钮是否存在 (增加健壮性)
+        const existingBtnByClass = block.querySelector('.code-copy-btn');
+        if (existingBtnByClass) {
+             console.warn("[CopyBtn] 检测到现有按钮类，跳过:", block);
+             return;
         }
         // --- 检查结束 ---
 
         // 创建复制按钮
+        const uniqueId = `copy-btn-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
         const copyBtn = document.createElement('button');
+        copyBtn.id = uniqueId; // 设置唯一ID
         copyBtn.className = 'code-copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         copyBtn.setAttribute('aria-label', '复制代码');
-        // 可选：给按钮加个标识，方便调试或进一步检查
-        // copyBtn.id = `copy-btn-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`; // 生成唯一ID
 
         // 添加到代码块容器
         block.appendChild(copyBtn);
 
-        // 标记该代码块已添加按钮
+        // 标记该代码块已添加按钮及按钮ID
         block.dataset.copyBtnAdded = 'true';
+        block.dataset.expectedCopyBtnId = uniqueId; // 记录按钮ID
 
-        // 复制成功状态切换 - 显示勾号
+        console.log("[CopyBtn] 成功为代码块添加按钮:", uniqueId, block);
+
+        // 复制成功状态切换 - 显示勾号 (保持不变，略...)
         const copySuccess = () => {
             copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
             copyBtn.classList.add('copied');
             copyBtn.classList.remove('error');
-
-            // 显示成功通知
             showNotification('代码已复制到剪贴板！', 'success');
-
             setTimeout(() => {
                 copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
                 copyBtn.classList.remove('copied');
             }, 1500);
         };
 
-        // 复制失败状态切换 - 显示叉号
+        // 复制失败状态切换 - 显示叉号 (保持不变，略...)
         const copyFail = (err) => {
-            console.error('复制失败：', err);
+            console.error('[CopyBtn] 复制失败：', err);
             copyBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
             copyBtn.classList.add('error');
             copyBtn.classList.remove('copied');
-
-            // 显示错误通知
             let errorMessage = '复制失败，请手动复制代码';
             if (err && err.name === 'NotAllowedError') {
                 errorMessage = '复制失败：需要用户手势才能触发剪贴板访问';
@@ -436,142 +446,88 @@
             } else if (err && err.message) {
                 errorMessage = `复制失败：${err.message}`;
             }
-
             showNotification(errorMessage, 'error');
-
             setTimeout(() => {
                 copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
                 copyBtn.classList.remove('error');
             }, 1500);
         };
 
-        // 绑定点击事件
+        // 绑定点击事件 (保持不变，略...)
         copyBtn.addEventListener('click', async () => {
-            // 获取代码内容 - 优先查找 pre > code 结构
             let codeContent = '';
             const preEl = block.querySelector('pre');
             if (preEl) {
-                // 查找 <pre> 下的 <code>
                 const codeEl = preEl.querySelector('code');
-                if (codeEl) {
-                    codeContent = codeEl.textContent;
-                } else {
-                    // 如果只有 <pre>，就取其文本
-                    codeContent = preEl.textContent;
-                }
+                codeContent = codeEl ? codeEl.textContent : preEl.textContent;
             } else {
-                // 如果没有 <pre>，尝试直接查找顶层的 <code>
-                const codeEl = block.querySelector(':scope > code'); // :scope 限制在当前 block 直接子元素
-                if (codeEl) {
-                   codeContent = codeEl.textContent;
-                } else {
-                    // 否则直接获取块的内容（不太推荐，但作为后备）
-                    codeContent = block.textContent.trim();
-                }
+                const codeEl = block.querySelector(':scope > code');
+                codeContent = codeEl ? codeEl.textContent : block.textContent.trim();
             }
-
             if (!codeContent) {
                 return copyFail(new Error('未检测到可复制的代码'));
             }
-
             try {
-                // 检查浏览器是否支持 Clipboard API
                 if (!navigator.clipboard) {
                     throw new Error('浏览器不支持剪贴板API');
                 }
-
-                // 使用剪贴板 API
                 await navigator.clipboard.writeText(codeContent);
                 copySuccess();
             } catch (err) {
-                // 如果剪贴板API失败，尝试备用方法
                 try {
-                    // 创建临时textarea元素
                     const textArea = document.createElement('textarea');
                     textArea.value = codeContent;
-                    textArea.style.position = 'fixed';
-                    textArea.style.left = '-999999px';
-                    textArea.style.top = '-999999px';
+                    textArea.style.position = 'fixed'; textArea.style.left = '-999999px'; textArea.style.top = '-999999px';
                     document.body.appendChild(textArea);
-
-                    // 选择文本并复制
-                    textArea.focus();
-                    textArea.select();
-
+                    textArea.focus(); textArea.select();
                     const successful = document.execCommand('copy');
                     document.body.removeChild(textArea);
-
-                    if (successful) {
-                        copySuccess();
-                    } else {
-                        copyFail(err);
-                    }
-                } catch (fallbackErr) {
-                    copyFail(err);
-                }
+                    if (successful) { copySuccess(); } else { copyFail(err); }
+                } catch (fallbackErr) { copyFail(err); }
             }
         });
     }
 
     // 初始化函数 - 为指定范围内的所有未处理代码块添加复制按钮
-    // scope 参数允许指定只在某个DOM片段内查找，提高性能和避免重复添加
     function initCodeCopyButtons(scope = document) {
-        // 获取所有未处理的代码块元素 (使用 data-copy-btn-added 属性判断)
-        // 强化选择器：确保只选择直接的 .code-block 或 .highlight 子元素，避免嵌套干扰
         const selector = ':scope .code-block:not([data-copy-btn-added="true"]), :scope .highlight:not([data-copy-btn-added="true"])';
         const codeBlocks = scope.querySelectorAll(selector);
 
-        console.log(`找到 ${codeBlocks.length} 个待处理的代码块 in scope:`, scope); // 调试信息
+        console.log(`[CopyBtn] 找到 ${codeBlocks.length} 个待处理的代码块 in scope:`, scope);
 
-        // 遍历每个找到的新代码块并附加按钮
         codeBlocks.forEach(block => {
              attachCopyButtonToBlock(block);
         });
     }
 
+    // --- 新增：防止自身被多次执行 ---
+    if (window.hasInitializedCopyButtons) {
+        console.warn("[CopyBtn] 初始化函数似乎已被执行过，跳过本次执行。");
+    } else {
+        window.hasInitializedCopyButtons = true;
 
-    // 页面加载完成后执行
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOMContentLoaded event fired."); // 调试信息
-        // 初次加载时，为整个文档中的代码块添加按钮
-        initCodeCopyButtons(document);
-
-        // --- 可选：观察 DOM 变化以自动处理动态加载的代码块 ---
-        // 如果你的网站使用 AJAX 或其他方式动态插入代码块，
-        // 可以启用下面的 MutationObserver 代码。
-        /*
-        const observer = new MutationObserver(mutations => {
-            let needsInit = false;
-            mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                         // 简单检查新增节点或其子代是否包含代码块
-                         if (node.matches('.code-block, .highlight') || node.querySelector('.code-block, .highlight')) {
-                              needsInit = true;
-                         }
-                    }
-                });
-            });
-            if (needsInit) {
-                 console.log("MutationObserver detected changes, re-initializing buttons.");
-                 initCodeCopyButtons(document); // 或者更精确地只处理变化的部分
-            }
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("[CopyBtn] DOMContentLoaded event fired.");
+            initCodeCopyButtons(document);
         });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true // 观察所有后代节点的变化
-        });
-        // ---
-        */
-    });
+    }
+    // --- 结束新增 ---
 
     // 提供全局方法以便在动态添加代码块后手动调用
-    // 传入新添加内容的父级元素，效率更高且能精确控制范围
     window.refreshCopyButtons = function(parentElement = document) {
-         console.log("refreshCopyButtons called with scope:", parentElement); // 调试信息
+         console.log("[CopyBtn] refreshCopyButtons called with scope:", parentElement);
          initCodeCopyButtons(parentElement);
     };
+
+    // --- 新增：主动探测是否有可疑的重复调用 ---
+    // 包装原始的 refreshCopyButtons 以添加日志
+    const originalRefreshCopyButtons = window.refreshCopyButtons;
+    window.refreshCopyButtons = function(...args) {
+        console.trace("[CopyBtn] refreshCopyButtons 被调用 (Trace)");
+        return originalRefreshCopyButtons.apply(this, args);
+    };
+    // --- 结束新增 ---
   </script>
 </body>
-</html>
+</html>	
