@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ========== 全局布局：导航右上角 + 内容宽度限制 ========== */
+    /* ========== 全局布局：仅保留标题，移除导航 ========== */
     body {
       margin: 0;
       padding: 0;
@@ -26,9 +26,6 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
-      display: flex;
-      justify-content: space-between; /* 标题左，导航右 */
-      align-items: center;
     }
     .site-title {
       font-size: 20px;
@@ -36,61 +33,46 @@
       color: #333;
       text-decoration: none;
     }
-    .nav-menu {
-      display: flex;
-      gap: 24px;
-    }
-    .nav-btn {
-      color: #333;
-      text-decoration: none;
-      font-size: 16px;
-      transition: color 0.2s;
-    }
-    .nav-btn:hover {
-      color: #4096ff;
-    }
     .container-main {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
     }
 
-    /* ========== 豆包同款代码框：无分界线+极小间距+配色 ========== */
-    /* 代码框外层：极小间距+外边框+豆包浅灰背景 */
+    /* ========== 豆包同款代码框：无分界线+极小间距 ========== */
     .highlight, .code-block {
-      background: #f5f7fa !important; /* 豆包同款浅灰 */
-      border: 1px solid #e5e6eb !important; /* 豆包同款边框 */
+      background: #f5f7fa !important;
+      border: 1px solid #e5e6eb !important;
       border-radius: 6px !important;
-      padding: 8px !important; /* 极小内边距 */
-      margin: 8px 0 !important; /* 极小外边距 */
+      padding: 8px !important;
+      margin: 8px 0 !important;
       overflow-x: auto !important;
       position: relative !important;
-      font-size: 14px !important; /* 字体大小不变 */
+      font-size: 14px !important;
       line-height: 1.5 !important;
       max-width: 100% !important;
     }
-    /* 代码内容：无任何间距/分界线，继承背景 */
     .highlight pre, .highlight code {
       background: transparent !important;
       border: none !important;
       padding: 0 !important;
       margin: 0 !important;
-      font-size: 14px !important; /* 和框一致 */
+      font-size: 14px !important;
       line-height: 1.5 !important;
     }
     /* 豆包同款代码高亮配色 */
-    .highlight .c { color: #8c8c8c !important; } /* 注释 */
-    .highlight .k { color: #e53935 !important; } /* 关键字 */
-    .highlight .o { color: #795548 !important; } /* 操作符 */
-    .highlight .m { color: #0097a7 !important; } /* 数字 */
-    .highlight .s { color: #43a047 !important; } /* 字符串 */
-    .highlight .na { color: #1565c0 !important; } /* 属性 */
-    .highlight .nb { color: #f57c00 !important; } /* 内置函数 */
-    .highlight .nf { color: #6200ea !important; } /* 函数名 */
-    .highlight .nc { color: #283593 !important; } /* 类名 */
-    .highlight .nv { color: #c2185b !important; } /* 变量 */
+    .highlight .c { color: #8c8c8c !important; }
+    .highlight .k { color: #e53935 !important; }
+    .highlight .o { color: #795548 !important; }
+    .highlight .m { color: #0097a7 !important; }
+    .highlight .s { color: #43a047 !important; }
+    .highlight .na { color: #1565c0 !important; }
+    .highlight .nb { color: #f57c00 !important; }
+    .highlight .nf { color: #6200ea !important; }
+    .highlight .nc { color: #283593 !important; }
+    .highlight .nv { color: #c2185b !important; }
 
-    /* ========== 豆包同款复制按钮（单按钮） ========== */
+    /* ========== 浅灰色复制按钮（核心修改） ========== */
     .copy-btn {
       position: absolute !important;
       top: 6px !important;
@@ -98,9 +80,9 @@
       width: 22px !important;
       height: 22px !important;
       border-radius: 4px !important;
-      background: #4096ff !important; /* 豆包蓝 */
+      background: #d9d9d9 !important; /* 浅灰色 */
       border: none !important;
-      color: #fff !important;
+      color: #666 !important; /* 灰色文字 */
       cursor: pointer !important;
       display: flex !important;
       align-items: center !important;
@@ -112,9 +94,11 @@
     }
     .copy-btn:hover {
       opacity: 1 !important;
+      background: #bfbfbf !important; /* hover浅灰加深 */
     }
     .copy-btn.copied {
-      background: #52c41a !important;
+      background: #52c41a !important; /* 复制成功仍为绿色 */
+      color: #fff !important;
     }
 
     /* ========== Banner样式 ========== */
@@ -142,70 +126,6 @@
     .banner-content p {
       font-size: 18px;
       margin: 0;
-    }
-
-    /* ========== 标签样式（修复404） ========== */
-    #tag_cloud {
-      text-align: center;
-      padding: 20px 0;
-    }
-    #tag_cloud a {
-      display: inline-block;
-      margin: 0 8px 8px 0;
-      padding: 4px 12px;
-      border-radius: 4px;
-      background: #f5f5f5;
-      color: #333;
-      text-decoration: none;
-      transition: all 0.3s;
-      font-size: 14px;
-    }
-    #tag_cloud a:hover {
-      background: #4096ff;
-      color: #fff;
-    }
-    #tag_cloud a[rel="1"] { font-size: 12px; }
-    #tag_cloud a[rel="2"] { font-size: 14px; }
-    #tag_cloud a[rel="3"] { font-size: 16px; }
-    #tag_cloud a[rel="4"] { font-size: 18px; }
-    #tag_cloud a[rel="5+"] { font-size: 20px; }
-
-    .one-tag-list {
-      margin-bottom: 30px;
-      padding: 20px;
-      background: #fff;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .listing-seperator {
-      display: block;
-      font-size: 18px;
-      margin: 0 0 20px 0;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #e5e6eb;
-      color: #333;
-    }
-    .tag-comments {
-      margin: 20px 0;
-      padding: 12px 20px;
-      background: #f9f9f9;
-      border-left: 4px solid #4096ff;
-      color: #666;
-      border-radius: 0 4px 4px 0;
-    }
-    .tag-item {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 16px;
-      font-size: 13px;
-      background: #f1f1f1;
-      color: #333;
-      text-decoration: none;
-      margin-right: 6px;
-      margin-bottom: 6px;
-    }
-    .tag-item:hover {
-      background: #e5e6eb;
     }
 
     /* ========== 文章列表样式 ========== */
@@ -243,20 +163,12 @@
   </style>
 </head>
 <body>
-  <!-- 头部：标题左，导航右（右上角） -->
+  <!-- 头部：仅保留标题，移除导航按钮 -->
   <div class="header-wrapper">
     <div class="header-inner">
       <a href="{{ '/' | relative_url }}" class="site-title">
         {{ site.title }}
       </a>
-      <div class="nav-menu">
-        <a href="{{ '/' | relative_url }}" class="nav-btn">
-          <i class="fa-solid fa-home mr-1"></i> 首页
-        </a>
-        <a href="{{ '/tags.html' | relative_url }}" class="nav-btn">
-          <i class="fa-solid fa-tags mr-1"></i> 标签
-        </a>
-      </div>
     </div>
   </div>
 
@@ -268,21 +180,16 @@
   <!-- 复制按钮脚本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 仅选择最外层代码块，避免重复
       const codeBlocks = document.querySelectorAll('.highlight:not(.highlight .highlight)');
-      
       codeBlocks.forEach(block => {
-        // 标记已处理
         if (block.dataset.copyBtnAdded) return;
         block.dataset.copyBtnAdded = 'true';
         
-        // 创建复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         block.appendChild(copyBtn);
         
-        // 复制逻辑
         copyBtn.addEventListener('click', function() {
           const codeEl = block.querySelector('code');
           const code = codeEl ? codeEl.textContent.trim() : block.textContent.trim();

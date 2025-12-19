@@ -17,7 +17,7 @@ lsi: false
 paginate: 10
 paginate_path: "/page/:num/"
 
-# 仅保留GitHub Pages官方插件
+# 仅保留必要插件
 plugins:
   - jekyll-paginate
   - jekyll-feed
