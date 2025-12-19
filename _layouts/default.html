@@ -368,6 +368,12 @@
         return;
       }
 
+      // 检查是否已经存在复制按钮（双重保险）
+      if (block.querySelector('.code-copy-btn')) {
+        block.dataset.copyBtnAdded = 'true';
+        return;
+      }
+
       // 创建复制按钮
       const copyBtn = document.createElement('button');
       copyBtn.className = 'code-copy-btn';
@@ -485,7 +491,11 @@
                   }
                 } else if (node.querySelectorAll) {
                   const newCodeBlocks = node.querySelectorAll('.code-block:not([data-copy-btn-added]), .highlight:not([data-copy-btn-added])');
-                  newCodeBlocks.forEach(block => attachCopyButtonToBlock(block));
+                  newCodeBlocks.forEach(block => {
+                    if (!block.dataset.copyBtnAdded) {
+                      attachCopyButtonToBlock(block);
+                    }
+                  });
                 }
               }
             });
