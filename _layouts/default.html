@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Liquid 模板语法保留 -->
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <!-- 改用 GitHub Pages 兼容的 Font Awesome CDN（避免跨域） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.4.0/css/all.min.css">
+  <!-- Tailwind 保留（如果不用可删除，不影响核心功能） -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      /* 基础配色 - 豆包风格 */
+      /* 核心配色 - 适配 GitHub Pages 风格 */
       --color-text-main: #24292e;
       --color-text-light: #666;
       --color-text-gray: #999;
       --color-border: #e5e6eb;
       --color-bg-main: #fafafa;
-      --color-code-bg: #f5f7fa;
+      --color-code-bg: #f6f8fa; /* 对齐 GitHub 代码块背景 */
       --color-inline-code-bg: #f1f2f6;
       --color-inline-code-border: #e0e0e0;
       --color-inline-code-text: #e63946;
       --color-copy-btn: #f0f2f5;
       --color-copy-btn-hover: #e5e6eb;
-      --color-copy-success: #52c41a;
+      --color-copy-success: #2eaadc; /* GitHub 蓝，更适配 */
       --border-radius-sm: 4px;
       --border-radius-md: 6px;
       --font-code: "Consolas", "Monaco", "Courier New", monospace;
@@ -46,7 +47,7 @@
       color: inherit;
     }
 
-    /* 原模板头部样式保留 */
+    /* 原头部样式 */
     header.header-wrapper {
       width: 100%;
       background: #fff;
@@ -75,11 +76,11 @@
       padding: 20px;
     }
 
-    /* 行内代码高亮 - 核心优化 */
+    /* ========== 核心修复：行内代码高亮（适配 Jekyll） ========== */
     .container-main p > code,
     .container-main li > code,
     .container-main span > code,
-    .container-main div > code:not(.code-block code),
+    .container-main div > code:not(.code-block code):not(.highlight code),
     .container-main td > code {
       background-color: var(--color-inline-code-bg);
       border: 1px solid var(--color-inline-code-border);
@@ -93,8 +94,10 @@
       box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
 
-    /* 代码块核心样式 - 无分割线、整体化 */
-    .code-block {
+    /* ========== 核心修复：代码块样式（兼容 Jekyll highlight 标签） ========== */
+    /* 适配手动写的 .code-block 和 Jekyll 生成的 .highlight */
+    .code-block,
+    .highlight {
       position: relative;
       background-color: var(--color-code-bg);
       border: 1px solid var(--color-border);
@@ -104,39 +107,45 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    /* 代码块头部 - 无分割线，背景与主体一致 */
-    .code-block-header {
+    /* 代码块头部（无分割线） */
+    .code-block-header,
+    .highlight-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 8px 16px;
-      background-color: var(--color-code-bg);
+      background-color: var(--color-code-bg); /* 无分割线 */
       font-size: 14px;
     }
 
-    .code-block-language {
+    .code-block-language,
+    .highlight-language {
       color: var(--color-text-gray);
       font-family: var(--font-code);
     }
 
-    /* 代码内容 - 仅横向滚动、禁止上下滚动 */
-    .code-block-content {
+    /* 代码内容：仅横向滚动，禁止上下滚动（核心修复） */
+    .code-block-content,
+    .highlight .highlight-code {
       padding: 16px;
       overflow-x: auto;
-      overflow-y: hidden;
+      overflow-y: hidden !important; /* 强制禁用上下滚动 */
       font-family: var(--font-code);
       font-size: 14px;
       line-height: 1.6;
-      white-space: pre;
+      white-space: pre; /* 禁止自动换行 */
+      max-height: none !important; /* 取消 Jekyll 可能的高度限制 */
     }
 
-    .code-block-content pre {
-      margin: 0;
+    .code-block-content pre,
+    .highlight-code pre {
+      margin: 0 !important;
       white-space: inherit;
     }
 
-    /* 复制按钮 - 仅图标、豆包浅灰色 */
-    .code-copy-btn {
+    /* ========== 复制按钮：仅图标（豆包风格，适配 GitHub Pages） ========== */
+    .code-copy-btn,
+    .highlight-copy-btn {
       width: 32px;
       height: 32px;
       display: flex;
@@ -148,19 +157,22 @@
       color: var(--color-text-light);
       cursor: pointer;
       transition: all 0.2s ease;
+      z-index: 10;
     }
 
-    .code-copy-btn:hover {
+    .code-copy-btn:hover,
+    .highlight-copy-btn:hover {
       background-color: var(--color-copy-btn-hover);
       color: #333;
     }
 
-    .code-copy-btn.copied {
+    .code-copy-btn.copied,
+    .highlight-copy-btn.copied {
       background-color: var(--color-copy-success);
       color: white;
     }
 
-    /* 复制成功提示框 */
+    /* 复制成功提示（适配 GitHub Pages 层级） */
     .copy-toast {
       position: fixed;
       top: 20px;
@@ -171,7 +183,7 @@
       border-radius: var(--border-radius-md);
       font-size: 14px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 9999;
+      z-index: 9999 !important; /* 确保在最上层 */
       opacity: 0;
       transform: translateX(20px);
       transition: all 0.3s ease;
@@ -182,13 +194,13 @@
       transform: translateX(0);
     }
 
-    /* 原模板其他样式保留 */
+    /* 原模板其他样式（保留） */
     .banner {
       width: 100%;
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('{{ site.banner.image | default: "" }}') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -284,7 +296,7 @@
       font-weight: 600;
     }
 
-    /* 响应式适配 */
+    /* 响应式适配（移动端） */
     @media (max-width: 480px) {
       .page-number {
         padding: 6px 12px;
@@ -296,19 +308,29 @@
       .banner-content p {
         font-size: 16px;
       }
-      .code-block-content {
+      .code-block-content, .highlight-code {
         font-size: 13px;
         padding: 12px;
       }
-      .code-copy-btn {
+      .code-copy-btn, .highlight-copy-btn {
         width: 28px;
         height: 28px;
       }
     }
+
+    /* 覆盖 Jekyll 默认代码块样式（核心修复） */
+    .highlight pre {
+      background: none !important;
+      border: none !important;
+    }
+    .highlight code {
+      background: none !important;
+      padding: 0 !important;
+      border: none !important;
+    }
   </style>
 </head>
 <body>
-  <!-- 原模板头部结构保留 -->
   <header class="header-wrapper">
     <div class="header-inner">
       <a href="{{ '/' | relative_url }}" class="site-title">
@@ -317,78 +339,111 @@
     </div>
   </header>
 
-  <!-- 原模板主体结构保留（无演示内容） -->
   <main class="container-main">
     {{ content }}
   </main>
 
   <script>
-    // 复制成功提示
-    function showToast(message) {
-      const existingToast = document.querySelector('.copy-toast');
-      if (existingToast) existingToast.remove();
+    // 修复：DOMContentLoaded 改为 load，确保 Jekyll 渲染完成后执行
+    window.addEventListener('load', function() {
+      // 复制成功提示（适配 GitHub Pages）
+      function showToast(message) {
+        const existingToast = document.querySelector('.copy-toast');
+        if (existingToast) existingToast.remove();
 
-      const toast = document.createElement('div');
-      toast.className = 'copy-toast';
-      toast.textContent = message;
-      document.body.appendChild(toast);
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
 
-      setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
 
-    // 初始化代码块（仅图标按钮、无多余逻辑）
-    function initCodeBlocks() {
-      const codeBlocks = document.querySelectorAll('.code-block');
-      
-      codeBlocks.forEach(block => {
-        // 提取语言
-        const language = block.dataset.language || '代码';
-        
-        // 创建头部
+      // ========== 核心修复：初始化所有代码块（兼容手动/ Jekyll 生成） ==========
+      function initAllCodeBlocks() {
+        // 1. 处理手动写的 .code-block
+        const customCodeBlocks = document.querySelectorAll('.code-block');
+        customCodeBlocks.forEach(block => {
+          initCodeBlock(block, 'code-block');
+        });
+
+        // 2. 处理 Jekyll {% highlight %} 生成的 .highlight
+        const jekyllHighlights = document.querySelectorAll('.highlight');
+        jekyllHighlights.forEach(block => {
+          // 提取 Jekyll 高亮的语言（从 class 中解析，比如 .highlight .language-ruby）
+          let lang = '代码';
+          const langClass = Array.from(block.classList).find(c => c.startsWith('language-'));
+          if (langClass) lang = langClass.replace('language-', '');
+          
+          initCodeBlock(block, 'highlight', lang);
+        });
+      }
+
+      // 通用代码块初始化函数（核心）
+      function initCodeBlock(block, prefix, lang = '代码') {
+        // 避免重复初始化
+        if (block.querySelector(`.${prefix}-header`)) return;
+
+        // 1. 创建头部（语言 + 复制按钮）
         const header = document.createElement('div');
-        header.className = 'code-block-header';
-        
+        header.className = `${prefix}-header`;
+
         // 语言显示
         const langElement = document.createElement('div');
-        langElement.className = 'code-block-language';
-        langElement.textContent = language;
-        
+        langElement.className = `${prefix}-language`;
+        langElement.textContent = block.dataset.language || lang;
+
         // 复制按钮（仅图标）
         const copyBtn = document.createElement('button');
-        copyBtn.className = 'code-copy-btn';
-        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>'; // 仅图标，无文字
-        
+        copyBtn.className = `${prefix}-copy-btn`;
+        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+
         // 组装头部
         header.appendChild(langElement);
         header.appendChild(copyBtn);
         block.insertBefore(header, block.firstChild);
 
-        // 补全内容容器（如果没有）
-        if (!block.querySelector('.code-block-content')) {
+        // 2. 整理代码内容容器（兼容 Jekyll 结构）
+        let contentWrapper = block.querySelector(`.${prefix}-content`);
+        if (!contentWrapper) {
+          contentWrapper = document.createElement('div');
+          contentWrapper.className = `${prefix}-content ${prefix}-code`;
+          
+          // 移动所有代码内容到容器（兼容 Jekyll 的 pre/code 结构）
           const preElement = block.querySelector('pre') || block;
-          const contentWrapper = document.createElement('div');
-          contentWrapper.className = 'code-block-content';
-          while (preElement.firstChild) {
-            contentWrapper.appendChild(preElement.firstChild);
-          }
+          const codeContent = preElement.innerHTML;
+          preElement.innerHTML = '';
+          contentWrapper.innerHTML = `<pre>${codeContent}</pre>`;
           block.appendChild(contentWrapper);
         }
 
-        // 复制事件（仅现代浏览器API）
+        // 3. 绑定复制事件（适配 GitHub Pages 剪贴板权限）
         copyBtn.addEventListener('click', async () => {
           try {
-            const codeContent = block.querySelector('.code-block-content').textContent.trim();
-            await navigator.clipboard.writeText(codeContent);
-            
+            // 获取纯文本代码（避免 HTML 标签）
+            const codeText = contentWrapper.textContent.trim();
+            // 兼容 GitHub Pages 的剪贴板 API（降级方案）
+            if (!navigator.clipboard) {
+              // 降级：创建临时 textarea 复制
+              const textarea = document.createElement('textarea');
+              textarea.value = codeText;
+              document.body.appendChild(textarea);
+              textarea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textarea);
+            } else {
+              await navigator.clipboard.writeText(codeText);
+            }
+
             // 按钮状态切换（仅图标）
             copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
             copyBtn.classList.add('copied');
             showToast('代码已复制');
-            
+
             // 恢复初始状态
             setTimeout(() => {
               copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
@@ -399,11 +454,11 @@
             showToast('复制失败，请手动复制');
           }
         });
-      });
-    }
+      }
 
-    // 页面加载初始化
-    document.addEventListener('DOMContentLoaded', initCodeBlocks);
+      // 执行初始化
+      initAllCodeBlocks();
+    });
   </script>
 </body>
 </html>
