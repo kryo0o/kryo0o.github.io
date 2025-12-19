@@ -346,8 +346,8 @@
     {{ content }}
   </main>
 
-<script>
-    // 创建通知提示函数 (保持不变)
+  <script>
+    // 创建通知提示函数
     function showNotification(message, type = 'success') {
       // 移除现有的通知
       const existingNotifications = document.querySelectorAll('.notification');
@@ -420,7 +420,7 @@
 
         console.log("[CopyBtn] 成功为代码块添加按钮:", uniqueId, block);
 
-        // 复制成功状态切换 - 显示勾号 (保持不变，略...)
+        // 复制成功状态切换 - 显示勾号
         const copySuccess = () => {
             copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
             copyBtn.classList.add('copied');
@@ -432,7 +432,7 @@
             }, 1500);
         };
 
-        // 复制失败状态切换 - 显示叉号 (保持不变，略...)
+        // 复制失败状态切换 - 显示叉号
         const copyFail = (err) => {
             console.error('[CopyBtn] 复制失败：', err);
             copyBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
@@ -453,7 +453,7 @@
             }, 1500);
         };
 
-        // 绑定点击事件 (保持不变，略...)
+        // 绑定点击事件
         copyBtn.addEventListener('click', async () => {
             let codeContent = '';
             const preEl = block.querySelector('pre');
@@ -500,34 +500,21 @@
         });
     }
 
-    // --- 新增：防止自身被多次执行 ---
-    if (window.hasInitializedCopyButtons) {
-        console.warn("[CopyBtn] 初始化函数似乎已被执行过，跳过本次执行。");
-    } else {
-        window.hasInitializedCopyButtons = true;
 
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("[CopyBtn] DOMContentLoaded event fired.");
-            initCodeCopyButtons(document);
-        });
-    }
-    // --- 结束新增 ---
-
-    // 提供全局方法以便在动态添加代码块后手动调用
-    window.refreshCopyButtons = function(parentElement = document) {
-         console.log("[CopyBtn] refreshCopyButtons called with scope:", parentElement);
-         initCodeCopyButtons(parentElement);
+    // --- 修改：确保只在首次加载时执行，忽略后续的 refreshCopyButtons 调用 ---
+    // 将全局的 refreshCopyButtons 替换为一个空函数，防止被意外调用
+    window.refreshCopyButtons = function() {
+        console.warn("[CopyBtn] 阻止了 refreshCopyButtons 的调用，防止重复添加按钮。");
     };
 
-    // --- 新增：主动探测是否有可疑的重复调用 ---
-    // 包装原始的 refreshCopyButtons 以添加日志
-    const originalRefreshCopyButtons = window.refreshCopyButtons;
-    window.refreshCopyButtons = function(...args) {
-        console.trace("[CopyBtn] refreshCopyButtons 被调用 (Trace)");
-        return originalRefreshCopyButtons.apply(this, args);
-    };
-    // --- 结束新增 ---
+    // 页面加载完成后执行，这是唯一一次执行机会
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("[CopyBtn] DOMContentLoaded event fired.");
+        initCodeCopyButtons(document);
+    });
+    // --- 结束修改 ---
+
+
   </script>
 </body>
-</html>	
+</html>
