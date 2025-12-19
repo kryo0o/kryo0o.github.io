@@ -11,12 +11,12 @@ title: 首页
   </div>
 </div>
 
-<!-- 文章列表 -->
+<!-- 文章列表（仅保留标题+日期，移除所有标签） -->
 <div class="post-list">
   {% if paginator.posts.size > 0 %}
     {% for post in paginator.posts %}
       <div class="post-item">
-        <!-- 文章标题+日期（日期右对齐） -->
+        <!-- 文章标题+日期（仅保留日期，无标签） -->
         <div class="post-header">
           <h2 class="post-title">
             <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
@@ -36,18 +36,15 @@ title: 首页
   {% endif %}
 </div>
 
-<!-- 页码分页（核心：无上下页，仅显示页码） -->
+<!-- 页码分页 -->
 {% if paginator.total_pages > 1 %}
   <div class="pagination">
     {% for page in (1..paginator.total_pages) %}
       {% if page == paginator.page %}
-        <!-- 当前页高亮 -->
         <span class="page-number current">{{ page }}</span>
       {% elsif page == 1 %}
-        <!-- 第一页直接跳转首页 -->
         <a href="{{ '/' | relative_url }}" class="page-number">{{ page }}</a>
       {% else %}
-        <!-- 其他页码跳转对应页 -->
         <a href="{{ site.paginate_path | replace: ':num', page | relative_url }}" class="page-number">{{ page }}</a>
       {% endif %}
     {% endfor %}

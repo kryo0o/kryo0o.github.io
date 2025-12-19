@@ -1,39 +1,29 @@
-title: kryo
+title: 豆包风格 Jekyll 博客
 email: wpforwg@gmail.com
 description: "基于 Jekyll + GitHub Pages 构建的博客"
 baseurl: ""
 url: "https://blog.kryoo.de"
 github_username: kryo0o
 
-# 核心配置
+# 核心配置（删除所有高亮相关）
 markdown: kramdown
-highlighter: rouge  # 强制使用Rouge高亮
 permalink: /posts/:title/
 timezone: Asia/Shanghai
-safe: false  # 关键：关闭safe模式，允许完整的Rouge解析
+safe: true
 lsi: false
 
 # 分页
 paginate: 10
 paginate_path: "/page/:num/"
 
-# 插件
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
 
-# Kramdown/Rouge 核心配置（必须）
+# 简化Kramdown配置（无高亮）
 kramdown:
   input: GFM
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    block:
-      line_numbers: false
-      wrap: div
-      css_class: "code-block"
-      default_lang: bash  # 未指定语言的块级代码默认按bash上色
-  # 开启行内代码解析
   parse_block_html: true
   parse_span_html: true
   smart_quotes: lsquo,rsquo,ldquo,rdquo

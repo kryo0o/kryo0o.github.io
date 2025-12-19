@@ -42,21 +42,20 @@
       line-height: 1.8;
     }
 
-    /* ========== 1. 行内代码高亮（` ` 包裹）- 无复制按钮 ========== */
-    /* 行内代码单独样式，区分块级代码 */
+    /* ========== 1. 行内代码（纯文本，无上色） ========== */
     p > code, li > code, span > code, div > code:not(.highlight code) {
       background-color: #f1f1f1 !important;
       border-radius: 3px !important;
       padding: 2px 6px !important;
       font-size: 13px !important;
       font-family: "Consolas", "Monaco", "Courier New", monospace !important;
-      color: #d73a4a !important; /* 行内代码统一红色，醒目 */
+      color: #24292e !important; /* 纯文本颜色 */
       border: 1px solid #e5e6eb !important;
       margin: 0 2px !important;
     }
 
-    /* ========== 2. 块级代码高亮（``` ``` 包裹）- 完整上色 ========== */
-    /* 块级代码容器 */
+    /* ========== 2. 块级代码（纯文本，无上色） ========== */
+    /* 块级代码容器（仅保留基础样式，无彩色） */
     .highlight, .code-block {
       background: #f5f7fa !important;
       border: 1px solid #e5e6eb !important;
@@ -69,7 +68,7 @@
       line-height: 1.6 !important;
       max-width: 100% !important;
     }
-    /* 块级代码内容 */
+    /* 块级代码内容（纯文本，无任何语法上色） */
     .highlight pre, .highlight code {
       background: transparent !important;
       border: none !important;
@@ -78,34 +77,10 @@
       font-size: 14px !important;
       line-height: 1.6 !important;
       font-family: "Consolas", "Monaco", "Courier New", monospace !important;
+      color: #24292e !important; /* 统一纯文本颜色 */
     }
 
-    /* ========== 块级代码完整语法上色（覆盖所有语言） ========== */
-    /* 注释 */
-    .highlight .c, .highlight .c1, .highlight .cm, .highlight .cp, .highlight .cpf { color: #6a737d !important; font-style: italic !important; }
-    /* 关键字（if/else/for/function等） */
-    .highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #d73a4a !important; font-weight: 600 !important; }
-    /* 操作符（+/-/*/=等） */
-    .highlight .o, .highlight .ow { color: #795548 !important; }
-    /* 数字 */
-    .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo { color: #005cc5 !important; }
-    /* 字符串（""/''包裹） */
-    .highlight .s, .highlight .s1, .highlight .s2, .highlight .sa, .highlight .sb, .highlight .sc { color: #032f62 !important; }
-    /* 函数/方法名 */
-    .highlight .nf, .highlight .fn { color: #6f42c1 !important; }
-    /* 变量/属性 */
-    .highlight .nv, .highlight .na, .highlight .vc, .highlight .vg { color: #22863a !important; }
-    /* 类/模块名 */
-    .highlight .nc, .highlight .nn { color: #e36209 !important; }
-    /* 内置函数 */
-    .highlight .nb, .highlight .ni { color: #007bff !important; }
-    /* 特殊标记（错误/成功） */
-    .highlight .gd { color: #b31d28 !important; }
-    .highlight .gi { color: #22863a !important; }
-    /* 纯文本兜底（未指定语言） */
-    .highlight .text { color: #24292e !important; }
-
-    /* ========== 3. 复制按钮（仅块级代码显示） ========== */
+    /* ========== 复制按钮 ========== */
     .copy-btn {
       position: absolute !important;
       top: 8px !important;
@@ -124,10 +99,8 @@
       padding: 0 !important;
       font-size: 12px !important;
       opacity: 0.8 !important;
-      /* 仅块级代码显示，行内隐藏 */
       display: none !important;
     }
-    /* 仅块级代码容器hover时显示复制按钮 */
     .highlight:hover .copy-btn {
       display: flex !important;
     }
@@ -247,44 +220,40 @@
     {{ content }}
   </div>
 
-  <!-- 复制按钮脚本（仅块级代码添加） -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // 仅选择块级代码容器（.highlight），排除行内代码
-      const codeBlocks = document.querySelectorAll('.highlight');
+  <!-- 复制按钮脚本（保留换行格式） -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('.highlight');
+    
+    codeBlocks.forEach(block => {
+      if (block.dataset.copyBtnAdded) return;
+      block.dataset.copyBtnAdded = 'true';
       
-      codeBlocks.forEach(block => {
-        // 避免重复添加
-        if (block.dataset.copyBtnAdded) return;
-        block.dataset.copyBtnAdded = 'true';
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-btn';
+      copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+      block.appendChild(copyBtn);
+      
+      copyBtn.addEventListener('click', function() {
+        const codeEl = block.querySelector('code');
+        // 关键：移除trim()，保留原始换行/空格
+        const code = codeEl ? codeEl.textContent : '';
         
-        // 创建复制按钮
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-btn';
-        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-        block.appendChild(copyBtn);
-        
-        // 复制逻辑
-        copyBtn.addEventListener('click', function() {
-          // 只获取块级代码内容
-          const codeEl = block.querySelector('code');
-          const code = codeEl ? codeEl.textContent.trim() : '';
-          
-          if (code) {
-            navigator.clipboard.writeText(code).then(() => {
-              copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-              copyBtn.classList.add('copied');
-              setTimeout(() => {
-                copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-                copyBtn.classList.remove('copied');
-              }, 1500);
-            }).catch(err => {
-              alert('复制失败：' + err.message);
-            });
-          }
-        });
+        if (code) {
+          navigator.clipboard.writeText(code).then(() => {
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            copyBtn.classList.add('copied');
+            setTimeout(() => {
+              copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+              copyBtn.classList.remove('copied');
+            }, 1500);
+          }).catch(err => {
+            alert('复制失败：' + err.message);
+          });
+        }
       });
     });
-  </script>
+  });
+</script>
 </body>
 </html>
