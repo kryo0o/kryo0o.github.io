@@ -11,24 +11,28 @@ markdown: kramdown
 highlighter: rouge
 permalink: /posts/:title/
 timezone: Asia/Shanghai
-safe: true  # 强制安全模式，避免插件冲突
-lsi: false  # 禁用LSI，减少构建报错
+safe: true
+lsi: false
 
-# 原生分页插件（仅保留GitHub Pages支持的版本）
+# 原生分页插件
 paginate: 3
 paginate_path: "/page/:num/"
 
-# 标签功能配置（简化版，无collections冲突）
+# 标签配置（核心：解决tag 404）
 tag_dir: tags
+collections:
+  tags:
+    output: true
+    permalink: /tags/:name/
 
-# 仅保留GitHub Pages原生支持的插件（关键！）
+# 仅保留GitHub Pages原生支持的插件
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-github-metadata
 
-# 代码高亮（适配旧版Rouge，禁用行号）
+# 代码高亮配置（适配小尺寸代码块）
 kramdown:
   input: GFM
   syntax_highlighter_opts:
