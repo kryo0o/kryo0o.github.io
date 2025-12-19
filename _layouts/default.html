@@ -317,74 +317,139 @@
   {% include footer.html %}
 
   <script>
-  // 解决重复添加复制按钮的核心逻辑
-  document.addEventListener('DOMContentLoaded', () => {
-    // 使用更精确的选择器，避免重复选择
-    const codeBlocks = document.querySelectorAll('.code-block, .highlight:not(.code-block)');
+  // 使用一个全局标志来防止重复执行
+  if (!window.copyButtonsInitialized) {
+    window.copyButtonsInitialized = true;
     
-    // 创建一个 Set 来记录已处理的元素
-    const processedBlocks = new Set();
-    
-    codeBlocks.forEach(block => {
-      // 如果已经处理过这个元素，跳过
-      if (processedBlocks.has(block)) {
-        return;
-      }
+    document.addEventListener('DOMContentLoaded', function() {
+      // 检查是否有代码块
+      const codeBlocks = document.querySelectorAll('.code-block, .highlight');
+      if (codeBlocks.length === 0) return;
       
-      // 标记为已处理
-      processedBlocks.add(block);
+      console.log('初始化复制按钮，找到', codeBlocks.length, '个代码块');
       
-      // 关键：检查当前代码块是否已存在复制按钮，避免重复添加
-      if (block.querySelector('.code-copy-btn')) {
-        return; // 如果已有按钮，则跳过
-      }
-
-      // 创建复制按钮
-      const copyBtn = document.createElement('button');
-      copyBtn.className = 'code-copy-btn';
-      copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
-      copyBtn.title = '复制代码';
-
-      // 复制功能
-      copyBtn.addEventListener('click', () => {
-        const codeElement = block.querySelector('code') || block.querySelector('pre');
-        const codeText = codeElement?.textContent || '';
-
-        if (codeText) {
-          navigator.clipboard.writeText(codeText).then(() => {
-            showNotification('复制成功', 'success');
-            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-            setTimeout(() => {
-              copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
-            }, 1500);
-          }).catch(err => {
-            showNotification('复制失败，请手动复制', 'error');
-            console.error('复制失败:', err);
-          });
-        } else {
-          showNotification('没有可复制的内容', 'error');
+      // 使用MutationObserver来避免动态内容的问题
+      const observer = new MutationObserver(function(mutations) {
+        // 检查是否有新的代码块被添加
+        let shouldReinitialize = false;
+        mutations.forEach(function(mutation) {
+          if (mutation.addedNodes.length) {
+            mutation.addedNodes.forEach(function(node) {
+              if (node.nodeType === 1 && (node.classList.contains('code-block') || 
+                                          node.classList.contains('highlight') ||
+                                          node.querySelector('.code-block, .highlight'))) {
+                shouldReinitialize = true;
+              }
+            });
+          }
+        });
+        
+        if (shouldReinitialize) {
+          initCopyButtons();
         }
       });
-
-      // 添加按钮到代码块
-      block.appendChild(copyBtn);
+      
+      // 开始观察文档变化
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      // 初始化复制按钮
+      initCopyButtons();
+      
+      function initCopyButtons() {
+        // 首先，移除所有现有的复制按钮
+        const existingButtons = document.querySelectorAll('.code-copy-btn');
+        existingButtons.forEach(btn => btn.remove());
+        
+        // 重新获取所有代码块
+        const allCodeContainers = document.querySelectorAll('.code-block, .highlight');
+        const processed = new Set();
+        
+        allCodeContainers.forEach(container => {
+          // 跳过已处理的元素
+          if (processed.has(container)) return;
+          processed.add(container);
+          
+          // 跳过已经有按钮的容器（理论上不应该有，因为上面已经移除了）
+          if (container.querySelector('.code-copy-btn')) return;
+          
+          // 找到实际的代码块元素（可能是嵌套的）
+          let actualCodeBlock = container;
+          
+          // 如果这个容器内部还有.code-block或.highlight，使用内部的
+          const innerCodeBlock = container.querySelector('.code-block, .highlight');
+          if (innerCodeBlock && innerCodeBlock !== container) {
+            // 检查内部代码块是否已经有按钮
+            if (!innerCodeBlock.querySelector('.code-copy-btn')) {
+              actualCodeBlock = innerCodeBlock;
+            }
+          }
+          
+          // 确保容器有相对定位
+          actualCodeBlock.style.position = 'relative';
+          
+          // 创建复制按钮
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'code-copy-btn';
+          copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
+          copyBtn.title = '复制代码';
+          
+          copyBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // 获取代码文本
+            const codeElement = actualCodeBlock.querySelector('code') || 
+                               actualCodeBlock.querySelector('pre');
+            const codeText = codeElement ? codeElement.textContent : actualCodeBlock.textContent;
+            
+            if (codeText && codeText.trim()) {
+              navigator.clipboard.writeText(codeText.trim()).then(() => {
+                showNotification('复制成功', 'success');
+                
+                // 临时改变图标
+                const icon = this.querySelector('i');
+                if (icon) {
+                  const originalClass = icon.className;
+                  icon.className = 'fa-solid fa-check';
+                  
+                  setTimeout(() => {
+                    icon.className = originalClass;
+                  }, 1500);
+                }
+              }).catch(err => {
+                console.error('复制失败:', err);
+                showNotification('复制失败，请手动复制', 'error');
+              });
+            } else {
+              showNotification('没有可复制的内容', 'error');
+            }
+          });
+          
+          // 添加到代码块
+          actualCodeBlock.appendChild(copyBtn);
+        });
+      }
+      
+      function showNotification(message, type) {
+        // 移除现有通知
+        const existing = document.querySelector('.notification');
+        if (existing) existing.remove();
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 3000);
+      }
     });
-
-    // 通知提示函数
-    function showNotification(message, type) {
-      // 先移除已存在的通知，避免堆积
-      const existingNotify = document.querySelector('.notification');
-      if (existingNotify) existingNotify.remove();
-
-      const notification = document.createElement('div');
-      notification.className = `notification ${type}`;
-      notification.textContent = message;
-      document.body.appendChild(notification);
-
-      // 3秒后自动移除
-      setTimeout(() => notification.remove(), 3000);
-    }
-  });
+  }
 </script>
 </body>
 </html>
