@@ -130,51 +130,68 @@
       white-space: pre;
     }
 
-    /* 复制按钮样式 */
+    /* DeepSeek风格复制按钮样式 */
     .copy-code-btn {
       position: absolute;
       top: 8px;
       right: 8px;
-      width: 30px;
-      height: 30px;
-      background: var(--color-bg-copy-btn);
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
+      border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--color-text-light);
+      color: #555;
       font-size: 14px;
       transition: all 0.2s ease;
       z-index: 10;
-      opacity: 0.7;
+      opacity: 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .copy-code-btn:hover {
-      background: var(--color-bg-copy-btn-hover);
+      background: white;
+      color: #333;
+      border-color: #aaa;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
       opacity: 1;
-      transform: scale(1.05);
+      transform: translateY(-1px);
     }
 
     .copy-code-btn.copied {
       background: var(--color-bg-copy-success);
       color: white;
+      border-color: var(--color-bg-copy-success);
       opacity: 1;
     }
 
-    .copy-code-btn.copied::before {
-      content: "✓";
+    .copy-code-btn.copied i {
+      transform: scale(1.1);
     }
 
-    .copy-code-btn:not(.copied)::before {
-      content: "⎘";
+    .copy-code-btn i {
+      font-size: 14px;
+      transition: transform 0.2s ease;
     }
 
     /* 代码块悬停时显示复制按钮 */
     .code-block:hover .copy-code-btn,
     .highlight:hover .copy-code-btn {
       opacity: 0.9;
+    }
+
+    /* 确保每个代码块只有一个复制按钮 */
+    .code-block > .copy-code-btn,
+    .highlight > .copy-code-btn {
+      opacity: 0.9;
+    }
+
+    /* 如果代码块内有pre标签，按钮在pre上 */
+    .code-block pre, .highlight pre {
+      position: relative;
     }
 
     /* 其他样式 */
@@ -324,8 +341,10 @@
         font-size: 16px;
       }
       .copy-code-btn {
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
+      }
+      .copy-code-btn i {
         font-size: 12px;
       }
     }
@@ -347,13 +366,23 @@
   <script>
     // 等待DOM完全加载
     document.addEventListener('DOMContentLoaded', function() {
-      // 为所有代码块添加复制按钮
+      // 为所有代码块添加复制按钮（确保只添加一次）
       document.querySelectorAll('.code-block, .highlight').forEach(function(codeBlock) {
+        // 检查是否已经添加了复制按钮
+        if (codeBlock.querySelector('.copy-code-btn')) {
+          return; // 如果已经有按钮，跳过
+        }
+        
         // 创建复制按钮
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-code-btn';
         copyButton.setAttribute('aria-label', '复制代码');
         copyButton.setAttribute('title', '复制代码');
+        
+        // 添加图标
+        const icon = document.createElement('i');
+        icon.className = 'far fa-copy';
+        copyButton.appendChild(icon);
         
         // 将按钮添加到代码块
         codeBlock.style.position = 'relative';
@@ -381,12 +410,15 @@
           // 复制到剪贴板
           navigator.clipboard.writeText(codeText).then(function() {
             // 复制成功反馈
+            const originalIcon = copyButton.querySelector('i');
+            originalIcon.className = 'fas fa-check';
             copyButton.classList.add('copied');
             copyButton.setAttribute('aria-label', '已复制');
             copyButton.setAttribute('title', '已复制');
             
             // 3秒后恢复原始状态
             setTimeout(function() {
+              originalIcon.className = 'far fa-copy';
               copyButton.classList.remove('copied');
               copyButton.setAttribute('aria-label', '复制代码');
               copyButton.setAttribute('title', '复制代码');
@@ -403,6 +435,12 @@
       
       // 显示通知的函数
       function showNotification(message, type) {
+        // 移除现有通知
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+          existingNotification.remove();
+        }
+        
         // 创建通知元素
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -413,13 +451,15 @@
         
         // 3秒后移除通知
         setTimeout(function() {
-          notification.style.opacity = '0';
-          notification.style.transform = 'translateX(100%)';
-          setTimeout(function() {
-            if (notification.parentNode) {
-              notification.parentNode.removeChild(notification);
-            }
-          }, 300);
+          if (notification.parentNode) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(function() {
+              if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+              }
+            }, 300);
+          }
         }, 3000);
       }
     });
