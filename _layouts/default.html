@@ -337,6 +337,11 @@
       const codeBlocks = document.querySelectorAll('.code-block, .highlight');
       
       codeBlocks.forEach(function(block) {
+        // 检查是否已经有复制按钮，避免重复添加
+        if (block.querySelector('.copy-button')) {
+          return; // 如果已有复制按钮，则跳过
+        }
+        
         // 创建复制按钮
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
