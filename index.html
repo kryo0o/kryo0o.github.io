@@ -11,7 +11,7 @@ title: 首页
   </div>
 </div>
 
-<!-- 文章列表（仅标题+日期，无任何标签） -->
+<!-- 文章列表 -->
 <div class="post-list">
   {% if paginator.posts.size > 0 %}
     {% for post in paginator.posts %}
@@ -29,7 +29,7 @@ title: 首页
     {% endfor %}
   {% else %}
     <div class="post-item text-center">
-      <p style="color: #999; font-size: 16px;">暂无文章</p>
+      <p style="color: var(--color-text-gray); font-size: 16px;">暂无文章</p>
     </div>
   {% endif %}
 </div>

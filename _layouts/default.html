@@ -7,15 +7,46 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ========== 全局布局 ========== */
-    body {
+    /* ========== 全局CSS变量（统一维护） ========== */
+    :root {
+      --color-text-main: #24292e;
+      --color-text-light: #666;
+      --color-text-gray: #999;
+      --color-border: #e5e6eb;
+      --color-bg-main: #fafafa;
+      --color-bg-code-block: #f5f7fa;
+      --color-bg-code-inline: #f1f1f1;
+      --color-bg-copy-btn: #d9d9d9;
+      --color-bg-copy-btn-hover: #bfbfbf;
+      --color-bg-copy-success: #52c41a;
+      --border-radius-sm: 3px;
+      --border-radius-md: 4px;
+      --border-radius-lg: 6px;
+      --font-code: "Consolas", "Monaco", "Courier New", monospace;
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* ========== 全局重置 & 基础样式 ========== */
+    * {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #fafafa;
-      color: #24292e;
+      box-sizing: border-box;
     }
-    .header-wrapper {
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--color-bg-main);
+      color: var(--color-text-main);
+      line-height: 1.8;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ========== 头部（语义化） ========== */
+    header.header-wrapper {
       width: 100%;
       background: #fff;
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -24,99 +55,123 @@
       top: 0;
       z-index: 999;
     }
+
     .header-inner {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
     }
+
     .site-title {
       font-size: 20px;
       font-weight: 600;
       color: #333;
-      text-decoration: none;
     }
-    .container-main {
+
+    /* ========== 主内容区（语义化） ========== */
+    main.container-main {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
-      line-height: 1.8;
     }
 
-    /* ========== 1. 行内代码（纯文本，无上色） ========== */
-    p > code, li > code, span > code, div > code:not(.highlight code) {
-      background-color: #f1f1f1 !important;
-      border-radius: 3px !important;
-      padding: 2px 6px !important;
-      font-size: 13px !important;
-      font-family: "Consolas", "Monaco", "Courier New", monospace !important;
-      color: #24292e !important;
-      border: 1px solid #e5e6eb !important;
-      margin: 0 2px !important;
+    /* ========== 1. 行内代码样式（无!important，提升选择器特异性） ========== */
+    .container-main p > code,
+    .container-main li > code,
+    .container-main span > code,
+    .container-main div > code:not(.highlight code):not(.code-block code) {
+      background-color: var(--color-bg-code-inline);
+      border-radius: var(--border-radius-sm);
+      padding: 2px 6px;
+      font-size: 13px;
+      font-family: var(--font-code);
+      color: var(--color-text-main);
+      border: 1px solid var(--color-border);
+      margin: 0 2px;
     }
 
-    /* ========== 2. 块级代码（纯文本，无上色） ========== */
+    /* ========== 2. 块级代码样式（优化滚动+无!important） ========== */
     .highlight, .code-block {
-      background: #f5f7fa !important;
-      border: 1px solid #e5e6eb !important;
-      border-radius: 6px !important;
-      padding: 12px !important;
-      margin: 16px 0 !important;
-      overflow-x: auto !important;
-      position: relative !important;
-      font-size: 14px !important;
-      line-height: 1.6 !important;
-      max-width: 100% !important;
-    }
-    .highlight pre, .highlight code {
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      font-size: 14px !important;
-      line-height: 1.6 !important;
-      font-family: "Consolas", "Monaco", "Courier New", monospace !important;
-      color: #24292e !important;
+      background: var(--color-bg-code-block);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-lg);
+      padding: 12px;
+      margin: 16px 0;
+      overflow-x: auto;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 100%;
+      /* 优化滚动条样式 */
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border) var(--color-bg-code-block);
     }
 
-    /* ========== 复制按钮（唯一显示） ========== */
+    /* 兼容Chrome/Safari滚动条 */
+    .highlight::-webkit-scrollbar, .code-block::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .highlight::-webkit-scrollbar-thumb, .code-block::-webkit-scrollbar-thumb {
+      background-color: var(--color-border);
+      border-radius: var(--border-radius-sm);
+    }
+
+    .highlight pre, .highlight code,
+    .code-block pre, .code-block code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      font-family: var(--font-code);
+      color: var(--color-text-main);
+    }
+
+    /* ========== 复制按钮（适配移动端+唯一化） ========== */
     .copy-btn {
-      position: absolute !important;
-      top: 8px !important;
-      right: 8px !important;
-      width: 24px !important;
-      height: 24px !important;
-      border-radius: 4px !important;
-      background: #d9d9d9 !important;
-      border: none !important;
-      color: #666 !important;
-      cursor: pointer !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      z-index: 99 !important;
-      padding: 0 !important;
-      font-size: 12px !important;
-      opacity: 0.8 !important;
-      /* 初始隐藏，hover显示 */
-      display: none !important;
-    }
-    /* 仅块级代码hover时显示一个按钮 */
-    .highlight:hover .copy-btn {
-      display: flex !important;
-    }
-    .copy-btn:hover {
-      opacity: 1 !important;
-      background: #bfbfbf !important;
-    }
-    .copy-btn.copied {
-      background: #52c41a !important;
-      color: #fff !important;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--border-radius-md);
+      background: var(--color-bg-copy-btn);
+      border: none;
+      color: var(--color-text-light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      padding: 0;
+      font-size: 12px;
+      opacity: 0.5; /* 初始半透明，适配移动端触摸 */
+      transition: opacity 0.2s ease;
     }
 
-    /* ========== Banner样式 ========== */
+    .highlight:hover .copy-btn,
+    .code-block:hover .copy-btn {
+      opacity: 0.8; /* hover提升透明度 */
+    }
+
+    .copy-btn:hover {
+      opacity: 1;
+      background: var(--color-bg-copy-btn-hover);
+    }
+
+    .copy-btn.copied {
+      background: var(--color-bg-copy-success);
+      color: #fff;
+    }
+
+    /* ========== Banner样式（响应式高度） ========== */
     .banner {
       width: 100%;
-      height: 300px;
+      min-height: 200px;
+      height: 50vh;
+      max-height: 300px;
       background: url('{{ site.banner.image }}') no-repeat center center;
       background-size: cover;
       display: flex;
@@ -124,150 +179,202 @@
       justify-content: center;
       color: white;
       text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-      border-radius: 8px;
+      border-radius: var(--border-radius-lg);
       margin-bottom: 30px;
     }
+
     .banner-content {
       text-align: center;
       padding: 0 20px;
     }
+
     .banner-content h1 {
       font-size: 36px;
       margin: 0 0 12px 0;
     }
+
     .banner-content p {
       font-size: 18px;
       margin: 0;
     }
 
-    /* ========== 文章列表样式（彻底屏蔽标签） ========== */
+    /* ========== 文章列表样式（简化标签屏蔽） ========== */
     .post-item {
       padding: 16px 0;
-      border-bottom: 1px solid #e5e6eb;
+      border-bottom: 1px solid var(--color-border);
     }
+
     .post-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
     }
+
     .post-title {
       font-size: 20px;
       font-weight: 600;
       margin: 0;
     }
-    .post-title a {
-      color: #333;
-      text-decoration: none;
-    }
+
     .post-title a:hover {
       color: #4096ff;
     }
+
     .post-date {
       font-size: 14px;
-      color: #999;
+      color: var(--color-text-gray);
       margin: 0;
     }
-    /* 🔥 强制屏蔽所有标签相关元素（优先级最高） */
+
+    /* 强制屏蔽所有标签相关元素（极简版） */
     .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
       display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      width: 0 !important;
-      height: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
     }
+
     .post-excerpt {
       font-size: 15px;
-      color: #666;
+      color: var(--color-text-light);
       line-height: 1.6;
       margin: 0;
     }
 
-    /* ========== 页码分页样式 ========== */
+    /* ========== 页码分页样式（移动端适配） ========== */
     .pagination {
       display: flex;
       justify-content: center;
       gap: 8px;
       margin-top: 40px;
       padding: 20px 0;
+      flex-wrap: wrap; /* 小屏幕自动换行 */
     }
+
     .page-number {
       display: inline-block;
       padding: 8px 16px;
-      border: 1px solid #e5e6eb;
-      border-radius: 4px;
-      color: #666;
-      text-decoration: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-light);
       font-size: 14px;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
+
     .page-number:hover {
-      border-color: #d9d9d9;
-      background-color: #f5f5f5;
+      border-color: var(--color-bg-copy-btn);
+      background-color: var(--color-bg-code-inline);
     }
+
     .page-number.current {
-      background-color: #d9d9d9;
-      color: #666;
-      border-color: #d9d9d9;
+      background-color: var(--color-bg-copy-btn);
+      color: var(--color-text-light);
+      border-color: var(--color-bg-copy-btn);
       font-weight: 600;
+    }
+
+    /* 移动端分页适配 */
+    @media (max-width: 480px) {
+      .page-number {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      .banner-content h1 {
+        font-size: 28px;
+      }
+      .banner-content p {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- 头部：仅保留标题 -->
-  <div class="header-wrapper">
+  <!-- 头部（语义化标签） -->
+  <header class="header-wrapper">
     <div class="header-inner">
       <a href="{{ '/' | relative_url }}" class="site-title">
         {{ site.title }}
       </a>
     </div>
-  </div>
+  </header>
 
-  <!-- 主内容区 -->
-  <div class="container-main">
+  <!-- 主内容区（语义化标签） -->
+  <main class="container-main">
     {{ content }}
-  </div>
+  </main>
 
-  <!-- 复制按钮脚本（确保唯一+保留换行） -->
+  <!-- 复制按钮脚本（兼容+动态支持+唯一化） -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // 第一步：清除所有已存在的复制按钮（解决重复问题）
+    // 封装复制按钮初始化函数（支持动态加载代码块）
+    function initCopyButtons() {
+      // 第一步：清除所有已存在的复制按钮（杜绝重复）
       const existingBtns = document.querySelectorAll('.copy-btn');
       existingBtns.forEach(btn => btn.remove());
 
-      // 第二步：为每个代码块添加唯一的复制按钮
-      const codeBlocks = document.querySelectorAll('.highlight');
+      // 第二步：为所有块级代码添加按钮（支持.highlight和.code-block）
+      const codeBlocks = document.querySelectorAll('.highlight, .code-block');
       codeBlocks.forEach(block => {
-        // 防止重复添加（双重保险）
+        // 双重保险：跳过已添加按钮的代码块
         if (block.querySelector('.copy-btn')) return;
 
+        // 创建复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         block.appendChild(copyBtn);
 
-        // 复制逻辑：保留换行/空格格式
+        // 复制成功/失败回调
+        const copySuccess = () => {
+          copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+          copyBtn.classList.add('copied');
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+            copyBtn.classList.remove('copied');
+          }, 1500);
+        };
+
+        const copyFail = (err) => {
+          alert(`复制失败：${err.message || '未知错误'}`);
+        };
+
+        // 复制逻辑（兼容新旧浏览器）
         copyBtn.addEventListener('click', function() {
           const codeEl = block.querySelector('code');
-          const code = codeEl ? codeEl.textContent : ''; // 无trim，保留原始格式
+          const code = codeEl ? codeEl.textContent : '';
+          
+          if (!code) return copyFail(new Error('无可复制的代码内容'));
 
-          if (code) {
-            navigator.clipboard.writeText(code).then(() => {
-              copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-              copyBtn.classList.add('copied');
-              setTimeout(() => {
-                copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-                copyBtn.classList.remove('copied');
-              }, 1500);
-            }).catch(err => {
-              alert('复制失败：' + err.message);
-            });
+          // 现代浏览器：Clipboard API
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(code)
+              .then(copySuccess)
+              .catch(copyFail);
+          } 
+          // 旧浏览器降级：execCommand
+          else {
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            textarea.style.position = 'fixed'; // 避免滚动到可视区域外
+            textarea.style.opacity = 0;
+            document.body.appendChild(textarea);
+            
+            textarea.select();
+            try {
+              const success = document.execCommand('copy');
+              success ? copySuccess() : copyFail(new Error('浏览器不支持复制功能'));
+            } catch (err) {
+              copyFail(err);
+            } finally {
+              document.body.removeChild(textarea);
+            }
           }
         });
       });
-    });
+    }
+
+    // 初始加载执行
+    document.addEventListener('DOMContentLoaded', initCopyButtons);
+
+    // 暴露全局方法，方便动态加载代码块后手动调用
+    window.initCopyButtons = initCopyButtons;
   </script>
 </body>
 </html>

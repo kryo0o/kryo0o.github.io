@@ -1,4 +1,4 @@
-title: 豆包风格 Jekyll 博客
+title: kryo
 email: wpforwg@gmail.com
 description: "基于 Jekyll + GitHub Pages 构建的博客"
 baseurl: ""
@@ -22,7 +22,7 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
-# 简化Kramdown配置
+# 简化Kramdown配置（无冗余）
 kramdown:
   input: GFM
   parse_block_html: true
