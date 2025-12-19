@@ -1,4 +1,3 @@
-# 基础配置（Jekyll 3.10.0 兼容）
 title: 豆包风格 Jekyll 博客
 email: wpforwg@gmail.com
 description: "基于 Jekyll + GitHub Pages 构建的博客"
@@ -6,27 +5,23 @@ baseurl: ""
 url: "https://blog.kryoo.de"
 github_username: kryo0o
 
-# 构建核心配置
 markdown: kramdown
 highlighter: rouge
 permalink: /posts/:title/
 timezone: Asia/Shanghai
 safe: true
 lsi: false
-theme: jekyll-theme-primer # 保留GitHub Pages默认主题
+theme: jekyll-theme-primer
 
-# 分页（Jekyll 3.10.0 仅支持简单分页）
 paginate: 10
 paginate_path: "/page/:num/"
 
-# 仅保留GitHub Pages官方支持的插件（避免兼容问题）
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-github-metadata
 
-# Kramdown/Rouge 兼容配置（移除line_width等不兼容项）
 kramdown:
   input: GFM
   syntax_highlighter: rouge
@@ -39,7 +34,6 @@ kramdown:
   footnote_nr: 1
   entity_output: as_char
 
-# Banner配置（简化，避免Liquid解析错误）
 banner:
   image: "https://picsum.photos/1920/500"
   title: "技术笔记与实用教程"

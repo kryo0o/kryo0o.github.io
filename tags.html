@@ -3,63 +3,46 @@ layout: default
 title: 所有标签
 ---
 
-<!-- 标签页面头部 -->
-<div class="container-lg mx-auto mb-10 text-center">
-  <h1 class="f00-light mb-2">所有标签</h1>
-  <p class="text-gray-600">共 {{ site.tags.size }} 个标签（点击查看对应文章）</p>
+<!-- Banner（可选，和首页保持一致） -->
+<div class="banner">
+  <div class="banner-content">
+    <h1 class="text-4xl font-bold mb-2">所有标签</h1>
+    <p class="text-xl">按标签浏览文章</p>
+  </div>
 </div>
 
-<!-- 标签列表 -->
-<div class="container-lg mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-12">
-  {% if site.tags.size > 0 %}
-    {% assign sorted_tags = site.tags | sort %}
-    {% for tag in sorted_tags %}
-      {% assign tag_name = tag[0] %}
-      {% assign tag_posts = tag[1] %}
-      <a href="#{{ tag_name | replace: ' ', '-' }}" class="tag-item d-flex align-items-center justify-content-center p-4">
-        <span class="font-medium">{{ tag_name }}</span>
-        <span class="d-block mt-2 text-sm text-gray-600">
-          <i class="fa-solid fa-file-alt mr-1"></i> {{ tag_posts.size }} 篇
-        </span>
-      </a>
-    {% endfor %}
-  {% else %}
-    <div class="col-span-full text-center py-12 text-gray-500">
-      <i class="fa-solid fa-tags text-4xl mb-4"></i>
-      <p>暂无标签</p>
-    </div>
-  {% endif %}
+<!-- 标签云（核心：参考你的实现） -->
+<div id='tag_cloud' class="tags">
+  {% for tag in site.tags %}
+    <a href="#{{ tag[0] }}" title="{{ tag[0] }} ({{ tag[1].size }}篇文章)" rel="{{ tag[1].size }}">
+      {{ tag[0] }} ({{ tag[1].size }})
+    </a>
+  {% endfor %}
 </div>
 
-<!-- 标签对应的文章 -->
-<div class="container-lg mx-auto">
-  {% if site.tags.size > 0 %}
-    {% assign sorted_tags = site.tags | sort %}
-    {% for tag in sorted_tags %}
-      {% assign tag_name = tag[0] %}
-      {% assign tag_posts = tag[1] %}
-      <div id="{{ tag_name | replace: ' ', '-' }}" class="mb-12">
-        <h2 class="f1-light mb-6 pb-2 border-bottom border-gray-200">
-          标签：{{ tag_name }}（{{ tag_posts.size }} 篇）
-        </h2>
-        <div class="space-y-6">
-          {% for post in tag_posts %}
-            <article class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
-              <h3 class="f1-light mb-4">
-                <a href="{{ post.url | relative_url }}" class="text-gray-800 hover:text-gray-700 text-decoration-none">
-                  {{ post.title }}
-                </a>
-              </h3>
-              <div class="text-sm text-gray-600 mb-4">
-                <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
-              </div>
-              <div class="text-gray-700 leading-relaxed">
-                {{ post.content | strip_html | truncate: 150, "..." }}
-              </div>
-            </article>
-          {% endfor %}
-        </div>
+<!-- 标签说明 -->
+<blockquote class="tag-comments">
+  标签命名规则：
+  <li>一篇文章相关的领域都将打上标签</li>
+  <li>每个标签下包含所有带有此标签的文章</li>
+</blockquote>
+
+<!-- 标签列表（核心：参考你的实现） -->
+{% for tag in site.tags %}
+  <div class="one-tag-list">
+    <span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
+      {{ tag[0] }} (共{{ tag[1].size }}篇)
+    </span>
+    {% for post in tag[1] %}
+      <div class="post-preview">
+        <a href="{{ post.url | relative_url }}">
+          <h2 class="post-title">
+            {{ post.title }}
+          </h2>
+        </a>
+        <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p>
       </div>
+      <hr>
     {% endfor %}
-  {% endif %}
-</div>
+  </div>
+{% endfor %}
