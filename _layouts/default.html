@@ -4,31 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <!-- Tailwind CSS CDN（兼容所有环境） -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome 图标 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- 代码高亮样式（豆包风格，适配Rouge） -->
+  <!-- 代码块样式（豆包浅灰风格+复制按钮） -->
   <style>
-    /* 豆包风格代码高亮 */
+    /* 豆包风格代码块（浅灰底色） */
     .highlight {
-      background: #1f2937 !important;
-      color: #e5e7eb !important;
+      background: #f6f8fa !important;
+      color: #24292e !important;
+      border: 1px solid #e1e4e8 !important;
       border-radius: 0.5rem;
       padding: 1rem;
       overflow-x: auto;
       margin: 1rem 0;
+      position: relative; /* 为复制按钮定位 */
     }
-    .highlight .c { color: #6e7781 } /* 注释 */
-    .highlight .k { color: #ff7b72 } /* 关键字 */
-    .highlight .o { color: #d2a8ff } /* 操作符 */
-    .highlight .m { color: #ffa657 } /* 数字 */
-    .highlight .s { color: #a5d6ff } /* 字符串 */
-    .highlight .na { color: #79c0ff } /* 属性 */
-    .highlight .nb { color: #8b5cf6 } /* 内置函数 */
-    .highlight .nf { color: #d1d5db } /* 函数名 */
-    
-    /* 自定义工具类（Tailwind 扩展） */
+    /* 代码高亮配色（适配浅背景） */
+    .highlight .c { color: #6a737d } /* 注释 */
+    .highlight .k { color: #d73a4a } /* 关键字 */
+    .highlight .o { color: #6f42c1 } /* 操作符 */
+    .highlight .m { color: #005cc5 } /* 数字 */
+    .highlight .s { color: #032f62 } /* 字符串 */
+    .highlight .na { color: #22863a } /* 属性 */
+    .highlight .nb { color: #6f42c1 } /* 内置函数 */
+    .highlight .nf { color: #6f42c1 } /* 函数名 */
+    .highlight .nc { color: #22863a } /* 类名 */
+    .highlight .nv { color: #e36209 } /* 变量 */
+
+    /* 代码复制按钮 */
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background: #ffffff;
+      border: 1px solid #e1e4e8;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: #24292e;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .copy-btn:hover {
+      background: #0366d6;
+      color: #ffffff;
+      border-color: #0366d6;
+    }
+    .copy-btn.copied {
+      background: #22863a;
+      color: #ffffff;
+      border-color: #22863a;
+    }
+
+    /* 自定义工具类 */
     @layer utilities {
       .tag-item { @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-primary/10; }
       .tag-active { @apply bg-primary text-white hover:bg-primary/90; }
@@ -36,7 +65,6 @@
       .page-active { @apply bg-primary text-white border-primary hover:bg-primary/90; }
     }
   </style>
-  <!-- Tailwind 配置（豆包风格配色） -->
   <script>
     tailwind.config = {
       theme: {
@@ -55,15 +83,45 @@
   </script>
 </head>
 <body class="bg-light min-h-screen">
-  <!-- 引入头部导航 -->
   {% include header.html %}
-
-  <!-- 主内容区 -->
   <main class="container mx-auto px-4 py-8">
     {{ content }}
   </main>
-
-  <!-- 引入底部 -->
   {% include footer.html %}
+
+  <!-- 代码复制功能JS -->
+  <script>
+    // 页面加载完成后初始化复制按钮
+    document.addEventListener('DOMContentLoaded', function() {
+      // 为每个代码块添加复制按钮
+      const highlightBlocks = document.querySelectorAll('.highlight');
+      highlightBlocks.forEach(block => {
+        // 创建复制按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.innerHTML = '<i class="fa-solid fa-copy mr-1"></i> 复制';
+        block.appendChild(copyBtn);
+
+        // 复制按钮点击事件
+        copyBtn.addEventListener('click', function() {
+          // 获取代码内容（排除复制按钮）
+          const code = block.textContent.replace(/复制|已复制/g, '').trim();
+          // 复制到剪贴板
+          navigator.clipboard.writeText(code).then(() => {
+            // 提示复制成功
+            copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> 已复制';
+            copyBtn.classList.add('copied');
+            // 2秒后恢复按钮文字
+            setTimeout(() => {
+              copyBtn.innerHTML = '<i class="fa-solid fa-copy mr-1"></i> 复制';
+              copyBtn.classList.remove('copied');
+            }, 2000);
+          }).catch(err => {
+            alert('复制失败：' + err);
+          });
+        });
+      });
+    });
+  </script>
 </body>
 </html>

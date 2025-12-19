@@ -3,24 +3,18 @@
     <a href="{{ site.baseurl }}/" class="text-2xl font-bold text-primary">
       {{ site.title }}
     </a>
-    <!-- 标签筛选区 -->
-    <div class="flex items-center gap-2">
-      <span class="text-gray-600">标签：</span>
-      <div class="flex flex-wrap gap-2">
-        <!-- 全部标签 -->
-        <a href="{{ site.baseurl }}/" class="tag-item {% if page.url == '/' %}tag-active{% endif %}">
-          全部
-        </a>
-        <!-- 遍历所有标签（兼容旧版Liquid） -->
-        {% assign tags = site.tags | sort %}
-        {% for tag in tags %}
-          {% assign tag_name = tag[0] %}
-          <a href="{{ site.baseurl }}/tags/{{ tag_name | slugify }}/" 
-             class="tag-item {% if page.tag == tag_name %}tag-active{% endif %}">
-            {{ tag_name }}
-          </a>
-        {% endfor %}
-      </div>
+    <!-- 导航菜单（添加标签入口，移除原标签筛选） -->
+    <div class="flex items-center gap-6">
+      <a href="{{ site.baseurl }}/" class="text-gray-700 hover:text-primary transition-colors">
+        <i class="fa-solid fa-home mr-1"></i> 首页
+      </a>
+      <a href="{{ site.baseurl }}/tags/" class="text-gray-700 hover:text-primary transition-colors">
+        <i class="fa-solid fa-tags mr-1"></i> 标签
+      </a>
+      <!-- 可添加其他导航项，比如“关于” -->
+      <!-- <a href="{{ site.baseurl }}/about/" class="text-gray-700 hover:text-primary transition-colors">
+        <i class="fa-solid fa-user mr-1"></i> 关于
+      </a> -->
     </div>
   </div>
 </header>
