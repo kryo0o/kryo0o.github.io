@@ -25,6 +25,8 @@
       --border-radius-lg: 6px;
       --font-code: "Consolas", "Monaco", "Courier New", monospace;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      /* 定义按钮尺寸，便于计算 */
+      --copy-btn-size: 24px;
     }
 
     * {
@@ -94,23 +96,24 @@
       background: var(--color-bg-code-block);
       border: 1px solid var(--color-border);
       border-radius: var(--border-radius-lg);
-      padding: 12px;
+      /* 关键修改：移除或注释掉固定的 padding-right */
+      /* padding-right: 40px; */ /* 移除这行 */
+      padding: 12px; /* 保持正常的内边距 */
       margin: 16px 0;
-      overflow-x: auto;
+      overflow-x: auto; /* 允许水平滚动 */
+      overflow-y: hidden; /* 默认隐藏垂直滚动条，内容多时会自动出现 */
       position: relative; /* 关键：确保按钮绝对定位的基准 */
       font-size: 14px;
       line-height: 1.6;
       max-width: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--color-border) var(--color-bg-code-block);
-      /* 防止按钮被滚动内容遮挡 */
-      padding-right: 40px; /* 留出按钮空间 */
     }
 
     /* 滚动条样式 */
     .code-block::-webkit-scrollbar, .highlight::-webkit-scrollbar {
       width: 6px;
-      height: 6px;
+      height: 6px; /* 水平滚动条高度 */
     }
     .code-block::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb {
       background-color: var(--color-border);
@@ -136,8 +139,8 @@
       position: absolute; /* 基于代码块定位，不随滚动动 */
       top: 8px;
       right: 8px;
-      width: 24px;
-      height: 24px;
+      width: var(--copy-btn-size); /* 使用变量 */
+      height: var(--copy-btn-size); /* 使用变量 */
       border-radius: var(--border-radius-md);
       background: var(--color-bg-copy-btn);
       border: none;
@@ -154,6 +157,8 @@
       /* 强制固定，不继承任何滚动属性 */
       transform: none !important;
       pointer-events: auto;
+      /* 新增：确保按钮背景不透明，避免滚动内容透出 */
+      background-clip: padding-box;
     }
 
     .code-block:hover .code-copy-btn,
@@ -369,16 +374,30 @@
 
     // 为单个代码块附加复制按钮的核心逻辑
     function attachCopyButtonToBlock(block) {
-        // 防御性检查：如果代码块已经被标记为已处理，则跳过
+        // --- 强化检查：确保按钮唯一性 ---
+        // 方法1: 检查自定义数据属性 (推荐)
         if (block.dataset.copyBtnAdded === 'true') {
-            return;
+            console.warn("复制按钮已存在于代码块:", block);
+            return; // 已经处理过，直接返回
         }
+
+        // 方法2 (备用): 再次查询按钮是否存在 (增加健壮性)
+        const existingBtn = block.querySelector('.code-copy-btn');
+        if (existingBtn) {
+             console.warn("检测到现有按钮，跳过添加:", block);
+             // 为了彻底防止，可以强制移除旧的再添加新的，或直接返回
+             // existingBtn.remove(); // 可选：移除旧的
+             return; // 推荐：直接返回，避免重复
+        }
+        // --- 检查结束 ---
 
         // 创建复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'code-copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         copyBtn.setAttribute('aria-label', '复制代码');
+        // 可选：给按钮加个标识，方便调试或进一步检查
+        // copyBtn.id = `copy-btn-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`; // 生成唯一ID
 
         // 添加到代码块容器
         block.appendChild(copyBtn);
@@ -498,7 +517,11 @@
     // scope 参数允许指定只在某个DOM片段内查找，提高性能和避免重复添加
     function initCodeCopyButtons(scope = document) {
         // 获取所有未处理的代码块元素 (使用 data-copy-btn-added 属性判断)
-        const codeBlocks = scope.querySelectorAll('.code-block:not([data-copy-btn-added="true"]), .highlight:not([data-copy-btn-added="true"])');
+        // 强化选择器：确保只选择直接的 .code-block 或 .highlight 子元素，避免嵌套干扰
+        const selector = ':scope .code-block:not([data-copy-btn-added="true"]), :scope .highlight:not([data-copy-btn-added="true"])';
+        const codeBlocks = scope.querySelectorAll(selector);
+
+        console.log(`找到 ${codeBlocks.length} 个待处理的代码块 in scope:`, scope); // 调试信息
 
         // 遍历每个找到的新代码块并附加按钮
         codeBlocks.forEach(block => {
@@ -509,6 +532,7 @@
 
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOMContentLoaded event fired."); // 调试信息
         // 初次加载时，为整个文档中的代码块添加按钮
         initCodeCopyButtons(document);
 
@@ -517,22 +541,21 @@
         // 可以启用下面的 MutationObserver 代码。
         /*
         const observer = new MutationObserver(mutations => {
+            let needsInit = false;
             mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
-                    // 检查新增节点是否是代码块本身，或是包含代码块的容器
                     if (node.nodeType === Node.ELEMENT_NODE) {
-                         // 如果新增节点本身就是代码块
-                         if (node.matches('.code-block, .highlight')) {
-                             attachCopyButtonToBlock(node);
-                         } else {
-                            // 如果是容器，检查其子代是否有新的代码块
-                            // 注意：这里只处理直接子代可能不够，可以用 querySelectorAll 并结合上面的 :not() 选择器重新筛选
-                            // 更简单的方法是在新内容插入后调用 initCodeCopyButtons(newContainerElement)
-                            // 例如：initCodeCopyButtons(node);
+                         // 简单检查新增节点或其子代是否包含代码块
+                         if (node.matches('.code-block, .highlight') || node.querySelector('.code-block, .highlight')) {
+                              needsInit = true;
                          }
                     }
                 });
             });
+            if (needsInit) {
+                 console.log("MutationObserver detected changes, re-initializing buttons.");
+                 initCodeCopyButtons(document); // 或者更精确地只处理变化的部分
+            }
         });
 
         observer.observe(document.body, {
@@ -546,6 +569,7 @@
     // 提供全局方法以便在动态添加代码块后手动调用
     // 传入新添加内容的父级元素，效率更高且能精确控制范围
     window.refreshCopyButtons = function(parentElement = document) {
+         console.log("refreshCopyButtons called with scope:", parentElement); // 调试信息
          initCodeCopyButtons(parentElement);
     };
   </script>
