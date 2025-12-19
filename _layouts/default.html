@@ -332,77 +332,85 @@
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // 查找所有代码块元素
-      const codeBlocks = document.querySelectorAll('.code-block, .highlight');
+    // 防止重复执行
+    if (!window.copyButtonAdded) {
+      window.copyButtonAdded = true;
       
-      codeBlocks.forEach(function(block) {
-        // 检查是否已经有复制按钮，避免重复添加
-        if (block.querySelector('.copy-button')) {
-          return; // 如果已有复制按钮，则跳过
-        }
+      document.addEventListener('DOMContentLoaded', function() {
+        // 查找所有代码块元素
+        const codeBlocks = document.querySelectorAll('.code-block, .highlight');
         
-        // 创建复制按钮
-        const copyButton = document.createElement('button');
-        copyButton.className = 'copy-button';
-        copyButton.innerHTML = '<i class="fas fa-paste"></i>';
-        copyButton.title = 'Copy code';
-        
-        // 添加点击事件
-        copyButton.addEventListener('click', function() {
-          let codeElement;
-          
-          // 查找代码元素
-          if (block.querySelector('pre')) {
-            codeElement = block.querySelector('pre');
-          } else if (block.querySelector('code')) {
-            codeElement = block.querySelector('code');
+        codeBlocks.forEach(function(block) {
+          // 检查是否已经有复制按钮（包括任何类名包含copy的按钮）
+          const existingButtons = block.querySelectorAll('button[class*="copy"]');
+          if (existingButtons.length > 0) {
+            // 移除现有的复制按钮，避免重复
+            existingButtons.forEach(btn => btn.remove());
           }
           
-          if (codeElement) {
-            let textToCopy = '';
+          // 创建复制按钮
+          const copyButton = document.createElement('button');
+          copyButton.className = 'copy-button';
+          copyButton.setAttribute('data-original-icon', '<i class="fas fa-paste"></i>');
+          copyButton.innerHTML = '<i class="fas fa-paste"></i>';
+          copyButton.title = 'Copy code';
+          
+          // 添加点击事件
+          copyButton.addEventListener('click', function() {
+            let codeElement;
             
-            // 如果是pre标签，则获取其文本内容
-            if (codeElement.tagName === 'PRE') {
-              textToCopy = codeElement.textContent || codeElement.innerText;
-            } else {
-              // 如果是code标签，直接获取内容
-              textToCopy = codeElement.textContent || codeElement.innerText;
+            // 查找代码元素
+            if (block.querySelector('pre')) {
+              codeElement = block.querySelector('pre');
+            } else if (block.querySelector('code')) {
+              codeElement = block.querySelector('code');
             }
             
-            // 执行复制操作
-            navigator.clipboard.writeText(textToCopy).then(function() {
-              // 显示成功状态
-              copyButton.classList.add('copied');
-              copyButton.innerHTML = '<i class="fas fa-check"></i>';
+            if (codeElement) {
+              let textToCopy = '';
               
-              // 一段时间后恢复原状
-              setTimeout(function() {
-                copyButton.classList.remove('copied');
-                copyButton.innerHTML = '<i class="fas fa-paste"></i>';
-              }, 2000);
-            }).catch(function(err) {
-              console.error('Failed to copy text: ', err);
+              // 如果是pre标签，则获取其文本内容
+              if (codeElement.tagName === 'PRE') {
+                textToCopy = codeElement.textContent || codeElement.innerText;
+              } else {
+                // 如果是code标签，直接获取内容
+                textToCopy = codeElement.textContent || codeElement.innerText;
+              }
               
-              // 显示错误状态
-              copyButton.classList.add('copied');
-              copyButton.style.background = 'var(--color-bg-copy-error)';
-              copyButton.innerHTML = '<i class="fas fa-times"></i>';
-              
-              // 一段时间后恢复原状
-              setTimeout(function() {
-                copyButton.classList.remove('copied');
-                copyButton.style.background = '';
-                copyButton.innerHTML = '<i class="fas fa-paste"></i>';
-              }, 2000);
-            });
-          }
+              // 执行复制操作
+              navigator.clipboard.writeText(textToCopy).then(function() {
+                // 显示成功状态
+                copyButton.classList.add('copied');
+                copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                
+                // 一段时间后恢复原状
+                setTimeout(function() {
+                  copyButton.classList.remove('copied');
+                  copyButton.innerHTML = copyButton.getAttribute('data-original-icon');
+                }, 2000);
+              }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                
+                // 显示错误状态
+                copyButton.classList.add('copied');
+                copyButton.style.background = 'var(--color-bg-copy-error)';
+                copyButton.innerHTML = '<i class="fas fa-times"></i>';
+                
+                // 一段时间后恢复原状
+                setTimeout(function() {
+                  copyButton.classList.remove('copied');
+                  copyButton.style.background = '';
+                  copyButton.innerHTML = copyButton.getAttribute('data-original-icon');
+                }, 2000);
+              });
+            }
+          });
+          
+          // 将复制按钮添加到代码块容器中
+          block.appendChild(copyButton);
         });
-        
-        // 将复制按钮添加到代码块容器中
-        block.appendChild(copyButton);
       });
-    });
+    }
   </script>
 </body>
 </html>
