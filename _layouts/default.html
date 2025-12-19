@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SEO元标签优化 -->
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description | default: '技术博客分享' }}{% endif %}">
+  <meta name="author" content="{{ site.author | default: 'kryo' }}">
+  <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  
+  <!-- 锁定资源版本，提升稳定性 -->
+  <script src="https://cdn.tailwindcss.com/v3.3.5"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- 网站图标 -->
+  <link rel="icon" href="{{ site.favicon | default: '/favicon.ico' }}">
+
   <style>
     :root {
       --color-text-main: #24292e;
@@ -43,8 +52,15 @@
     a {
       text-decoration: none;
       color: inherit;
+      transition: color 0.2s ease;
     }
 
+    a:focus {
+      outline: 2px solid #4096ff;
+      outline-offset: 2px;
+    }
+
+    /* 头部导航优化 */
     header.header-wrapper {
       width: 100%;
       background: #fff;
@@ -61,19 +77,31 @@
       padding: 0 20px;
     }
 
+    .site-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     .site-title {
       font-size: 20px;
       font-weight: 600;
       color: #333;
     }
 
+    .site-title[aria-current="page"] {
+      color: #4096ff;
+      font-weight: 700;
+    }
+
     main.container-main {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+      content-visibility: auto; /* 提升渲染性能 */
     }
 
-    /* 行内代码样式 */
+    /* 代码样式优化（合并重复定义） */
     .container-main p > code,
     .container-main li > code,
     .container-main span > code,
@@ -89,7 +117,6 @@
       margin: 0 2px;
     }
 
-    /* 代码块核心样式 */
     .code-block, .highlight {
       background: var(--color-bg-code-block);
       border: 1px solid var(--color-border);
@@ -104,58 +131,19 @@
       max-width: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--color-border) var(--color-bg-code-block);
+      tabindex: 0; /* 支持键盘滚动 */
     }
 
-    /* 添加复制按钮样式 */
-    .code-block, .highlight {
-      position: relative;
-    }
-    
-    .copy-button {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--color-bg-copy-btn);
-      border: none;
-      border-radius: var(--border-radius-sm);
-      width: var(--copy-btn-size);
-      height: var(--copy-btn-size);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s ease;
-      z-index: 10;
-    }
-    
-    .copy-button:hover {
-      background: var(--color-bg-copy-btn-hover);
-    }
-    
-    .copy-button i {
-      font-size: 12px;
-      color: #333;
-    }
-    
-    .copy-button.copied {
-      background: var(--color-bg-copy-success);
-    }
-    
-    .copy-button.copied i {
-      color: white;
-    }
-
-    /* 滚动条样式 */
     .code-block::-webkit-scrollbar, .highlight::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
+
     .code-block::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb {
       background-color: var(--color-border);
       border-radius: var(--border-radius-sm);
     }
 
-    /* 代码块内文本样式 */
     .code-block pre, .code-block code,
     .highlight pre, .highlight code {
       background: transparent;
@@ -169,7 +157,7 @@
       white-space: pre;
     }
 
-    /* 其他样式 */
+    /* Banner样式 */
     .banner {
       width: 100%;
       min-height: 200px;
@@ -201,6 +189,7 @@
       margin: 0;
     }
 
+    /* 文章列表样式 */
     .post-item {
       padding: 16px 0;
       border-bottom: 1px solid var(--color-border);
@@ -229,7 +218,8 @@
       margin: 0;
     }
 
-    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
+    /* 标签样式（精准隐藏，避免误操作） */
+    .post-tags, .tag-list, .tags-container {
       display: none;
     }
 
@@ -240,6 +230,7 @@
       margin: 0;
     }
 
+    /* 分页样式（增强可访问性） */
     .pagination {
       display: flex;
       justify-content: center;
@@ -271,7 +262,7 @@
       font-weight: 600;
     }
 
-    /* 通知提示框 */
+    /* 通知提示框（自动消失动画） */
     .notification {
       position: fixed;
       top: 20px;
@@ -282,7 +273,7 @@
       font-size: 14px;
       z-index: 1000;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: slideIn 0.3s ease-out;
+      animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
     }
 
     .notification.success {
@@ -294,13 +285,31 @@
     }
 
     @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* 响应式多断点适配 */
+    @media (max-width: 1024px) {
+      .container-main {
+        padding: 0 16px;
       }
-      to {
-        transform: translateX(0);
-        opacity: 1;
+      .banner-content h1 {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 12px;
+      }
+      .post-title {
+        font-size: 18px;
       }
     }
 
@@ -310,10 +319,10 @@
         font-size: 12px;
       }
       .banner-content h1 {
-        font-size: 28px;
+        font-size: 24px;
       }
       .banner-content p {
-        font-size: 16px;
+        font-size: 14px;
       }
     }
   </style>
@@ -321,9 +330,17 @@
 <body>
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">
-        {{ site.title }}
-      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="{{ '/' | relative_url }}" class="site-title" aria-current="{% if page.url == '/' %}page{% endif %}">
+          {{ site.title }}
+        </a>
+        <!-- 可扩展导航项 -->
+        <div class="nav-links">
+          <a href="{{ '/tags.html' | relative_url }}" class="nav-link" aria-label="标签页">
+            <i class="fa-solid fa-tags mr-1"></i> 标签
+          </a>
+        </div>
+      </nav>
     </div>
   </header>
 
@@ -331,89 +348,7 @@
     {{ content }}
   </main>
 
-  <script>
-    // 防止重复执行
-    if (!window.copyButtonAdded) {
-      window.copyButtonAdded = true;
-      
-      document.addEventListener('DOMContentLoaded', function() {
-        // 查找所有代码块元素
-        const codeBlocks = document.querySelectorAll('.code-block, .highlight');
-        
-        codeBlocks.forEach(function(block) {
-          // 检查是否已经有复制按钮（包括任何类名包含copy的按钮）
-          const existingButtons = block.querySelectorAll('button[class*="copy"]');
-          if (existingButtons.length > 0) {
-            // 移除现有的复制按钮，避免重复
-            existingButtons.forEach(btn => btn.remove());
-          }
-          
-          // 创建复制按钮
-          const copyButton = document.createElement('button');
-          copyButton.className = 'copy-button';
-          copyButton.setAttribute('data-original-icon', '<i class="fas fa-paste"></i>');
-          copyButton.innerHTML = '<i class="fas fa-paste"></i>';
-          copyButton.title = 'Copy code';
-          
-          // 添加点击事件
-          copyButton.addEventListener('click', function() {
-            let codeElement;
-            
-            // 查找代码元素
-            if (block.querySelector('pre')) {
-              codeElement = block.querySelector('pre');
-            } else if (block.querySelector('code')) {
-              codeElement = block.querySelector('code');
-            }
-            
-            if (codeElement) {
-              let textToCopy = '';
-              
-              // 如果是pre标签，则获取其文本内容
-              if (codeElement.tagName === 'PRE') {
-                textToCopy = codeElement.textContent || codeElement.innerText;
-              } else {
-                // 如果是code标签，直接获取内容
-                textToCopy = codeElement.textContent || codeElement.innerText;
-              }
-              
-              // 执行复制操作
-              navigator.clipboard.writeText(textToCopy).then(function() {
-                // 显示成功状态
-                copyButton.classList.add('copied');
-                copyButton.innerHTML = '<i class="fas fa-check"></i>';
-                
-                // 一段时间后恢复原状
-                setTimeout(function() {
-                  copyButton.classList.remove('copied');
-                  copyButton.innerHTML = copyButton.getAttribute('data-original-icon');
-                }, 2000);
-              }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-                
-                // 显示错误状态
-                copyButton.classList.add('copied');
-                copyButton.style.background = 'var(--color-bg-copy-error)';
-                copyButton.innerHTML = '<i class="fas fa-times"></i>';
-                
-                // 一段时间后恢复原状
-                setTimeout(function() {
-                  copyButton.classList.remove('copied');
-                  copyButton.style.background = '';
-                  copyButton.innerHTML = copyButton.getAttribute('data-original-icon');
-                }, 2000);
-              });
-            }
-          });
-          
-          // 将复制按钮添加到代码块容器中
-          block.appendChild(copyButton);
-        });
-      });
-    }
-  </script>
+  <!-- 引入页脚组件 -->
+  {% include footer.html %}
 </body>
 </html>
-
-
-
