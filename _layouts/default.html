@@ -40,7 +40,7 @@
       padding: 20px;
     }
 
-    /* ========== 代码框样式（保留） ========== */
+    /* ========== 代码框样式（强制所有代码块上色） ========== */
     .highlight, .code-block {
       background: #f5f7fa !important;
       border: 1px solid #e5e6eb !important;
@@ -60,17 +60,31 @@
       margin: 0 !important;
       font-size: 14px !important;
       line-height: 1.5 !important;
+      font-family: "Consolas", "Monaco", "Courier New", monospace !important;
     }
-    .highlight .c { color: #8c8c8c !important; }
-    .highlight .k { color: #e53935 !important; }
-    .highlight .o { color: #795548 !important; }
-    .highlight .m { color: #0097a7 !important; }
-    .highlight .s { color: #43a047 !important; }
-    .highlight .na { color: #1565c0 !important; }
-    .highlight .nb { color: #f57c00 !important; }
-    .highlight .nf { color: #6200ea !important; }
-    .highlight .nc { color: #283593 !important; }
-    .highlight .nv { color: #c2185b !important; }
+
+    /* ========== 补全所有Rouge高亮颜色（覆盖所有语法） ========== */
+    /* 基础文本 */
+    .highlight .generic { color: #24292e !important; }
+    /* 注释 */
+    .highlight .c, .highlight .c1, .highlight .cm, .highlight .cp, .highlight .cpf, .highlight .cs { color: #6a737d !important; font-style: italic !important; }
+    /* 关键字 */
+    .highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #d73a4a !important; font-weight: 600 !important; }
+    /* 操作符 */
+    .highlight .o, .highlight .ow { color: #795548 !important; }
+    /* 数字 */
+    .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .mx { color: #005cc5 !important; }
+    /* 字符串 */
+    .highlight .s, .highlight .s1, .highlight .s2, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .se, .highlight .sh, .highlight .si, .highlight .sr, .highlight .ss, .highlight .sx { color: #032f62 !important; }
+    /* 内置函数/变量 */
+    .highlight .nb, .highlight .nc, .highlight .no, .highlight .nd, .highlight .ni, .highlight .ne, .highlight .nf, .highlight .nl, .highlight .nn, .highlight .nx, .highlight .py, .highlight .nt { color: #6f42c1 !important; }
+    /* 属性/名称 */
+    .highlight .na, .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi { color: #22863a !important; }
+    /* 特殊标记 */
+    .highlight .gt, .highlight .gd { color: #b31d28 !important; background-color: #ffeef0 !important; }
+    .highlight .gi, .highlight .gu { color: #22863a !important; background-color: #f0fff4 !important; }
+    /* 纯文本兜底（未指定语言的代码块） */
+    .highlight .text { color: #24292e !important; }
 
     /* ========== 浅灰色复制按钮 ========== */
     .copy-btn {
@@ -128,13 +142,11 @@
       margin: 0;
     }
 
-    /* ========== 文章列表样式（核心修改） ========== */
-    /* 文章项：无框，日期右对齐 */
+    /* ========== 文章列表样式 ========== */
     .post-item {
       padding: 16px 0;
-      border-bottom: 1px solid #e5e6eb; /* 浅色分隔线 */
+      border-bottom: 1px solid #e5e6eb;
     }
-    /* 文章标题+日期行：flex布局，日期右对齐 */
     .post-header {
       display: flex;
       justify-content: space-between;

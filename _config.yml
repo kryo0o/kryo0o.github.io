@@ -13,8 +13,8 @@ timezone: Asia/Shanghai
 safe: true
 lsi: false
 
-# 分页（必须保留，页码依赖此配置）
-paginate: 8
+# 分页
+paginate: 10
 paginate_path: "/page/:num/"
 
 # 仅保留必要插件
@@ -23,7 +23,7 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
-# 代码高亮配置
+# 代码高亮核心配置（强制所有代码块上色）
 kramdown:
   input: GFM
   syntax_highlighter: rouge
@@ -32,6 +32,10 @@ kramdown:
       line_numbers: false
       wrap: div
       css_class: "code-block"
+      default_lang: text  # 关键：未指定语言的代码块默认用text高亮
+  # 确保Markdown解析代码块不被干扰
+  parse_block_html: true  # 兼容HTML标签内的代码块
+  parse_span_html: true
 
 # Banner配置
 banner:
