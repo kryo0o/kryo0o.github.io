@@ -24,7 +24,6 @@
       --border-radius-lg: 6px;
       --font-code: "Consolas", "Monaco", "Courier New", monospace;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --copy-btn-size: 24px;
     }
 
     * {
@@ -45,6 +44,7 @@
       color: inherit;
     }
 
+    /* 头部样式 */
     header.header-wrapper {
       width: 100%;
       background: #fff;
@@ -67,6 +67,7 @@
       color: #333;
     }
 
+    /* 主内容区 */
     main.container-main {
       max-width: 1200px;
       margin: 0 auto;
@@ -98,7 +99,7 @@
       margin: 16px 0;
       overflow-x: auto;
       overflow-y: hidden;
-      position: relative; /* 新增：为粘贴按钮提供定位基准 */
+      position: relative; /* 为复制按钮提供定位基准 */
       font-size: 14px;
       line-height: 1.6;
       max-width: 100%;
@@ -106,7 +107,7 @@
       scrollbar-color: var(--color-border) var(--color-bg-code-block);
     }
 
-    /* 代码块粘贴按钮 */
+    /* 代码块复制按钮 */
     .code-copy-btn {
       position: absolute;
       top: 8px;
@@ -283,14 +284,8 @@
     }
 
     @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
 
     @keyframes fadeOut {
@@ -313,41 +308,40 @@
   </style>
 </head>
 <body>
-  <header class="header-wrapper">
-    <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">
-        {{ site.title }}
-      </a>
-    </div>
-  </header>
+  {% include header.html %}
 
   <main class="container-main">
     {{ content }}
   </main>
 
+  {% include footer.html %}
+
   <script>
-    // 页面加载完成后初始化代码块粘贴功能
+    // 解决重复添加复制按钮的核心逻辑
     document.addEventListener('DOMContentLoaded', () => {
-      // 为所有代码块添加粘贴按钮
+      // 只选择一次代码块（.code-block 和 .highlight）
       const codeBlocks = document.querySelectorAll('.code-block, .highlight');
+      
       codeBlocks.forEach(block => {
-        // 创建粘贴按钮
+        // 关键：检查当前代码块是否已存在复制按钮，避免重复添加
+        if (block.querySelector('.code-copy-btn')) {
+          return; // 如果已有按钮，则跳过
+        }
+
+        // 创建复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'code-copy-btn';
-        copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>'; // 使用剪贴板图标模拟豆包粘贴图标
+        copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
         copyBtn.title = '复制代码';
-        
-        // 添加点击事件
+
+        // 复制功能
         copyBtn.addEventListener('click', () => {
-          // 获取代码块内的文本内容
           const codeElement = block.querySelector('code') || block.querySelector('pre');
           const codeText = codeElement?.textContent || '';
-          
+
           if (codeText) {
-            // 复制到剪贴板
             navigator.clipboard.writeText(codeText).then(() => {
               showNotification('复制成功', 'success');
-              // 临时更改图标显示成功状态
               copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
               setTimeout(() => {
                 copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
@@ -360,22 +354,24 @@
             showNotification('没有可复制的内容', 'error');
           }
         });
-        
-        // 将按钮添加到代码块
+
+        // 添加按钮到代码块
         block.appendChild(copyBtn);
       });
-      
-      // 显示通知提示
+
+      // 通知提示函数
       function showNotification(message, type) {
+        // 先移除已存在的通知，避免堆积
+        const existingNotify = document.querySelector('.notification');
+        if (existingNotify) existingNotify.remove();
+
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
         document.body.appendChild(notification);
-        
-        // 3秒后自动移除通知
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
+
+        // 3秒后自动移除
+        setTimeout(() => notification.remove(), 3000);
       }
     });
   </script>
