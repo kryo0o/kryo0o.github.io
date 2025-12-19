@@ -3,45 +3,56 @@ layout: default
 title: 所有标签
 ---
 
+<!-- 标签列表 -->
 <div class="mb-8">
   <h2 class="text-2xl font-bold text-dark mb-6">所有标签</h2>
   <div class="flex flex-wrap gap-3">
     {% assign tags = site.tags | sort %}
-    {% for tag in tags %}
-      {% assign tag_name = tag[0] %}
-      {% assign post_count = tag[1].size %}
-      <a href="{{ site.baseurl }}/tags/{{ tag_name | slugify }}/" 
-         class="tag-item bg-gray-100 hover:bg-primary/10">
-        {{ tag_name }} <span class="bg-primary/10 text-primary rounded-full w-5 h-5 inline-flex items-center justify-center text-xs ml-1">
-          {{ post_count }}
-        </span>
-      </a>
-    {% endfor %}
+    {% if tags.size > 0 %}
+      {% for tag in tags %}
+        {% assign tag_name = tag[0] %}
+        {% assign post_count = tag[1].size %}
+        <a href="{{ site.baseurl }}/tags/{{ tag_name | slugify }}/" 
+           class="tag-item bg-gray-100 hover:bg-primary/10">
+          {{ tag_name }} <span class="bg-primary/10 text-primary rounded-full w-5 h-5 inline-flex items-center justify-center text-xs ml-1">
+            {{ post_count }}
+          </span>
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="text-gray-500">暂无标签</div>
+    {% endif %}
   </div>
 </div>
 
+<!-- 标签下的文章列表（兼容旧版Liquid） -->
 {% if page.tag %}
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    {% for post in site.tags[page.tag] %}
-      <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-        <div class="p-6">
-          <h2 class="text-xl font-semibold text-dark hover:text-primary transition-colors mb-2">
-            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-          </h2>
-          <div class="flex justify-between items-center mb-3 text-sm text-gray-500">
-            <span>{{ post.date | date: "%Y-%m-%d" }}</span>
-            <div class="flex gap-2">
-              {% for tag in post.tags %}
-                <a href="{{ site.baseurl }}/tags/{{ tag | slugify }}/" class="tag-item bg-gray-100">
-                  {{ tag }}
-                </a>
-              {% endfor %}
+    {% assign tag_posts = site.tags[page.tag] %}
+    {% if tag_posts.size > 0 %}
+      {% for post in tag_posts %}
+        <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+          <div class="p-6">
+            <h2 class="text-xl font-semibold text-dark hover:text-primary transition-colors mb-2">
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            </h2>
+            <div class="flex justify-between items-center mb-3 text-sm text-gray-500">
+              <span>{{ post.date | date: "%Y-%m-%d" }}</span>
+              <div class="flex gap-2">
+                {% for tag in post.tags %}
+                  <a href="{{ site.baseurl }}/tags/{{ tag | slugify }}/" class="tag-item bg-gray-100">
+                    {{ tag }}
+                  </a>
+                {% endfor %}
+              </div>
             </div>
+            <p class="text-gray-600 mb-4">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+            <a href="{{ post.url | relative_url }}" class="text-primary hover:underline">阅读更多</a>
           </div>
-          <p class="text-gray-600 mb-4">{{ post.excerpt | strip_html | truncate: 150 }}</p>
-          <a href="{{ post.url | relative_url }}" class="text-primary hover:underline">阅读更多</a>
-        </div>
-      </article>
-    {% endfor %}
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="col-span-full text-center py-12 text-gray-500">该标签下暂无文章</div>
+    {% endif %}
   </div>
 {% endif %}

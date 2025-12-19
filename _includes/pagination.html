@@ -1,5 +1,6 @@
 {% if paginator.total_pages > 1 %}
   <div class="flex justify-center items-center gap-2 mt-8">
+    <!-- 上一页（兼容旧版paginator变量） -->
     {% if paginator.previous_page %}
       <a href="{{ paginator.previous_page_path | relative_url }}" class="page-item">
         <i class="fa-solid fa-chevron-left"></i>
@@ -10,6 +11,7 @@
       </span>
     {% endif %}
 
+    <!-- 页码（无语法错误） -->
     {% for page in (1..paginator.total_pages) %}
       {% if page == paginator.page %}
         <span class="page-item page-active">{{ page }}</span>
@@ -20,6 +22,7 @@
       {% endif %}
     {% endfor %}
 
+    <!-- 下一页 -->
     {% if paginator.next_page %}
       <a href="{{ paginator.next_page_path | relative_url }}" class="page-item">
         <i class="fa-solid fa-chevron-right"></i>
