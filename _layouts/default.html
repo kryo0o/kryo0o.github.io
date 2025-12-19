@@ -24,6 +24,7 @@
       --border-radius-lg: 6px;
       --font-code: "Consolas", "Monaco", "Courier New", monospace;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --copy-btn-size: 24px;
     }
 
     * {
@@ -44,7 +45,6 @@
       color: inherit;
     }
 
-    /* 头部样式 */
     header.header-wrapper {
       width: 100%;
       background: #fff;
@@ -67,7 +67,6 @@
       color: #333;
     }
 
-    /* 主内容区 */
     main.container-main {
       max-width: 1200px;
       margin: 0 auto;
@@ -99,40 +98,12 @@
       margin: 16px 0;
       overflow-x: auto;
       overflow-y: hidden;
-      position: relative; /* 为复制按钮提供定位基准 */
+      position: relative;
       font-size: 14px;
       line-height: 1.6;
       max-width: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--color-border) var(--color-bg-code-block);
-    }
-
-    /* 代码块复制按钮 */
-    .code-copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 32px;
-      height: 32px;
-      border-radius: var(--border-radius-sm);
-      background-color: var(--color-bg-copy-btn);
-      border: none;
-      color: var(--color-text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      z-index: 10;
-    }
-
-    .code-copy-btn:hover {
-      background-color: var(--color-bg-copy-btn-hover);
-      transform: scale(1.05);
-    }
-
-    .code-copy-btn i {
-      font-size: 16px;
     }
 
     /* 滚动条样式 */
@@ -157,6 +128,53 @@
       font-family: var(--font-code);
       color: var(--color-text-main);
       white-space: pre;
+    }
+
+    /* 复制按钮样式 */
+    .copy-code-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      background: var(--color-bg-copy-btn);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-light);
+      font-size: 14px;
+      transition: all 0.2s ease;
+      z-index: 10;
+      opacity: 0.7;
+    }
+
+    .copy-code-btn:hover {
+      background: var(--color-bg-copy-btn-hover);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .copy-code-btn.copied {
+      background: var(--color-bg-copy-success);
+      color: white;
+      opacity: 1;
+    }
+
+    .copy-code-btn.copied::before {
+      content: "✓";
+    }
+
+    .copy-code-btn:not(.copied)::before {
+      content: "⎘";
+    }
+
+    /* 代码块悬停时显示复制按钮 */
+    .code-block:hover .copy-code-btn,
+    .highlight:hover .copy-code-btn {
+      opacity: 0.9;
     }
 
     /* 其他样式 */
@@ -272,7 +290,7 @@
       font-size: 14px;
       z-index: 1000;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+      animation: slideIn 0.3s ease-out;
     }
 
     .notification.success {
@@ -284,13 +302,14 @@
     }
 
     @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; visibility: hidden; }
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @media (max-width: 480px) {
@@ -304,152 +323,106 @@
       .banner-content p {
         font-size: 16px;
       }
+      .copy-code-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  {% include header.html %}
+  <header class="header-wrapper">
+    <div class="header-inner">
+      <a href="{{ '/' | relative_url }}" class="site-title">
+        {{ site.title }}
+      </a>
+    </div>
+  </header>
 
   <main class="container-main">
     {{ content }}
   </main>
 
-  {% include footer.html %}
-
   <script>
-  // 使用一个全局标志来防止重复执行
-  if (!window.copyButtonsInitialized) {
-    window.copyButtonsInitialized = true;
-    
+    // 等待DOM完全加载
     document.addEventListener('DOMContentLoaded', function() {
-      // 检查是否有代码块
-      const codeBlocks = document.querySelectorAll('.code-block, .highlight');
-      if (codeBlocks.length === 0) return;
-      
-      console.log('初始化复制按钮，找到', codeBlocks.length, '个代码块');
-      
-      // 使用MutationObserver来避免动态内容的问题
-      const observer = new MutationObserver(function(mutations) {
-        // 检查是否有新的代码块被添加
-        let shouldReinitialize = false;
-        mutations.forEach(function(mutation) {
-          if (mutation.addedNodes.length) {
-            mutation.addedNodes.forEach(function(node) {
-              if (node.nodeType === 1 && (node.classList.contains('code-block') || 
-                                          node.classList.contains('highlight') ||
-                                          node.querySelector('.code-block, .highlight'))) {
-                shouldReinitialize = true;
-              }
-            });
-          }
-        });
+      // 为所有代码块添加复制按钮
+      document.querySelectorAll('.code-block, .highlight').forEach(function(codeBlock) {
+        // 创建复制按钮
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-code-btn';
+        copyButton.setAttribute('aria-label', '复制代码');
+        copyButton.setAttribute('title', '复制代码');
         
-        if (shouldReinitialize) {
-          initCopyButtons();
-        }
-      });
-      
-      // 开始观察文档变化
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-      
-      // 初始化复制按钮
-      initCopyButtons();
-      
-      function initCopyButtons() {
-        // 首先，移除所有现有的复制按钮
-        const existingButtons = document.querySelectorAll('.code-copy-btn');
-        existingButtons.forEach(btn => btn.remove());
+        // 将按钮添加到代码块
+        codeBlock.style.position = 'relative';
+        codeBlock.appendChild(copyButton);
         
-        // 重新获取所有代码块
-        const allCodeContainers = document.querySelectorAll('.code-block, .highlight');
-        const processed = new Set();
-        
-        allCodeContainers.forEach(container => {
-          // 跳过已处理的元素
-          if (processed.has(container)) return;
-          processed.add(container);
+        // 添加点击事件
+        copyButton.addEventListener('click', function() {
+          // 获取代码文本
+          let codeText = '';
+          const codeElement = codeBlock.querySelector('code');
           
-          // 跳过已经有按钮的容器（理论上不应该有，因为上面已经移除了）
-          if (container.querySelector('.code-copy-btn')) return;
-          
-          // 找到实际的代码块元素（可能是嵌套的）
-          let actualCodeBlock = container;
-          
-          // 如果这个容器内部还有.code-block或.highlight，使用内部的
-          const innerCodeBlock = container.querySelector('.code-block, .highlight');
-          if (innerCodeBlock && innerCodeBlock !== container) {
-            // 检查内部代码块是否已经有按钮
-            if (!innerCodeBlock.querySelector('.code-copy-btn')) {
-              actualCodeBlock = innerCodeBlock;
-            }
-          }
-          
-          // 确保容器有相对定位
-          actualCodeBlock.style.position = 'relative';
-          
-          // 创建复制按钮
-          const copyBtn = document.createElement('button');
-          copyBtn.className = 'code-copy-btn';
-          copyBtn.innerHTML = '<i class="fa-solid fa-clipboard"></i>';
-          copyBtn.title = '复制代码';
-          
-          copyBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            
-            // 获取代码文本
-            const codeElement = actualCodeBlock.querySelector('code') || 
-                               actualCodeBlock.querySelector('pre');
-            const codeText = codeElement ? codeElement.textContent : actualCodeBlock.textContent;
-            
-            if (codeText && codeText.trim()) {
-              navigator.clipboard.writeText(codeText.trim()).then(() => {
-                showNotification('复制成功', 'success');
-                
-                // 临时改变图标
-                const icon = this.querySelector('i');
-                if (icon) {
-                  const originalClass = icon.className;
-                  icon.className = 'fa-solid fa-check';
-                  
-                  setTimeout(() => {
-                    icon.className = originalClass;
-                  }, 1500);
-                }
-              }).catch(err => {
-                console.error('复制失败:', err);
-                showNotification('复制失败，请手动复制', 'error');
-              });
+          if (codeElement) {
+            codeText = codeElement.textContent || codeElement.innerText;
+          } else {
+            // 如果没有<code>标签，直接获取<pre>的内容
+            const preElement = codeBlock.querySelector('pre');
+            if (preElement) {
+              codeText = preElement.textContent || preElement.innerText;
             } else {
-              showNotification('没有可复制的内容', 'error');
+              // 如果都没有，获取整个代码块的内容
+              codeText = codeBlock.textContent || codeBlock.innerText;
             }
-          });
+          }
           
-          // 添加到代码块
-          actualCodeBlock.appendChild(copyBtn);
+          // 复制到剪贴板
+          navigator.clipboard.writeText(codeText).then(function() {
+            // 复制成功反馈
+            copyButton.classList.add('copied');
+            copyButton.setAttribute('aria-label', '已复制');
+            copyButton.setAttribute('title', '已复制');
+            
+            // 3秒后恢复原始状态
+            setTimeout(function() {
+              copyButton.classList.remove('copied');
+              copyButton.setAttribute('aria-label', '复制代码');
+              copyButton.setAttribute('title', '复制代码');
+            }, 2000);
+            
+            // 显示通知
+            showNotification('代码已复制到剪贴板', 'success');
+          }).catch(function(err) {
+            console.error('复制失败: ', err);
+            showNotification('复制失败，请手动复制', 'error');
+          });
         });
-      }
+      });
       
+      // 显示通知的函数
       function showNotification(message, type) {
-        // 移除现有通知
-        const existing = document.querySelector('.notification');
-        if (existing) existing.remove();
-        
+        // 创建通知元素
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
+        
+        // 添加到body
         document.body.appendChild(notification);
         
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.remove();
-          }
+        // 3秒后移除通知
+        setTimeout(function() {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateX(100%)';
+          setTimeout(function() {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
         }, 3000);
       }
     });
-  }
-</script>
+  </script>
 </body>
 </html>
