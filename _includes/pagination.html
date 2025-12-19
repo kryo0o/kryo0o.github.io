@@ -1,36 +1,90 @@
 {% if paginator.total_pages > 1 %}
-  <div class="flex justify-center items-center gap-2 mt-8">
-    <!-- 上一页（兼容旧版paginator变量） -->
-    {% if paginator.previous_page %}
-      <a href="{{ paginator.previous_page_path | relative_url }}" class="page-item">
-        <i class="fa-solid fa-chevron-left"></i>
-      </a>
-    {% else %}
-      <span class="page-item opacity-50 pointer-events-none">
-        <i class="fa-solid fa-chevron-left"></i>
-      </span>
-    {% endif %}
-
-    <!-- 页码（无语法错误） -->
-    {% for page in (1..paginator.total_pages) %}
-      {% if page == paginator.page %}
-        <span class="page-item page-active">{{ page }}</span>
-      {% elsif page == 1 %}
-        <a href="{{ site.baseurl }}/" class="page-item">{{ page }}</a>
+  <nav class="pagination" aria-label="分页导航">
+    <div class="flex justify-center items-center gap-2 mt-8 flex-wrap">
+      <!-- 上一页 -->
+      {% if paginator.previous_page %}
+        <a 
+          href="{{ paginator.previous_page_path | relative_url }}" 
+          class="page-number" 
+          aria-label="上一页"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </a>
       {% else %}
-        <a href="{{ site.baseurl }}/page/{{ page }}/" class="page-item">{{ page }}</a>
+        <span 
+          class="page-number opacity-50 pointer-events-none" 
+          aria-disabled="true"
+          aria-label="没有上一页"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </span>
       {% endif %}
-    {% endfor %}
 
-    <!-- 下一页 -->
-    {% if paginator.next_page %}
-      <a href="{{ paginator.next_page_path | relative_url }}" class="page-item">
-        <i class="fa-solid fa-chevron-right"></i>
-      </a>
-    {% else %}
-      <span class="page-item opacity-50 pointer-events-none">
-        <i class="fa-solid fa-chevron-right"></i>
-      </span>
-    {% endif %}
-  </div>
+      <!-- 页码（优化大量页码显示） -->
+      {% assign left_ellipsis = false %}
+      {% assign right_ellipsis = false %}
+      
+      {% for page in (1..paginator.total_pages) %}
+        {% comment %} 只显示当前页前后2页、第1页和最后1页，其余用省略号代替 {% endcomment %}
+        {% if page == 1 or page == paginator.total_pages or (page >= paginator.page - 2 and page <= paginator.page + 2) %}
+          {% if left_ellipsis %}
+            <span class="page-number opacity-70">...</span>
+            {% assign left_ellipsis = false %}
+          {% endif %}
+          
+          {% if page == paginator.page %}
+            <span 
+              class="page-number current" 
+              aria-current="page"
+              aria-label="当前页，第{{ page }}页"
+            >
+              {{ page }}
+            </span>
+          {% elsif page == 1 %}
+            <a 
+              href="{{ '/' | relative_url }}" 
+              class="page-number" 
+              aria-label="第{{ page }}页"
+            >
+              {{ page }}
+            </a>
+          {% else %}
+            <a 
+              href="{{ site.baseurl }}/page/{{ page }}/" 
+              class="page-number" 
+              aria-label="第{{ page }}页"
+            >
+              {{ page }}
+            </a>
+          {% endif %}
+        {% else %}
+          {% comment %} 标记需要显示省略号的位置 {% endcomment %}
+          {% if page < paginator.page - 2 and left_ellipsis == false %}
+            {% assign left_ellipsis = true %}
+          {% elsif page > paginator.page + 2 and right_ellipsis == false and page < paginator.total_pages %}
+            {% assign right_ellipsis = true %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      <!-- 下一页 -->
+      {% if paginator.next_page %}
+        <a 
+          href="{{ paginator.next_page_path | relative_url }}" 
+          class="page-number" 
+          aria-label="下一页"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+      {% else %}
+        <span 
+          class="page-number opacity-50 pointer-events-none" 
+          aria-disabled="true"
+          aria-label="没有下一页"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </span>
+      {% endif %}
+    </div>
+  </nav>
 {% endif %}

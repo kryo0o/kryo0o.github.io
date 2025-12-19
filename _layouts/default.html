@@ -129,9 +129,9 @@
       white-space: pre; /* 强制保留换行/空格 */
     }
 
-    /* 复制按钮（唯一一套样式，固定在代码块右上角，不随滚动动） */
+    /* 复制按钮（唯一一套样式，固定在代码块右上角） */
     .code-copy-btn {
-      position: absolute; /* 基于代码块定位，不随滚动动 */
+      position: absolute;
       top: 8px;
       right: 8px;
       width: 24px;
@@ -144,14 +144,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 10; /* 高于滚动内容 */
+      z-index: 10;
       padding: 0;
       font-size: 12px;
       opacity: 0.5;
       transition: all 0.2s ease;
-      /* 强制固定，不继承任何滚动属性 */
-      transform: none !important;
-      pointer-events: auto;
     }
 
     .code-block:hover .code-copy-btn,
@@ -174,7 +171,7 @@
       color: #fff;
     }
 
-    /* 其他样式（无修改） */
+    /* 其他样式 */
     .banner {
       width: 100%;
       min-height: 200px;
@@ -364,16 +361,17 @@
 
     // 完整的初始化函数 - 确保每个代码块只添加一个复制按钮
     function initCodeCopyButtons() {
-      // 获取所有代码块元素
-      const codeBlocks = document.querySelectorAll('.code-block, .highlight');
+      // 关键优化：只选择未处理过的代码块（排除带有.has-copy-btn类的元素）
+      const codeBlocks = document.querySelectorAll(
+        '.code-block:not(.has-copy-btn), .highlight:not(.has-copy-btn)'
+      );
       
       // 遍历每个代码块
       codeBlocks.forEach(block => {
-        // 检查此代码块是否已经有复制按钮
+        // 双重检查：防止重复添加
         const existingButton = block.querySelector('.code-copy-btn');
-        
-        // 如果已经存在复制按钮，则跳过
         if (existingButton) {
+          block.classList.add('has-copy-btn'); // 标记为已处理
           return;
         }
         
@@ -385,14 +383,14 @@
         
         // 添加到代码块容器
         block.appendChild(copyBtn);
+        // 标记为已处理（核心：防止重复处理）
+        block.classList.add('has-copy-btn');
 
-        // 复制成功状态切换 - 显示勾号
+        // 复制成功状态切换
         const copySuccess = () => {
           copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
           copyBtn.classList.add('copied');
           copyBtn.classList.remove('error');
-          
-          // 显示成功通知
           showNotification('代码已复制到剪贴板！', 'success');
           
           setTimeout(() => {
@@ -401,14 +399,13 @@
           }, 1500);
         };
 
-        // 复制失败状态切换 - 显示叉号
+        // 复制失败状态切换
         const copyFail = (err) => {
           console.error('复制失败：', err);
           copyBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
           copyBtn.classList.add('error');
           copyBtn.classList.remove('copied');
           
-          // 显示错误通知
           let errorMessage = '复制失败，请手动复制代码';
           if (err.name === 'NotAllowedError') {
             errorMessage = '复制失败：需要用户手势才能触发剪贴板访问';
@@ -435,12 +432,10 @@
           if (preEl) {
             codeContent = preEl.textContent;
           } else {
-            // 如果没有pre标签，从code标签获取内容
             const codeEl = block.querySelector('code');
             if (codeEl) {
               codeContent = codeEl.textContent;
             } else {
-              // 否则直接获取块的内容
               codeContent = block.textContent.trim();
             }
           }
@@ -450,40 +445,26 @@
           }
 
           try {
-            // 检查浏览器是否支持 Clipboard API
-            if (!navigator.clipboard) {
-              throw new Error('浏览器不支持剪贴板API');
-            }
-            
-            // 使用剪贴板 API
-            await navigator.clipboard.writeText(codeContent);
-            copySuccess();
-          } catch (err) {
-            // 如果剪贴板API失败，尝试备用方法
-            try {
-              // 创建临时textarea元素
+            if (navigator.clipboard) {
+              await navigator.clipboard.writeText(codeContent);
+              copySuccess();
+            } else {
+              // 备用方法
               const textArea = document.createElement('textarea');
               textArea.value = codeContent;
               textArea.style.position = 'fixed';
               textArea.style.left = '-999999px';
-              textArea.style.top = '-999999px';
               document.body.appendChild(textArea);
               
-              // 选择文本并复制
               textArea.focus();
               textArea.select();
-              
               const successful = document.execCommand('copy');
               document.body.removeChild(textArea);
               
-              if (successful) {
-                copySuccess();
-              } else {
-                copyFail(err);
-              }
-            } catch (fallbackErr) {
-              copyFail(err);
+              successful ? copySuccess() : copyFail(new Error('备用方法失败'));
             }
+          } catch (err) {
+            copyFail(err);
           }
         });
       });
@@ -499,6 +480,3 @@
   </script>
 </body>
 </html>
-
-
-
