@@ -4,70 +4,66 @@ title: 首页
 ---
 
 <!-- Banner -->
-<div class="max-w-4xl mx-auto banner-container">
+<div class="banner-container">
   <div class="banner">
     <div class="banner-content">
-      <h1 class="text-4xl font-bold mb-2">{{ site.banner.title }}</h1>
-      <p class="text-xl">{{ site.banner.subtitle }}</p>
+      <h1 class="f00-light mb-2">{{ site.banner.title }}</h1>
+      <p class="f1-light">{{ site.banner.subtitle }}</p>
     </div>
   </div>
 </div>
 
-<!-- 核心调试：输出Jekyll原生Tag数据（确认是否收集到） -->
-<div class="max-w-4xl mx-auto mb-4 text-sm text-gray-600">
-  <div>✅ Jekyll原生site.tags总数：{{ site.tags | size }}</div>
-  <div>✅ 所有Tag原始数据：{{ site.tags | inspect }}</div>
-  <div>✅ 所有文章数：{{ site.posts | size }}</div>
-</div>
-
-<!-- 文章列表（修复Tag显示） -->
-<div class="max-w-4xl mx-auto mb-8 space-y-6">
+<!-- 文章列表 -->
+<div class="container-lg mx-auto mb-8 space-y-6">
   {% if paginator.posts.size > 0 %}
     {% for post in paginator.posts %}
-      <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow border border-gray-100">
-        <div class="p-6 md:p-8">
-          <!-- 标题 -->
-          <h2 class="text-2xl font-bold text-gray-800 hover:text-gray-700 transition-colors mb-4 cursor-pointer">
-            <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
-          </h2>
-          
-          <!-- 元信息 + Tag显示修复（核心） -->
-          <div class="flex flex-wrap gap-3 mb-4 text-sm text-gray-600 border-b border-gray-100 pb-3">
-            <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
-            <div class="flex gap-2">
-              <!-- 修复：直接遍历post.tags，不使用slugify，避免格式问题 -->
-              {% if post.tags and post.tags.size > 0 %}
-                {% for tag in post.tags limit:3 %}
-                  <a href="{{ site.url }}/tags.html#{{ tag | replace: ' ', '-' }}" class="tag-item bg-gray-100">
-                    {{ tag }}
-                  </a>
-                {% endfor %}
-                {% if post.tags.size > 3 %}
-                  <span class="tag-item bg-gray-100">+{{ post.tags.size - 3 }}</span>
-                {% endif %}
-              {% else %}
-                <span class="tag-item bg-gray-100">无标签</span>
+      <article class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
+        <!-- 文章标题 -->
+        <h2 class="f00-light mb-4">
+          <a href="{{ post.url | relative_url }}" class="text-gray-800 hover:text-gray-700 text-decoration-none">
+            {{ post.title }}
+          </a>
+        </h2>
+        <!-- 元信息 -->
+        <div class="flex flex-wrap gap-3 mb-4 text-sm text-gray-600 border-bottom border-gray-100 pb-3">
+          <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+          <div class="flex gap-2">
+            <!-- 简化Tag遍历（兼容Jekyll 3.10.0） -->
+            {% if post.tags.size > 0 %}
+              {% for tag in post.tags limit:3 %}
+                <a href="{{ '/tags.html#' | append: tag | replace: ' ', '-' | relative_url }}" class="tag-item">
+                  {{ tag }}
+                </a>
+              {% endfor %}
+              {% if post.tags.size > 3 %}
+                <span class="tag-item">+{{ post.tags.size - 3 }}</span>
               {% endif %}
-            </div>
+            {% else %}
+              <span class="tag-item">无标签</span>
+            {% endif %}
           </div>
-          
-          <!-- 文章简介（无叠字） -->
-          <div class="text-gray-700 leading-relaxed line-height:1.6">
-            {{ post.content | strip_html | truncate: 200, "..." }}
-          </div>
+        </div>
+        <!-- 文章简介 -->
+        <div class="text-gray-700 leading-relaxed">
+          {{ post.content | strip_html | truncate: 200, "..." }}
         </div>
       </article>
     {% endfor %}
   {% else %}
-    <div class="text-center py-12 text-gray-500 bg-white rounded-lg shadow-sm border border-gray-100">
+    <div class="bg-white rounded-lg shadow-sm p-12 text-center text-gray-500 border border-gray-100">
       <i class="fa-solid fa-file-alt text-4xl mb-4"></i>
       <p>暂无文章</p>
     </div>
   {% endif %}
 </div>
-{% endif %}
 
 <!-- 分页 -->
-<div class="max-w-4xl mx-auto">
-  {% include pagination.html %}
+<div class="container-lg mx-auto d-flex justify-content-center gap-2">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}" class="page-item">上一页</a>
+  {% endif %}
+  <span class="page-item page-active">{{ paginator.page }}</span>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}" class="page-item">下一页</a>
+  {% endif %}
 </div>

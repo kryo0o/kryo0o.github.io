@@ -1,14 +1,13 @@
-<header class="sticky top-0 z-10 bg-white shadow-sm mb-6">
-  <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-    <a href="{{ site.url }}/" class="text-2xl font-bold text-gray-800">
+<header class="sticky top-0 bg-white shadow-sm mb-6">
+  <div class="container-lg mx-auto px-3 py-4 d-flex flex-wrap justify-between align-items-center">
+    <a href="{{ '/' | relative_url }}" class="f00-light text-gray-800 text-decoration-none">
       {{ site.title }}
     </a>
-    <div class="flex items-center gap-6">
-      <!-- 导航按钮：深灰色，非浅蓝 -->
-      <a href="{{ site.url }}/" class="nav-btn text-lg">
+    <div class="d-flex gap-6">
+      <a href="{{ '/' | relative_url }}" class="nav-btn f1-light">
         <i class="fa-solid fa-home mr-1"></i> 首页
       </a>
-      <a href="{{ site.url }}/tags.html" class="nav-btn text-lg">
+      <a href="{{ '/tags.html' | relative_url }}" class="nav-btn f1-light">
         <i class="fa-solid fa-tags mr-1"></i> 标签
       </a>
     </div>

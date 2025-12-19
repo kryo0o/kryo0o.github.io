@@ -1,4 +1,4 @@
-# 站点基本信息
+# 基础配置（Jekyll 3.10.0 兼容）
 title: 豆包风格 Jekyll 博客
 email: wpforwg@gmail.com
 description: "基于 Jekyll + GitHub Pages 构建的博客"
@@ -6,47 +6,41 @@ baseurl: ""
 url: "https://blog.kryoo.de"
 github_username: kryo0o
 
-# 构建配置（核心：移除冲突的collections.tags，改用Jekyll原生Tag）
+# 构建核心配置
 markdown: kramdown
 highlighter: rouge
 permalink: /posts/:title/
 timezone: Asia/Shanghai
 safe: true
 lsi: false
+theme: jekyll-theme-primer # 保留GitHub Pages默认主题
 
-# 分页：每页10篇文章
+# 分页（Jekyll 3.10.0 仅支持简单分页）
 paginate: 10
 paginate_path: "/page/:num/"
 
-# 插件（仅保留GitHub Pages原生支持，无额外Tag插件）
+# 仅保留GitHub Pages官方支持的插件（避免兼容问题）
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-github-metadata
 
-# 代码样式配置（解决换行/间距问题）
+# Kramdown/Rouge 兼容配置（移除line_width等不兼容项）
 kramdown:
   input: GFM
+  syntax_highlighter: rouge
   syntax_highlighter_opts:
     block:
       line_numbers: false
       wrap: div
-      css_class: "code-block" # 唯一类名，避免冲突
+      css_class: "code-block"
   auto_ids: true
   footnote_nr: 1
   entity_output: as_char
-  line_width: 120 # 限制代码行宽，避免换行异常
 
-# Banner配置
+# Banner配置（简化，避免Liquid解析错误）
 banner:
   image: "https://picsum.photos/1920/500"
   title: "技术笔记与实用教程"
   subtitle: "持续分享，共同成长"
-
-# 自定义颜色（统一按钮为深灰色，非浅蓝）
-custom_colors:
-  button_primary: "#333333"       # 按钮默认色（深灰）
-  button_hover: "#555555"         # 按钮hover色
-  button_success: "#52c41a"       # 复制成功色
-  code_bg: "#f6f8fa"              # 代码背景色
-  code_text: "#24292e"            # 代码文字色

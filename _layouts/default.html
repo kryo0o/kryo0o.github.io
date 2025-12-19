@@ -6,161 +6,159 @@
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- 高优先级样式（覆盖主题默认样式） -->
   <style>
-    /* ========== 代码块核心修复（换行/间距/叠字） ========== */
-    /* 代码框：极小间距，解决间距过大 */
-    .code-block, .highlight {
-      background: {{ site.custom_colors.code_bg }} !important;
-      color: {{ site.custom_colors.code_text }} !important;
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
-      border-radius: 4px !important;
-      /* 核心：减少间距（解决过大问题） */
-      padding: 0.4rem !important;    /* 大幅减少内边距 */
-      margin: 0.5rem 0 !important;   /* 减少外边距 */
-      max-width: 100% !important;
-      overflow-x: auto !important;   /* 横向滚动 */
-      position: relative !important; /* 按钮定位 */
+    /* 重置主题默认代码样式 */
+    body .markdown-body .code-block,
+    body .markdown-body .highlight,
+    body .markdown-body .highlight pre,
+    body .markdown-body .highlight code {
+      background: #f6f8fa;
+      color: #24292e;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      border-radius: 4px;
+      padding: 0.4rem;
+      margin: 0.5rem 0;
+      max-width: 100%;
+      overflow-x: auto;
+      position: relative;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      word-break: break-all;
     }
-
-    /* 代码内容：修复换行叠字 */
-    .highlight pre, .highlight code {
-      background: transparent !important; /* 继承父背景，无额外间距 */
-      padding: 0 !important;             /* 彻底移除代码内间距 */
-      margin: 0 !important;              /* 彻底移除代码外间距 */
-      font-size: 0.9rem !important;      /* 合适字体大小 */
-      line-height: 1.6 !important;       /* 行高1.6，避免叠字 */
-      white-space: pre-wrap !important;  /* 自动换行，不叠字 */
-      word-wrap: break-word !important;  /* 长单词换行 */
-      word-break: break-all !important;  /* 强制换行，避免溢出 */
+    /* 代码内容无额外间距 */
+    body .markdown-body .highlight pre,
+    body .markdown-body .highlight code {
+      padding: 0;
+      margin: 0;
+      background: transparent;
     }
-
-    /* 代码高亮配色（适配修复后样式） */
-    .highlight .c { color: #6a737d !important; line-height: 1.6 !important; }
-    .highlight .k { color: #d73a4a !important; line-height: 1.6 !important; }
-    .highlight .o { color: #6f42c1 !important; line-height: 1.6 !important; }
-    .highlight .m { color: #005cc5 !important; line-height: 1.6 !important; }
-    .highlight .s { color: #032f62 !important; line-height: 1.6 !important; }
-    .highlight .na { color: #22863a !important; line-height: 1.6 !important; }
-    .highlight .nb { color: #6f42c1 !important; line-height: 1.6 !important; }
-    .highlight .nf { color: #6f42c1 !important; line-height: 1.6 !important; }
-
-    /* ========== 按钮颜色修复（非浅蓝，深灰色系） ========== */
-    /* 代码复制按钮（深灰色） */
-    .copy-btn {
-      position: absolute !important;
-      top: 4px !important;
-      right: 4px !important;
-      width: 24px !important;
-      height: 24px !important;
-      border-radius: 50% !important;
-      background: {{ site.custom_colors.button_primary }} !important; /* 深灰 */
-      border: none !important;
-      color: #fff !important;
-      cursor: pointer !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      z-index: 10 !important;
-      padding: 0 !important;
-      font-size: 12px !important;
-      opacity: 0.8 !important;
+    /* 复制按钮（深灰色，高优先级） */
+    body .markdown-body .copy-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #333;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 0;
+      font-size: 12px;
+      opacity: 0.8;
     }
-    .copy-btn:hover {
-      opacity: 1 !important;
-      background: {{ site.custom_colors.button_hover }} !important; /* hover深灰 */
+    body .markdown-body .copy-btn:hover {
+      opacity: 1;
+      background: #555;
     }
-    .copy-btn.copied {
-      background: {{ site.custom_colors.button_success }} !important; /* 成功绿 */
+    body .markdown-body .copy-btn.copied {
+      background: #52c41a;
     }
-    .copy-btn i {
-      margin: 0 !important;
-      font-size: 12px !important;
+    body .markdown-body .copy-btn i {
+      margin: 0;
+      font-size: 12px;
     }
-
-    /* 主页导航按钮（深灰色，非浅蓝） */
-    .nav-btn {
-      color: {{ site.custom_colors.button_primary }} !important;
-      transition: color 0.2s ease !important;
-    }
-    .nav-btn:hover {
-      color: {{ site.custom_colors.button_hover }} !important;
-      text-decoration: none !important;
-    }
-
-    /* ========== Banner样式（300px高，和文章同宽） ========== */
+    /* Banner样式 */
     .banner-container {
-      max-width: 4xl;
-      margin: 0 auto 2rem auto !important;
-      width: 100% !important;
+      max-width: 768px; /* 和GitHub Primer主题文章宽度一致 */
+      margin: 0 auto 2rem auto;
+      width: 100%;
     }
     .banner {
-      width: 100% !important;
-      height: 300px !important;
-      background: url('{{ site.banner.image }}') no-repeat center center !important;
-      background-size: cover !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      color: white !important;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.6) !important;
-      border-radius: 8px !important;
+      width: 100%;
+      height: 300px;
+      background: url('{{ site.banner.image }}') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      border-radius: 8px;
     }
     .banner-content {
-      text-align: center !important;
-      padding: 0 1rem !important;
+      text-align: center;
+      padding: 0 1rem;
     }
-
-    /* ========== 通用样式 ========== */
-    .tag-item { 
-      @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-gray-100; 
-      color: #333 !important;
+    /* 导航/标签样式 */
+    .nav-btn {
+      color: #333;
+      transition: color 0.2s ease;
+      text-decoration: none;
     }
-    .page-item { 
-      @apply w-9 h-9 flex items-center justify-center rounded-md border border-gray-200 cursor-pointer transition-all hover:border-gray-500 hover:text-gray-700; 
-      color: #333 !important;
+    .nav-btn:hover {
+      color: #555;
+      text-decoration: none;
     }
-    .page-active { 
-      @apply bg-gray-800 text-white border-gray-800 hover:bg-gray-700; 
+    .tag-item {
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      color: #333;
+      background: #f1f1f1;
+      text-decoration: none;
+    }
+    .tag-item:hover {
+      background: #e1e1e1;
+      text-decoration: none;
+    }
+    .page-item {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      border: 1px solid #e1e1e1;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #333;
+      text-decoration: none;
+    }
+    .page-item:hover {
+      border-color: #555;
+      color: #555;
+    }
+    .page-active {
+      background: #333;
+      color: white;
+      border-color: #333;
+    }
+    .page-active:hover {
+      background: #555;
+      border-color: #555;
     }
   </style>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#333333', // 深灰色（非浅蓝）
-            dark: '#1f2937',
-            light: '#f9fafb'
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          },
-        }
-      }
-    }
-  </script>
 </head>
-<body class="bg-light min-h-screen">
+<body>
   {% include header.html %}
-  <main class="container mx-auto px-4 py-8">
+  <main class="container-lg px-3 py-8 mx-auto">
     {{ content }}
   </main>
   {% include footer.html %}
 
-  <!-- ========== 复制按钮逻辑（仅1个，无重复） ========== -->
+  <!-- 复制按钮脚本（简化，兼容Jekyll 3.10.0） -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 仅选择最外层代码块，避免嵌套
+      // 仅选择最外层代码块
       const codeBlocks = document.querySelectorAll('.highlight:not(.highlight .highlight)');
-      
       codeBlocks.forEach(block => {
-        // 标记已处理，避免重复
         if (block.dataset.copyBtnAdded) return;
         block.dataset.copyBtnAdded = 'true';
         
-        // 创建复制按钮（深灰色）
+        // 创建复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
