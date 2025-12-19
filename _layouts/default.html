@@ -237,8 +237,48 @@
       margin: 0;
     }
 
-    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
-      display: none;
+    /* 隐藏标签的增强规则 - 新增 */
+    .tag-item, .tags, .post-tags, 
+    [class*="tag"], [id*="tag"],
+    .post-meta a[href*="/tag/"],
+    .post-meta a[href*="/tags/"],
+    .post-header a[href*="/tag/"],
+    .post-header a[href*="/tags/"],
+    .post-meta span:not(.post-date),
+    .post-header span:not(.post-date) {
+      display: none !important;
+    }
+
+    /* 如果标签是直接显示在日期旁边的文本，添加这些规则 */
+    .post-meta .label,
+    .post-header .label,
+    .post-meta .category,
+    .post-header .category {
+      display: none !important;
+    }
+
+    /* 确保只显示日期 */
+    .post-meta,
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .post-meta > *:not(.post-date),
+    .post-header > *:not(.post-date) {
+      display: none !important;
+    }
+
+    /* 如果标签是链接形式 */
+    .post-meta a:not([href*="/page"]),
+    .post-header a:not([href*="/page"]) {
+      display: none !important;
+    }
+
+    .post-meta .post-date,
+    .post-header .post-date {
+      display: block !important;
     }
 
     .post-excerpt {
@@ -518,6 +558,30 @@
       
       // 输出调试信息
       console.log(`找到 ${outerCodeBlocks.length} 个最外层代码块，已添加复制按钮`);
+      
+      // 额外处理：手动隐藏任何可能漏掉的标签元素
+      setTimeout(function() {
+        // 查找并隐藏所有可能包含标签的元素
+        const possibleTagElements = document.querySelectorAll(
+          'span, a, div, li'
+        );
+        
+        possibleTagElements.forEach(function(el) {
+          const text = el.textContent || el.innerText || '';
+          const html = el.innerHTML || '';
+          
+          // 如果元素包含"标签"、"tag"、"分类"等关键词，且不在代码块中
+          if (
+            (text.includes('标签') || text.includes('Tag') || text.includes('tag') || 
+             text.includes('分类') || text.includes('Category') || text.includes('category') ||
+             html.includes('/tag/') || html.includes('/tags/') || html.includes('/category/')) &&
+            !el.closest('.code-block') && !el.closest('.highlight') &&
+            el !== document.querySelector('.post-date')
+          ) {
+            el.style.display = 'none';
+          }
+        });
+      }, 100);
     });
   </script>
 </body>
