@@ -7,182 +7,282 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ========== 核心：页面宽度修复（非全屏，最大1200px居中） ========== */
+    /* ========== 全局布局：导航右上角 + 内容宽度限制 ========== */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .header-wrapper {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between; /* 标题左，导航右 */
+      align-items: center;
+    }
+    .site-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      text-decoration: none;
+    }
+    .nav-menu {
+      display: flex;
+      gap: 24px;
+    }
+    .nav-btn {
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
+    .nav-btn:hover {
+      color: #4096ff;
+    }
     .container-main {
-      max-width: 1200px !important; /* 桌面端最大宽度 */
-      width: 100% !important;
-      margin: 0 auto !important;
-      padding: 0 20px !important;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
 
-    /* ========== 代码框修复（明显边框+背景） ========== */
-    .code-block, .highlight {
-      background: #f6f8fa !important;
-      color: #24292e !important;
-      border: 1px solid #e1e4e8 !important; /* 明显边框 */
+    /* ========== 豆包同款代码框：无分界线+极小间距+配色 ========== */
+    /* 代码框外层：极小间距+外边框+豆包浅灰背景 */
+    .highlight, .code-block {
+      background: #f5f7fa !important; /* 豆包同款浅灰 */
+      border: 1px solid #e5e6eb !important; /* 豆包同款边框 */
       border-radius: 6px !important;
-      padding: 1rem !important; /* 充足内边距 */
-      margin: 1rem 0 !important;
-      max-width: 100% !important;
+      padding: 8px !important; /* 极小内边距 */
+      margin: 8px 0 !important; /* 极小外边距 */
       overflow-x: auto !important;
       position: relative !important;
-      font-size: 0.9rem !important;
-      line-height: 1.6 !important;
-      white-space: pre-wrap !important;
-      word-wrap: break-word !important;
-      word-break: break-all !important;
+      font-size: 14px !important; /* 字体大小不变 */
+      line-height: 1.5 !important;
+      max-width: 100% !important;
     }
+    /* 代码内容：无任何间距/分界线，继承背景 */
     .highlight pre, .highlight code {
       background: transparent !important;
+      border: none !important;
       padding: 0 !important;
       margin: 0 !important;
+      font-size: 14px !important; /* 和框一致 */
+      line-height: 1.5 !important;
     }
+    /* 豆包同款代码高亮配色 */
+    .highlight .c { color: #8c8c8c !important; } /* 注释 */
+    .highlight .k { color: #e53935 !important; } /* 关键字 */
+    .highlight .o { color: #795548 !important; } /* 操作符 */
+    .highlight .m { color: #0097a7 !important; } /* 数字 */
+    .highlight .s { color: #43a047 !important; } /* 字符串 */
+    .highlight .na { color: #1565c0 !important; } /* 属性 */
+    .highlight .nb { color: #f57c00 !important; } /* 内置函数 */
+    .highlight .nf { color: #6200ea !important; } /* 函数名 */
+    .highlight .nc { color: #283593 !important; } /* 类名 */
+    .highlight .nv { color: #c2185b !important; } /* 变量 */
 
-    /* ========== 复制按钮（深灰色，单按钮） ========== */
+    /* ========== 豆包同款复制按钮（单按钮） ========== */
     .copy-btn {
       position: absolute !important;
-      top: 8px !important;
-      right: 8px !important;
-      width: 24px !important;
-      height: 24px !important;
-      border-radius: 50% !important;
-      background: #333 !important;
+      top: 6px !important;
+      right: 6px !important;
+      width: 22px !important;
+      height: 22px !important;
+      border-radius: 4px !important;
+      background: #4096ff !important; /* 豆包蓝 */
       border: none !important;
       color: #fff !important;
       cursor: pointer !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      z-index: 999 !important;
+      z-index: 10 !important;
       padding: 0 !important;
-      font-size: 12px !important;
+      font-size: 10px !important;
       opacity: 0.8 !important;
     }
     .copy-btn:hover {
       opacity: 1 !important;
-      background: #555 !important;
     }
     .copy-btn.copied {
       background: #52c41a !important;
     }
 
-    /* ========== Banner样式（适配宽度） ========== */
+    /* ========== Banner样式 ========== */
     .banner {
-      width: 100% !important;
-      height: 300px !important;
-      background: url('{{ site.banner.image }}') no-repeat center center !important;
-      background-size: cover !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      color: white !important;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.6) !important;
-      border-radius: 8px !important;
-      margin-bottom: 2rem !important;
+      width: 100%;
+      height: 300px;
+      background: url('{{ site.banner.image }}') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      border-radius: 8px;
+      margin-bottom: 20px;
     }
     .banner-content {
-      text-align: center !important;
-      padding: 0 1rem !important;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .banner-content h1 {
+      font-size: 36px;
+      margin: 0 0 12px 0;
+    }
+    .banner-content p {
+      font-size: 18px;
+      margin: 0;
     }
 
-    /* ========== 标签样式（参考你的tags.html） ========== */
+    /* ========== 标签样式（修复404） ========== */
     #tag_cloud {
-      text-align: center !important;
-      padding: 20px 0 !important;
+      text-align: center;
+      padding: 20px 0;
     }
     #tag_cloud a {
-      display: inline-block !important;
-      margin: 0 10px 10px 0 !important;
-      padding: 3px 10px !important;
-      border-radius: 4px !important;
-      background: #f5f5f5 !important;
-      color: #333 !important;
-      text-decoration: none !important;
-      transition: all 0.3s !important;
+      display: inline-block;
+      margin: 0 8px 8px 0;
+      padding: 4px 12px;
+      border-radius: 4px;
+      background: #f5f5f5;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 14px;
     }
     #tag_cloud a:hover {
-      background: #337ab7 !important;
-      color: white !important;
+      background: #4096ff;
+      color: #fff;
     }
-    #tag_cloud a[rel="1"] { font-size: 12px !important; }
-    #tag_cloud a[rel="2"] { font-size: 14px !important; }
-    #tag_cloud a[rel="3"] { font-size: 16px !important; }
-    #tag_cloud a[rel="4"] { font-size: 18px !important; }
-    #tag_cloud a[rel="5"] { font-size: 20px !important; }
-    #tag_cloud a[rel="6"] { font-size: 22px !important; }
-    #tag_cloud a[rel="7"] { font-size: 24px !important; }
-    #tag_cloud a[rel="8"] { font-size: 26px !important; }
-    #tag_cloud a[rel="9"] { font-size: 28px !important; }
-    #tag_cloud a[rel="10"] { font-size: 30px !important; }
+    #tag_cloud a[rel="1"] { font-size: 12px; }
+    #tag_cloud a[rel="2"] { font-size: 14px; }
+    #tag_cloud a[rel="3"] { font-size: 16px; }
+    #tag_cloud a[rel="4"] { font-size: 18px; }
+    #tag_cloud a[rel="5+"] { font-size: 20px; }
 
     .one-tag-list {
-      margin-bottom: 30px !important;
-      padding: 20px !important;
-      background: #fff !important;
-      border-radius: 4px !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .listing-seperator {
-      display: block !important;
-      font-size: 18px !important;
-      margin: 20px 0 !important;
-      padding-bottom: 10px !important;
-      border-bottom: 1px solid #eee !important;
-      color: #333 !important;
+      display: block;
+      font-size: 18px;
+      margin: 0 0 20px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e6eb;
+      color: #333;
     }
     .tag-comments {
-      margin: 20px 0 !important;
-      padding: 10px 20px !important;
-      background: #f9f9f9 !important;
-      border-left: 4px solid #337ab7 !important;
-      color: #666 !important;
-    }
-
-    /* ========== 通用样式 ========== */
-    .nav-btn {
-      color: #333 !important;
-      transition: color 0.2s ease !important;
-      text-decoration: none !important;
-    }
-    .nav-btn:hover {
-      color: #555 !important;
+      margin: 20px 0;
+      padding: 12px 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #4096ff;
+      color: #666;
+      border-radius: 0 4px 4px 0;
     }
     .tag-item {
-      padding: 0.25rem 0.75rem !important;
-      border-radius: 999px !important;
-      font-size: 0.875rem !important;
-      cursor: pointer !important;
-      transition: background 0.2s ease !important;
-      color: #333 !important;
-      background: #f1f1f1 !important;
-      text-decoration: none !important;
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 16px;
+      font-size: 13px;
+      background: #f1f1f1;
+      color: #333;
+      text-decoration: none;
+      margin-right: 6px;
+      margin-bottom: 6px;
     }
     .tag-item:hover {
-      background: #e1e1e1 !important;
+      background: #e5e6eb;
+    }
+
+    /* ========== 文章列表样式 ========== */
+    .post-item {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .post-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+    }
+    .post-title a {
+      color: #333;
+      text-decoration: none;
+    }
+    .post-title a:hover {
+      color: #4096ff;
+    }
+    .post-meta {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f1f1;
+    }
+    .post-excerpt {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  {% include header.html %}
-  <!-- 核心：容器改为container-main，限制最大宽度1200px -->
-  <main class="container-main py-8">
+  <!-- 头部：标题左，导航右（右上角） -->
+  <div class="header-wrapper">
+    <div class="header-inner">
+      <a href="{{ '/' | relative_url }}" class="site-title">
+        {{ site.title }}
+      </a>
+      <div class="nav-menu">
+        <a href="{{ '/' | relative_url }}" class="nav-btn">
+          <i class="fa-solid fa-home mr-1"></i> 首页
+        </a>
+        <a href="{{ '/tags.html' | relative_url }}" class="nav-btn">
+          <i class="fa-solid fa-tags mr-1"></i> 标签
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主内容区 -->
+  <div class="container-main">
     {{ content }}
-  </main>
-  {% include footer.html %}
+  </div>
 
   <!-- 复制按钮脚本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // 仅选择最外层代码块，避免重复
       const codeBlocks = document.querySelectorAll('.highlight:not(.highlight .highlight)');
+      
       codeBlocks.forEach(block => {
+        // 标记已处理
         if (block.dataset.copyBtnAdded) return;
         block.dataset.copyBtnAdded = 'true';
         
+        // 创建复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         block.appendChild(copyBtn);
         
+        // 复制逻辑
         copyBtn.addEventListener('click', function() {
           const codeEl = block.querySelector('code');
           const code = codeEl ? codeEl.textContent.trim() : block.textContent.trim();

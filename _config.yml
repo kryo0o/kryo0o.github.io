@@ -5,23 +5,25 @@ baseurl: ""
 url: "https://blog.kryoo.de"
 github_username: kryo0o
 
+# 核心配置
 markdown: kramdown
 highlighter: rouge
 permalink: /posts/:title/
 timezone: Asia/Shanghai
 safe: true
 lsi: false
-theme: jekyll-theme-primer
 
+# 分页
 paginate: 10
 paginate_path: "/page/:num/"
 
+# 仅保留GitHub Pages官方插件
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
-  - jekyll-github-metadata
 
+# 代码高亮配置
 kramdown:
   input: GFM
   syntax_highlighter: rouge
@@ -30,10 +32,8 @@ kramdown:
       line_numbers: false
       wrap: div
       css_class: "code-block"
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
 
+# Banner配置
 banner:
   image: "https://picsum.photos/1920/500"
   title: "技术笔记与实用教程"
