@@ -168,6 +168,11 @@
       color: #999;
       margin: 0;
     }
+    /* 移除日期旁边的标签 */
+    .post-header .post-tags,
+    .post-header .tags {
+      display: none !important;
+    }
     .post-excerpt {
       font-size: 15px;
       color: #666;
@@ -220,15 +225,16 @@
     {{ content }}
   </div>
 
-  <!-- 复制按钮脚本（保留换行格式） -->
+  <!-- 复制按钮脚本（保留换行格式，确保只添加一次） -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // 清除可能存在的重复按钮
+    document.querySelectorAll('.copy-btn').forEach(btn => btn.remove());
+    
+    // 重新为每个代码块添加唯一的复制按钮
     const codeBlocks = document.querySelectorAll('.highlight');
     
     codeBlocks.forEach(block => {
-      if (block.dataset.copyBtnAdded) return;
-      block.dataset.copyBtnAdded = 'true';
-      
       const copyBtn = document.createElement('button');
       copyBtn.className = 'copy-btn';
       copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
@@ -236,7 +242,7 @@
       
       copyBtn.addEventListener('click', function() {
         const codeEl = block.querySelector('code');
-        // 关键：移除trim()，保留原始换行/空格
+        // 保留原始换行和空格格式
         const code = codeEl ? codeEl.textContent : '';
         
         if (code) {
