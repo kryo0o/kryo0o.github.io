@@ -1,12 +1,12 @@
 # 站点基本信息
 title: 豆包风格 Jekyll 博客
 email: wpforwg@gmail.com
-description: "基于 Jekyll + GitHub Pages 构建的博客，支持标签/分页/代码高亮"
+description: "基于 Jekyll + GitHub Pages 构建的博客"
 baseurl: ""
 url: "https://blog.kryoo.de"
 github_username: kryo0o
 
-# 构建配置（适配 GitHub Pages 原生 Jekyll 3.10.0）
+# 构建配置
 markdown: kramdown
 highlighter: rouge
 permalink: /posts/:title/
@@ -14,25 +14,25 @@ timezone: Asia/Shanghai
 safe: true
 lsi: false
 
-# 原生分页插件
-paginate: 3
+# 分页：每页10篇文章
+paginate: 10
 paginate_path: "/page/:num/"
 
-# 标签配置（核心：解决tag 404）
-tag_dir: tags
+# 标签功能（强制生成tag页面，解决404）
 collections:
   tags:
     output: true
     permalink: /tags/:name/
+tag_dir: tags
 
-# 仅保留GitHub Pages原生支持的插件
+# 插件（仅保留GitHub Pages原生支持）
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-github-metadata
 
-# 代码高亮配置（适配小尺寸代码块）
+# 代码高亮（适配超小尺寸）
 kramdown:
   input: GFM
   syntax_highlighter_opts:
@@ -45,3 +45,9 @@ kramdown:
   toc_levels: 1..6
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   enable_coderay: false
+
+# 自定义配置（背景图片）
+banner:
+  image: "https://picsum.photos/1920/400" # 替换为你的背景图链接
+  title: "技术笔记与实用教程"
+  subtitle: "持续分享，共同成长"

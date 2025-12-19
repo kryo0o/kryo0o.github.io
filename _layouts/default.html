@@ -7,63 +7,83 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 修复：代码块缩小尺寸（核心） */
+    /* 超小尺寸代码框（缩小5倍核心） */
     .highlight {
       background: #f6f8fa !important;
       color: #24292e !important;
       border: 1px solid #e1e4e8 !important;
-      border-radius: 0.375rem; /* 缩小圆角 */
-      padding: 0.75rem !important; /* 减少内边距 */
+      border-radius: 0.25rem !important; /* 极小圆角 */
+      padding: 0.25rem !important; /* 超小内边距 */
       overflow-x: auto;
-      margin: 0.75rem 0 !important;
+      margin: 0.5rem 0 !important;
       position: relative;
-      max-width: 100% !important; /* 限制最大宽度 */
-      font-size: 0.9rem !important; /* 缩小字体 */
-      line-height: 1.4 !important; /* 调整行高 */
+      max-width: 100% !important;
+      font-size: 0.7rem !important; /* 超小字体 */
+      line-height: 1.2 !important; /* 紧凑行高 */
+      max-height: 300px !important; /* 限制高度 */
     }
 
-    /* 代码高亮配色（适配小尺寸） */
-    .highlight .c { color: #6a737d } /* 注释 */
-    .highlight .k { color: #d73a4a } /* 关键字 */
-    .highlight .o { color: #6f42c1 } /* 操作符 */
-    .highlight .m { color: #005cc5 } /* 数字 */
-    .highlight .s { color: #032f62 } /* 字符串 */
-    .highlight .na { color: #22863a } /* 属性 */
-    .highlight .nb { color: #6f42c1 } /* 内置函数 */
-    .highlight .nf { color: #6f42c1 } /* 函数名 */
-    .highlight .nc { color: #22863a } /* 类名 */
-    .highlight .nv { color: #e36209 } /* 变量 */
+    /* 代码高亮配色（适配超小尺寸） */
+    .highlight .c { color: #6a737d; font-size: 0.7rem !important; }
+    .highlight .k { color: #d73a4a; font-size: 0.7rem !important; }
+    .highlight .o { color: #6f42c1; font-size: 0.7rem !important; }
+    .highlight .m { color: #005cc5; font-size: 0.7rem !important; }
+    .highlight .s { color: #032f62; font-size: 0.7rem !important; }
+    .highlight .na { color: #22863a; font-size: 0.7rem !important; }
+    .highlight .nb { color: #6f42c1; font-size: 0.7rem !important; }
+    .highlight .nf { color: #6f42c1; font-size: 0.7rem !important; }
+    .highlight .nc { color: #22863a; font-size: 0.7rem !important; }
+    .highlight .nv { color: #e36209; font-size: 0.7rem !important; }
 
-    /* 修复：豆包风格复制按钮（核心） */
+    /* 豆包风格纯图标复制按钮（超小尺寸） */
     .copy-btn {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      width: 28px; /* 固定尺寸 */
-      height: 28px;
-      background: #4096ff !important; /* 豆包主色 */
+      top: 0.25rem;
+      right: 0.25rem;
+      width: 20px !important; /* 超小尺寸 */
+      height: 20px !important;
+      background: #4096ff !important;
       border: none !important;
-      border-radius: 4px !important; /* 豆包同款圆角 */
+      border-radius: 3px !important;
       cursor: pointer;
       color: #fff !important;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10;
-      font-size: 14px !important;
-      padding: 0 !important; /* 清除内边距 */
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      transition: all 0.2s ease;
+      font-size: 10px !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      transition: all 0.1s ease;
     }
     .copy-btn:hover {
-      background: #1879ff !important; /* 豆包hover色 */
-      transform: translateY(-1px);
+      background: #1879ff !important;
     }
     .copy-btn.copied {
-      background: #52c41a !important; /* 豆包成功色 */
+      background: #52c41a !important;
     }
     .copy-btn i {
-      margin: 0 !important; /* 清除图标边距 */
+      margin: 0 !important;
+      font-size: 10px !important;
+    }
+
+    /* 主页背景banner */
+    .banner {
+      width: 100%;
+      height: 200px; /* 自定义高度 */
+      background: url('{{ site.banner.image }}') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      margin-bottom: 2rem;
+      border-radius: 0.5rem;
+    }
+    .banner-content {
+      text-align: center;
+      padding: 0 1rem;
     }
 
     /* 自定义工具类 */
@@ -79,7 +99,7 @@
       theme: {
         extend: {
           colors: {
-            primary: '#4096ff', // 豆包主色
+            primary: '#4096ff',
             dark: '#1f2937',
             light: '#f9fafb'
           },
@@ -98,43 +118,48 @@
   </main>
   {% include footer.html %}
 
-  <!-- 修复：代码复制按钮（防重复创建+豆包样式） -->
+  <!-- 重构复制按钮逻辑（确保仅一个按钮） -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 只选择最外层的highlight块，避免嵌套重复
-      const highlightBlocks = document.querySelectorAll('.highlight:not(.highlight .highlight)');
+      // 仅选择直接包含code的highlight块，避免嵌套
+      const highlightBlocks = document.querySelectorAll('.highlight > pre > code').closest('.highlight');
+      // 兜底选择所有highlight块（兼容不同结构）
+      const finalBlocks = highlightBlocks.length > 0 ? highlightBlocks : document.querySelectorAll('.highlight');
       
-      highlightBlocks.forEach(block => {
-        // 判重：如果已有复制按钮，不再创建
-        if (block.querySelector('.copy-btn')) return;
+      // 遍历并添加唯一按钮
+      finalBlocks.forEach(block => {
+        // 强制移除已有按钮（防重复）
+        const existingBtn = block.querySelector('.copy-btn');
+        if (existingBtn) existingBtn.remove();
         
-        // 创建豆包风格复制按钮
+        // 创建纯图标按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'copy-btn';
-        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>'; // 仅图标，无文字
+        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
         block.appendChild(copyBtn);
 
         // 复制逻辑
-        copyBtn.addEventListener('click', function() {
-          // 精准获取代码内容（排除按钮）
-          const codeElements = block.querySelectorAll('code');
+        copyBtn.addEventListener('click', function(e) {
+          e.stopPropagation(); // 防止事件冒泡
+          // 精准获取代码内容
           let code = '';
-          if (codeElements.length > 0) {
-            code = codeElements[0].textContent.trim(); // 取真实代码内容
+          const codeEl = block.querySelector('code');
+          if (codeEl) {
+            code = codeEl.textContent.trim();
           } else {
             code = block.textContent.replace(/复制|已复制/g, '').trim();
           }
 
           // 复制到剪贴板
           navigator.clipboard.writeText(code).then(() => {
-            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>'; // 豆包成功图标
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
             copyBtn.classList.add('copied');
             setTimeout(() => {
               copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
               copyBtn.classList.remove('copied');
-            }, 2000);
+            }, 1500);
           }).catch(err => {
-            alert('复制失败：' + err);
+            console.log('复制失败:', err);
           });
         });
       });
