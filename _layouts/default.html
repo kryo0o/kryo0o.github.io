@@ -372,16 +372,25 @@
       }, 3000);
     }
 
+    // --- 新增：全局集合，用于记录已处理的代码块 ---
+    const processedCodeBlocks = new Set();
+
     // 为单个代码块附加复制按钮的核心逻辑
     function attachCopyButtonToBlock(block) {
         // --- 强化检查：确保按钮唯一性 ---
-        // 方法1: 检查自定义数据属性 (推荐)
-        if (block.dataset.copyBtnAdded === 'true') {
-            console.warn("[CopyBtn] 按钮已标记为已添加，跳过:", block);
+        // 方法1: 检查全局 Set (最高优先级)
+        if (processedCodeBlocks.has(block)) {
+            console.warn("[CopyBtn] 按钮已标记为已添加（Set），跳过:", block);
             return; // 已经处理过，直接返回
         }
 
-        // 方法2 (增强): 检查预期的按钮ID是否存在 (更可靠)
+        // 方法2: 检查自定义数据属性 (备用)
+        if (block.dataset.copyBtnAdded === 'true') {
+            console.warn("[CopyBtn] 按钮已标记为已添加（data-*），跳过:", block);
+            return; // 已经处理过，直接返回
+        }
+
+        // 方法3 (增强): 检查预期的按钮ID是否存在 (更可靠)
         const expectedBtnId = block.dataset.expectedCopyBtnId;
         if (expectedBtnId) {
             const existingBtnById = document.getElementById(expectedBtnId);
@@ -395,7 +404,7 @@
             }
         }
 
-        // 方法3 (备用): 再次查询按钮是否存在 (增加健壮性)
+        // 方法4 (备用): 再次查询按钮是否存在 (增加健壮性)
         const existingBtnByClass = block.querySelector('.code-copy-btn');
         if (existingBtnByClass) {
              console.warn("[CopyBtn] 检测到现有按钮类，跳过:", block);
@@ -417,6 +426,9 @@
         // 标记该代码块已添加按钮及按钮ID
         block.dataset.copyBtnAdded = 'true';
         block.dataset.expectedCopyBtnId = uniqueId; // 记录按钮ID
+
+        // 关键：将元素添加到全局 Set
+        processedCodeBlocks.add(block);
 
         console.log("[CopyBtn] 成功为代码块添加按钮:", uniqueId, block);
 
