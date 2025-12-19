@@ -49,13 +49,12 @@
       padding: 2px 6px !important;
       font-size: 13px !important;
       font-family: "Consolas", "Monaco", "Courier New", monospace !important;
-      color: #24292e !important; /* 纯文本颜色 */
+      color: #24292e !important;
       border: 1px solid #e5e6eb !important;
       margin: 0 2px !important;
     }
 
     /* ========== 2. 块级代码（纯文本，无上色） ========== */
-    /* 块级代码容器（仅保留基础样式，无彩色） */
     .highlight, .code-block {
       background: #f5f7fa !important;
       border: 1px solid #e5e6eb !important;
@@ -68,7 +67,6 @@
       line-height: 1.6 !important;
       max-width: 100% !important;
     }
-    /* 块级代码内容（纯文本，无任何语法上色） */
     .highlight pre, .highlight code {
       background: transparent !important;
       border: none !important;
@@ -77,10 +75,10 @@
       font-size: 14px !important;
       line-height: 1.6 !important;
       font-family: "Consolas", "Monaco", "Courier New", monospace !important;
-      color: #24292e !important; /* 统一纯文本颜色 */
+      color: #24292e !important;
     }
 
-    /* ========== 复制按钮 ========== */
+    /* ========== 复制按钮（唯一显示） ========== */
     .copy-btn {
       position: absolute !important;
       top: 8px !important;
@@ -95,12 +93,14 @@
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      z-index: 10 !important;
+      z-index: 99 !important;
       padding: 0 !important;
       font-size: 12px !important;
       opacity: 0.8 !important;
+      /* 初始隐藏，hover显示 */
       display: none !important;
     }
+    /* 仅块级代码hover时显示一个按钮 */
     .highlight:hover .copy-btn {
       display: flex !important;
     }
@@ -140,7 +140,7 @@
       margin: 0;
     }
 
-    /* ========== 文章列表样式 ========== */
+    /* ========== 文章列表样式（彻底屏蔽标签） ========== */
     .post-item {
       padding: 16px 0;
       border-bottom: 1px solid #e5e6eb;
@@ -168,10 +168,15 @@
       color: #999;
       margin: 0;
     }
-    /* 移除日期旁边的标签 */
-    .post-header .post-tags,
-    .post-header .tags {
+    /* 🔥 强制屏蔽所有标签相关元素（优先级最高） */
+    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
       display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
     .post-excerpt {
       font-size: 15px;
@@ -225,41 +230,44 @@
     {{ content }}
   </div>
 
-  <!-- 复制按钮脚本（保留换行格式，确保只添加一次） -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // 清除可能存在的重复按钮
-    document.querySelectorAll('.copy-btn').forEach(btn => btn.remove());
-    
-    // 重新为每个代码块添加唯一的复制按钮
-    const codeBlocks = document.querySelectorAll('.highlight');
-    
-    codeBlocks.forEach(block => {
-      const copyBtn = document.createElement('button');
-      copyBtn.className = 'copy-btn';
-      copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-      block.appendChild(copyBtn);
-      
-      copyBtn.addEventListener('click', function() {
-        const codeEl = block.querySelector('code');
-        // 保留原始换行和空格格式
-        const code = codeEl ? codeEl.textContent : '';
-        
-        if (code) {
-          navigator.clipboard.writeText(code).then(() => {
-            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-            copyBtn.classList.add('copied');
-            setTimeout(() => {
-              copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-              copyBtn.classList.remove('copied');
-            }, 1500);
-          }).catch(err => {
-            alert('复制失败：' + err.message);
-          });
-        }
+  <!-- 复制按钮脚本（确保唯一+保留换行） -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 第一步：清除所有已存在的复制按钮（解决重复问题）
+      const existingBtns = document.querySelectorAll('.copy-btn');
+      existingBtns.forEach(btn => btn.remove());
+
+      // 第二步：为每个代码块添加唯一的复制按钮
+      const codeBlocks = document.querySelectorAll('.highlight');
+      codeBlocks.forEach(block => {
+        // 防止重复添加（双重保险）
+        if (block.querySelector('.copy-btn')) return;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+        block.appendChild(copyBtn);
+
+        // 复制逻辑：保留换行/空格格式
+        copyBtn.addEventListener('click', function() {
+          const codeEl = block.querySelector('code');
+          const code = codeEl ? codeEl.textContent : ''; // 无trim，保留原始格式
+
+          if (code) {
+            navigator.clipboard.writeText(code).then(() => {
+              copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+              copyBtn.classList.add('copied');
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+                copyBtn.classList.remove('copied');
+              }, 1500);
+            }).catch(err => {
+              alert('复制失败：' + err.message);
+            });
+          }
+        });
       });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

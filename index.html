@@ -11,19 +11,17 @@ title: 首页
   </div>
 </div>
 
-<!-- 文章列表（仅保留标题+日期，移除所有标签） -->
+<!-- 文章列表（仅标题+日期，无任何标签） -->
 <div class="post-list">
   {% if paginator.posts.size > 0 %}
     {% for post in paginator.posts %}
       <div class="post-item">
-        <!-- 文章标题+日期（仅保留日期，无标签） -->
         <div class="post-header">
           <h2 class="post-title">
             <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
           </h2>
           <p class="post-date">{{ post.date | date: "%Y-%m-%d" }}</p>
         </div>
-        <!-- 文章简介 -->
         <p class="post-excerpt">
           {{ post.content | strip_html | truncate: 200, "..." }}
         </p>

@@ -5,7 +5,7 @@ baseurl: ""
 url: "https://blog.kryoo.de"
 github_username: kryo0o
 
-# 核心配置（删除所有高亮相关）
+# 核心配置
 markdown: kramdown
 permalink: /posts/:title/
 timezone: Asia/Shanghai
@@ -16,12 +16,13 @@ lsi: false
 paginate: 10
 paginate_path: "/page/:num/"
 
+# 仅保留必要插件
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
 
-# 简化Kramdown配置（无高亮）
+# 简化Kramdown配置
 kramdown:
   input: GFM
   parse_block_html: true
