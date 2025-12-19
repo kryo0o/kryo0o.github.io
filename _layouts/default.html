@@ -320,7 +320,7 @@
   // 解决重复添加复制按钮的核心逻辑
   document.addEventListener('DOMContentLoaded', () => {
     // 使用更精确的选择器，避免重复选择
-    const codeBlocks = document.querySelectorAll('.code-block, .highlight');
+    const codeBlocks = document.querySelectorAll('.code-block, .highlight:not(.code-block)');
     
     // 创建一个 Set 来记录已处理的元素
     const processedBlocks = new Set();
