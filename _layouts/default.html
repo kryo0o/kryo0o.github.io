@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>代码块样式示例</title>
-  <!-- 引入Font Awesome图标库 -->
+  <!-- Liquid 模板语法保留 -->
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       /* 基础配色 - 豆包风格 */
-      --code-block-bg: #f5f7fa;
-      --code-block-border: #e5e6eb;
-      --code-text-color: #24292e;
-      --inline-code-bg: #f1f2f6;
-      --inline-code-border: #e0e0e0;
-      --inline-code-text: #e63946;
-      --copy-btn-normal: #f0f2f5;
-      --copy-btn-hover: #e5e6eb;
-      --copy-success-color: #52c41a;
-      --text-gray: #999;
-      --text-light-gray: #666;
-
-      /* 尺寸与字体 */
-      --radius-sm: 4px;
-      --radius-md: 6px;
+      --color-text-main: #24292e;
+      --color-text-light: #666;
+      --color-text-gray: #999;
+      --color-border: #e5e6eb;
+      --color-bg-main: #fafafa;
+      --color-code-bg: #f5f7fa;
+      --color-inline-code-bg: #f1f2f6;
+      --color-inline-code-border: #e0e0e0;
+      --color-inline-code-text: #e63946;
+      --color-copy-btn: #f0f2f5;
+      --color-copy-btn-hover: #e5e6eb;
+      --color-copy-success: #52c41a;
+      --border-radius-sm: 4px;
+      --border-radius-md: 6px;
       --font-code: "Consolas", "Monaco", "Courier New", monospace;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -36,77 +36,98 @@
 
     body {
       font-family: var(--font-main);
-      background-color: #fafafa;
-      color: #333;
+      background-color: var(--color-bg-main);
+      color: var(--color-text-main);
       line-height: 1.8;
-      padding: 40px 20px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* 原模板头部样式保留 */
+    header.header-wrapper {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-inner {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 0 20px;
     }
 
-    h2 {
-      margin-bottom: 20px;
-      color: #24292e;
-      font-size: 24px;
+    .site-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
     }
 
-    p {
-      margin-bottom: 16px;
-      font-size: 16px;
+    main.container-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
 
-    /* 行内代码高亮样式 - 重点强化 */
-    p > code,
-    li > code,
-    span > code,
-    div > code:not(.code-block code) {
-      background-color: var(--inline-code-bg);
-      border: 1px solid var(--inline-code-border);
-      border-radius: var(--radius-sm);
-      padding: 4px 8px;
+    /* 行内代码高亮 - 核心优化 */
+    .container-main p > code,
+    .container-main li > code,
+    .container-main span > code,
+    .container-main div > code:not(.code-block code),
+    .container-main td > code {
+      background-color: var(--color-inline-code-bg);
+      border: 1px solid var(--color-inline-code-border);
+      border-radius: var(--border-radius-sm);
+      padding: 3px 8px;
       font-size: 14px;
       font-family: var(--font-code);
-      color: var(--inline-code-text);
+      color: var(--color-inline-code-text);
       font-weight: 500;
-      margin: 0 3px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      margin: 0 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
 
-    /* 代码块核心样式 - 无分割线、整体化设计 */
+    /* 代码块核心样式 - 无分割线、整体化 */
     .code-block {
       position: relative;
-      background-color: var(--code-block-bg);
-      border: 1px solid var(--code-block-border);
-      border-radius: var(--radius-md);
-      margin: 24px 0;
+      background-color: var(--color-code-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      margin: 16px 0;
       overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    /* 代码块头部 - 与主体无分割线 */
+    /* 代码块头部 - 无分割线，背景与主体一致 */
     .code-block-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 16px;
-      background-color: var(--code-block-bg); /* 与主体背景一致，无分割感 */
+      padding: 8px 16px;
+      background-color: var(--color-code-bg);
       font-size: 14px;
     }
 
     .code-block-language {
-      color: var(--text-gray);
+      color: var(--color-text-gray);
       font-family: var(--font-code);
     }
 
-    /* 代码内容区域 - 仅横向滚动，禁止纵向滚动 */
+    /* 代码内容 - 仅横向滚动、禁止上下滚动 */
     .code-block-content {
       padding: 16px;
       overflow-x: auto;
-      overflow-y: hidden; /* 强制禁用纵向滚动 */
+      overflow-y: hidden;
       font-family: var(--font-code);
       font-size: 14px;
       line-height: 1.6;
-      white-space: pre; /* 保留代码原始格式，不自动换行 */
+      white-space: pre;
     }
 
     .code-block-content pre {
@@ -114,43 +135,42 @@
       white-space: inherit;
     }
 
-    /* 豆包风格复制按钮 - 浅灰色系 */
+    /* 复制按钮 - 仅图标、豆包浅灰色 */
     .code-copy-btn {
-      padding: 6px 12px;
-      background-color: var(--copy-btn-normal);
-      border: none;
-      border-radius: var(--radius-sm);
-      color: var(--text-light-gray);
-      cursor: pointer;
-      font-size: 13px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      background-color: var(--color-copy-btn);
+      border: none;
+      border-radius: var(--border-radius-sm);
+      color: var(--color-text-light);
+      cursor: pointer;
       transition: all 0.2s ease;
-      font-family: var(--font-main);
     }
 
     .code-copy-btn:hover {
-      background-color: var(--copy-btn-hover);
+      background-color: var(--color-copy-btn-hover);
       color: #333;
     }
 
     .code-copy-btn.copied {
-      background-color: var(--copy-success-color);
+      background-color: var(--color-copy-success);
       color: white;
     }
 
-    /* 复制成功提示框 - 右上角弹出 */
+    /* 复制成功提示框 */
     .copy-toast {
       position: fixed;
       top: 20px;
       right: 20px;
       padding: 10px 20px;
-      background-color: var(--copy-success-color);
+      background-color: var(--color-copy-success);
       color: white;
-      border-radius: var(--radius-md);
+      border-radius: var(--border-radius-md);
       font-size: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       z-index: 9999;
       opacity: 0;
       transform: translateX(20px);
@@ -162,244 +182,228 @@
       transform: translateX(0);
     }
 
-    /* 响应式适配 - 移动端优化 */
-    @media (max-width: 768px) {
-      body {
-        padding: 20px 16px;
-      }
+    /* 原模板其他样式保留 */
+    .banner {
+      width: 100%;
+      min-height: 200px;
+      height: 50vh;
+      max-height: 300px;
+      background: url('{{ site.banner.image }}') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      border-radius: var(--border-radius-md);
+      margin-bottom: 30px;
+    }
 
+    .banner-content {
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .banner-content h1 {
+      font-size: 36px;
+      margin: 0 0 12px 0;
+    }
+
+    .banner-content p {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .post-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .post-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .post-title a:hover {
+      color: #4096ff;
+    }
+
+    .post-date {
+      font-size: 14px;
+      color: var(--color-text-gray);
+      margin: 0;
+    }
+
+    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
+      display: none;
+    }
+
+    .post-excerpt {
+      font-size: 15px;
+      color: var(--color-text-light);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 40px;
+      padding: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .page-number {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-light);
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .page-number:hover {
+      border-color: var(--color-copy-btn);
+      background-color: var(--color-inline-code-bg);
+    }
+
+    .page-number.current {
+      background-color: var(--color-copy-btn);
+      color: var(--color-text-light);
+      border-color: var(--color-copy-btn);
+      font-weight: 600;
+    }
+
+    /* 响应式适配 */
+    @media (max-width: 480px) {
+      .page-number {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      .banner-content h1 {
+        font-size: 28px;
+      }
+      .banner-content p {
+        font-size: 16px;
+      }
       .code-block-content {
         font-size: 13px;
         padding: 12px;
       }
-
       .code-copy-btn {
-        padding: 4px 8px;
-        font-size: 12px;
-      }
-
-      .code-block-header {
-        padding: 8px 12px;
+        width: 28px;
+        height: 28px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- 页面示例内容 -->
-  <h2>代码块与行内代码演示</h2>
-  
-  <p>这是行内代码示例：<code>const handleCopy = async () => { ... }</code>，行内代码会高亮显示，视觉更醒目。</p>
-  
-  <p>另一个行内代码示例：<code>navigator.clipboard.writeText(codeContent)</code>，使用现代浏览器剪贴板API实现复制。</p>
-
-  <!-- JavaScript代码块示例 -->
-  <div class="code-block" data-language="javascript">
-    <div class="code-block-content">
-<pre>/**
- * 初始化所有代码块的复制功能
- * 仅适配现代浏览器，使用原生剪贴板API
- */
-function initCodeBlocks() {
-  const codeBlocks = document.querySelectorAll('.code-block');
-  
-  codeBlocks.forEach(block => {
-    // 获取代码语言标识（默认值为"代码"）
-    const language = block.dataset.language || '代码';
-    
-    // 创建代码块头部（语言+复制按钮）
-    const header = document.createElement('div');
-    header.className = 'code-block-header';
-    
-    // 语言显示元素
-    const langElement = document.createElement('div');
-    langElement.className = 'code-block-language';
-    langElement.textContent = language;
-    
-    // 复制按钮
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'code-copy-btn';
-    copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> 复制代码';
-    
-    // 组装头部并插入到代码块
-    header.appendChild(langElement);
-    header.appendChild(copyBtn);
-    block.insertBefore(header, block.firstChild);
-    
-    // 绑定复制点击事件
-    copyBtn.addEventListener('click', async () => {
-      try {
-        // 获取代码内容并去除首尾空白
-        const codeContent = block.querySelector('.code-block-content').textContent.trim();
-        
-        // 现代浏览器剪贴板API
-        await navigator.clipboard.writeText(codeContent);
-        
-        // 更新按钮状态
-        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> 复制成功';
-        copyBtn.classList.add('copied');
-        
-        // 显示复制成功提示
-        showToast('代码已复制到剪贴板');
-        
-        // 2秒后恢复按钮初始状态
-        setTimeout(() => {
-          copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> 复制代码';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-        
-      } catch (error) {
-        console.error('复制失败:', error);
-        showToast('复制失败，请手动复制', 'error');
-      }
-    });
-  });
-}</pre>
+  <!-- 原模板头部结构保留 -->
+  <header class="header-wrapper">
+    <div class="header-inner">
+      <a href="{{ '/' | relative_url }}" class="site-title">
+        {{ site.title }}
+      </a>
     </div>
-  </div>
+  </header>
 
-  <!-- 超长代码块示例（测试横向滚动） -->
-  <div class="code-block" data-language="python">
-    <div class="code-block-content">
-<pre>def long_code_demo():
-    # 超长代码行测试 - 仅横向滚动，无纵向滚动
-    long_string = "This is a very long string to test horizontal scrolling effect in code block, no vertical scroll bar will appear even if the content is very long, only horizontal scroll bar is allowed."
-    print(f"Long string: {long_string}")
-    
-    # 多列数据测试横向滚动
-    data = [
-        {"id": 1, "name": "Test Item 1", "description": "This is a test description for item 1 with long content"},
-        {"id": 2, "name": "Test Item 2", "description": "This is a test description for item 2 with long content"},
-        {"id": 3, "name": "Test Item 3", "description": "This is a test description for item 3 with long content"}
-    ]
-    
-    for item in data:
-        print(f"ID: {item['id']}, Name: {item['name']}, Description: {item['description']} - {long_string}")
-    
-    return True
-
-# 主函数执行
-if __name__ == "__main__":
-    result = long_code_demo()
-    print(f"Execution result: {result}")
-    print("This line is also very long to test the horizontal scroll bar in the code block - " + long_string)</pre>
-    </div>
-  </div>
-
-  <!-- HTML代码块示例 -->
-  <div class="code-block" data-language="html">
-    <div class="code-block-content">
-<pre>&lt;!DOCTYPE html&gt;
-&lt;html lang="zh-CN"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8"&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;代码块示例&lt;/title&gt;
-  &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;div class="code-block" data-language="html"&gt;
-    &lt;div class="code-block-content"&gt;
-      &lt;pre&gt;代码内容&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-    </div>
-  </div>
+  <!-- 原模板主体结构保留（无演示内容） -->
+  <main class="container-main">
+    {{ content }}
+  </main>
 
   <script>
-    /**
-     * 显示复制提示框
-     * @param {string} message - 提示文本
-     * @param {string} type - 提示类型（success/error）
-     */
-    function showToast(message, type = 'success') {
-      // 移除已存在的提示框
+    // 复制成功提示
+    function showToast(message) {
       const existingToast = document.querySelector('.copy-toast');
       if (existingToast) existingToast.remove();
-      
-      // 创建新提示框
+
       const toast = document.createElement('div');
       toast.className = 'copy-toast';
       toast.textContent = message;
-      
-      // 错误类型样式调整
-      if (type === 'error') {
-        toast.style.backgroundColor = '#ff4d4f';
-      }
-      
       document.body.appendChild(toast);
-      
-      // 显示动画
+
       setTimeout(() => toast.classList.add('show'), 10);
-      
-      // 3秒后隐藏并移除
       setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
       }, 3000);
     }
 
-    /**
-     * 页面加载完成后初始化所有代码块
-     */
-    document.addEventListener('DOMContentLoaded', function() {
+    // 初始化代码块（仅图标按钮、无多余逻辑）
+    function initCodeBlocks() {
       const codeBlocks = document.querySelectorAll('.code-block');
       
       codeBlocks.forEach(block => {
-        // 获取语言标识
+        // 提取语言
         const language = block.dataset.language || '代码';
         
-        // 创建头部容器
+        // 创建头部
         const header = document.createElement('div');
         header.className = 'code-block-header';
         
-        // 创建语言显示元素
+        // 语言显示
         const langElement = document.createElement('div');
         langElement.className = 'code-block-language';
         langElement.textContent = language;
         
-        // 创建复制按钮
+        // 复制按钮（仅图标）
         const copyBtn = document.createElement('button');
         copyBtn.className = 'code-copy-btn';
-        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> 复制代码';
+        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>'; // 仅图标，无文字
         
         // 组装头部
         header.appendChild(langElement);
         header.appendChild(copyBtn);
-        
-        // 插入头部到代码块最前方
         block.insertBefore(header, block.firstChild);
-        
-        // 绑定复制事件
+
+        // 补全内容容器（如果没有）
+        if (!block.querySelector('.code-block-content')) {
+          const preElement = block.querySelector('pre') || block;
+          const contentWrapper = document.createElement('div');
+          contentWrapper.className = 'code-block-content';
+          while (preElement.firstChild) {
+            contentWrapper.appendChild(preElement.firstChild);
+          }
+          block.appendChild(contentWrapper);
+        }
+
+        // 复制事件（仅现代浏览器API）
         copyBtn.addEventListener('click', async () => {
           try {
-            // 获取代码内容
             const codeContent = block.querySelector('.code-block-content').textContent.trim();
-            
-            // 现代浏览器剪贴板API
             await navigator.clipboard.writeText(codeContent);
             
-            // 更新按钮状态
-            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> 复制成功';
+            // 按钮状态切换（仅图标）
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
             copyBtn.classList.add('copied');
+            showToast('代码已复制');
             
-            // 显示成功提示
-            showToast('代码已复制到剪贴板');
-            
-            // 2秒后恢复按钮状态
+            // 恢复初始状态
             setTimeout(() => {
-              copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> 复制代码';
+              copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
               copyBtn.classList.remove('copied');
             }, 2000);
-            
-          } catch (error) {
-            console.error('复制失败:', error);
-            showToast('复制失败，请手动复制', 'error');
+          } catch (err) {
+            console.error('复制失败:', err);
+            showToast('复制失败，请手动复制');
           }
         });
       });
-    });
+    }
+
+    // 页面加载初始化
+    document.addEventListener('DOMContentLoaded', initCodeBlocks);
   </script>
 </body>
 </html>
