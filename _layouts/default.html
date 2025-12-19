@@ -361,6 +361,9 @@
       }, 3000);
     }
 
+    // 全局变量用于跟踪是否已经初始化过
+    let copyButtonsInitialized = false;
+
     // 为单个代码块附加复制按钮
     function attachCopyButtonToBlock(block) {
       // 检查是否已添加按钮，避免重复添加
@@ -369,7 +372,9 @@
       }
 
       // 检查是否已经存在复制按钮（双重保险）
-      if (block.querySelector('.code-copy-btn')) {
+      const existingBtn = block.querySelector('.code-copy-btn');
+      if (existingBtn) {
+        // 如果按钮已存在但数据属性未设置，则更新数据属性
         block.dataset.copyBtnAdded = 'true';
         return;
       }
@@ -455,6 +460,19 @@
 
     // 初始化代码块复制按钮
     function initCodeCopyButtons(scope = document) {
+      if (copyButtonsInitialized) {
+        // 如果已经在其他地方初始化过了，则只处理新添加的代码块
+        const newCodeBlocks = scope.querySelectorAll(
+          '.code-block:not([data-copy-btn-added]), .highlight:not([data-copy-btn-added])'
+        );
+        newCodeBlocks.forEach(block => {
+          if (!block.dataset.copyBtnAdded) {
+            attachCopyButtonToBlock(block);
+          }
+        });
+        return;
+      }
+
       // 选择所有代码块，包括 .code-block 和 .highlight 类
       const codeBlocks = scope.querySelectorAll(
         '.code-block, .highlight'
@@ -466,6 +484,8 @@
           attachCopyButtonToBlock(block);
         }
       });
+      
+      copyButtonsInitialized = true;
     }
 
     // 页面加载完成后初始化
@@ -490,7 +510,7 @@
                     attachCopyButtonToBlock(node);
                   }
                 } else if (node.querySelectorAll) {
-                  const newCodeBlocks = node.querySelectorAll('.code-block:not([data-copy-btn-added]), .highlight:not([data-copy-btn-added])');
+                  const newCodeBlocks = node.querySelectorAll('.code-block, .highlight');
                   newCodeBlocks.forEach(block => {
                     if (!block.dataset.copyBtnAdded) {
                       attachCopyButtonToBlock(block);
