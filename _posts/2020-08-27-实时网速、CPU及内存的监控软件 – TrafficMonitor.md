@@ -3,7 +3,6 @@ layout: post
 title: 实时网速、CPU及内存的监控软件 – TrafficMonitor
 date: 2020-08-27
 categories: blog
-tags: [windows]
 description: 实时网速、CPU及内存的监控软件 – TrafficMonitor
 author: 'musk'
 ---

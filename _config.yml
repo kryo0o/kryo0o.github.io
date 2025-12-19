@@ -34,5 +34,5 @@ kramdown:
 # Banner配置
 banner:
   image: "https://picsum.photos/1920/500"
-  title: "技术笔记与实用教程"
-  subtitle: "持续分享，共同成长"
+  title: "一点记录"
+  subtitle: "沉默"
