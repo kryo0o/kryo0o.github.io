@@ -4,461 +4,215 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <!-- 改用 GitHub Pages 兼容的 Font Awesome CDN（避免跨域） -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.4.0/css/all.min.css">
-  <!-- Tailwind 保留（如果不用可删除，不影响核心功能） -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 仅加载必要的图标，兼容 GitHub Pages -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
   <style>
-    :root {
-      /* 核心配色 - 适配 GitHub Pages 风格 */
-      --color-text-main: #24292e;
-      --color-text-light: #666;
-      --color-text-gray: #999;
-      --color-border: #e5e6eb;
-      --color-bg-main: #fafafa;
-      --color-code-bg: #f6f8fa; /* 对齐 GitHub 代码块背景 */
-      --color-inline-code-bg: #f1f2f6;
-      --color-inline-code-border: #e0e0e0;
-      --color-inline-code-text: #e63946;
-      --color-copy-btn: #f0f2f5;
-      --color-copy-btn-hover: #e5e6eb;
-      --color-copy-success: #2eaadc; /* GitHub 蓝，更适配 */
-      --border-radius-sm: 4px;
-      --border-radius-md: 6px;
-      --font-code: "Consolas", "Monaco", "Courier New", monospace;
-      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    /* 全局基础样式 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: var(--font-main);
-      background-color: var(--color-bg-main);
-      color: var(--color-text-main);
-      line-height: 1.8;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* 原头部样式 */
-    header.header-wrapper {
-      width: 100%;
-      background: #fff;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      padding: 12px 0;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .site-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    main.container-main {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+      line-height: 1.8;
+      color: #24292e;
+      background: #fafafa;
     }
 
-    /* ========== 核心修复：行内代码高亮（适配 Jekyll） ========== */
-    .container-main p > code,
-    .container-main li > code,
-    .container-main span > code,
-    .container-main div > code:not(.code-block code):not(.highlight code),
-    .container-main td > code {
-      background-color: var(--color-inline-code-bg);
-      border: 1px solid var(--color-inline-code-border);
-      border-radius: var(--border-radius-sm);
+    /* ========== 1. 行内代码高亮（MD `代码` 自动生效） ========== */
+    p > code, li > code, h1 > code, h2 > code, h3 > code,
+    div > code:not(.highlighter-rouge code) {
+      background: #f1f2f6;
+      border: 1px solid #e5e6eb;
+      border-radius: 4px;
       padding: 3px 8px;
       font-size: 14px;
-      font-family: var(--font-code);
-      color: var(--color-inline-code-text);
-      font-weight: 500;
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      color: #e63946;
       margin: 0 2px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
 
-    /* ========== 核心修复：代码块样式（兼容 Jekyll highlight 标签） ========== */
-    /* 适配手动写的 .code-block 和 Jekyll 生成的 .highlight */
-    .code-block,
-    .highlight {
+    /* ========== 2. MD ``` 代码块核心样式（无分割线、仅横向滚动） ========== */
+    /* 匹配 MD 渲染后的代码块容器 */
+    .highlighter-rouge {
       position: relative;
-      background-color: var(--color-code-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
+      background: #f6f8fa;
+      border: 1px solid #e5e6eb;
+      border-radius: 6px;
       margin: 16px 0;
       overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-
-    /* 代码块头部（无分割线） */
-    .code-block-header,
-    .highlight-header {
+    /* 代码块头部（自动生成：语言 + 复制按钮） */
+    .code-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 8px 16px;
-      background-color: var(--color-code-bg); /* 无分割线 */
+      background: #f6f8fa; /* 和代码块背景一致，无分割线 */
       font-size: 14px;
     }
-
-    .code-block-language,
-    .highlight-language {
-      color: var(--color-text-gray);
-      font-family: var(--font-code);
-    }
-
-    /* 代码内容：仅横向滚动，禁止上下滚动（核心修复） */
-    .code-block-content,
-    .highlight .highlight-code {
-      padding: 16px;
-      overflow-x: auto;
-      overflow-y: hidden !important; /* 强制禁用上下滚动 */
-      font-family: var(--font-code);
-      font-size: 14px;
-      line-height: 1.6;
-      white-space: pre; /* 禁止自动换行 */
-      max-height: none !important; /* 取消 Jekyll 可能的高度限制 */
-    }
-
-    .code-block-content pre,
-    .highlight-code pre {
+    .code-lang { color: #999; font-family: Consolas, monospace; }
+    /* 代码内容：仅横向滚动，禁止上下滚动 */
+    .highlighter-rouge pre {
+      padding: 16px !important;
       margin: 0 !important;
-      white-space: inherit;
+      overflow-x: auto !important;
+      overflow-y: hidden !important; /* 强制禁用上下滚动 */
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      font-size: 14px;
+      white-space: pre !important; /* 不自动换行，仅横向滚 */
+      background: transparent !important;
     }
+    /* 覆盖 Jekyll 原生样式，避免冲突 */
+    .highlighter-rouge .highlight { background: transparent !important; border: 0 !important; }
+    .highlighter-rouge code { background: transparent !important; padding: 0 !important; border: 0 !important; }
 
-    /* ========== 复制按钮：仅图标（豆包风格，适配 GitHub Pages） ========== */
-    .code-copy-btn,
-    .highlight-copy-btn {
+    /* ========== 3. 复制按钮（仅图标，豆包浅灰色） ========== */
+    .copy-btn {
       width: 32px;
       height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--color-copy-btn);
+      background: #f0f2f5; /* 豆包浅灰 */
       border: none;
-      border-radius: var(--border-radius-sm);
-      color: var(--color-text-light);
+      border-radius: 4px;
+      color: #666;
       cursor: pointer;
-      transition: all 0.2s ease;
-      z-index: 10;
+      transition: all 0.2s;
     }
+    .copy-btn:hover { background: #e5e6eb; color: #333; }
+    .copy-btn.copied { background: #2eaadc; color: white; }
 
-    .code-copy-btn:hover,
-    .highlight-copy-btn:hover {
-      background-color: var(--color-copy-btn-hover);
-      color: #333;
-    }
-
-    .code-copy-btn.copied,
-    .highlight-copy-btn.copied {
-      background-color: var(--color-copy-success);
-      color: white;
-    }
-
-    /* 复制成功提示（适配 GitHub Pages 层级） */
-    .copy-toast {
+    /* ========== 4. 复制成功提示 ========== */
+    .toast {
       position: fixed;
       top: 20px;
       right: 20px;
       padding: 10px 20px;
-      background-color: var(--color-copy-success);
+      background: #2eaadc;
       color: white;
-      border-radius: var(--border-radius-md);
+      border-radius: 6px;
       font-size: 14px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 9999 !important; /* 确保在最上层 */
+      z-index: 9999;
       opacity: 0;
       transform: translateX(20px);
-      transition: all 0.3s ease;
+      transition: all 0.3s;
     }
+    .toast.show { opacity: 1; transform: translateX(0); }
 
-    .copy-toast.show {
-      opacity: 1;
-      transform: translateX(0);
+    /* 保留头部样式（按需调整） */
+    header {
+      padding: 12px 0;
+      margin-bottom: 20px;
+      background: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
     }
-
-    /* 原模板其他样式（保留） */
-    .banner {
-      width: 100%;
-      min-height: 200px;
-      height: 50vh;
-      max-height: 300px;
-      background: url('{{ site.banner.image | default: "" }}') no-repeat center center;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-      border-radius: var(--border-radius-md);
-      margin-bottom: 30px;
-    }
-
-    .banner-content {
-      text-align: center;
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 0 20px;
     }
-
-    .banner-content h1 {
-      font-size: 36px;
-      margin: 0 0 12px 0;
-    }
-
-    .banner-content p {
-      font-size: 18px;
-      margin: 0;
-    }
-
-    .post-item {
-      padding: 16px 0;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .post-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .post-title {
+    .site-title {
       font-size: 20px;
       font-weight: 600;
-      margin: 0;
-    }
-
-    .post-title a:hover {
-      color: #4096ff;
-    }
-
-    .post-date {
-      font-size: 14px;
-      color: var(--color-text-gray);
-      margin: 0;
-    }
-
-    .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"] {
-      display: none;
-    }
-
-    .post-excerpt {
-      font-size: 15px;
-      color: var(--color-text-light);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 40px;
-      padding: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .page-number {
-      display: inline-block;
-      padding: 8px 16px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
-      color: var(--color-text-light);
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .page-number:hover {
-      border-color: var(--color-copy-btn);
-      background-color: var(--color-inline-code-bg);
-    }
-
-    .page-number.current {
-      background-color: var(--color-copy-btn);
-      color: var(--color-text-light);
-      border-color: var(--color-copy-btn);
-      font-weight: 600;
-    }
-
-    /* 响应式适配（移动端） */
-    @media (max-width: 480px) {
-      .page-number {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-      .banner-content h1 {
-        font-size: 28px;
-      }
-      .banner-content p {
-        font-size: 16px;
-      }
-      .code-block-content, .highlight-code {
-        font-size: 13px;
-        padding: 12px;
-      }
-      .code-copy-btn, .highlight-copy-btn {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    /* 覆盖 Jekyll 默认代码块样式（核心修复） */
-    .highlight pre {
-      background: none !important;
-      border: none !important;
-    }
-    .highlight code {
-      background: none !important;
-      padding: 0 !important;
-      border: none !important;
+      color: #333;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <header class="header-wrapper">
+  <header>
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">
-        {{ site.title }}
-      </a>
+      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
     </div>
   </header>
 
-  <main class="container-main">
-    {{ content }}
-  </main>
+  <main>{{ content }}</main>
 
   <script>
-    // 修复：DOMContentLoaded 改为 load，确保 Jekyll 渲染完成后执行
-    window.addEventListener('load', function() {
-      // 复制成功提示（适配 GitHub Pages）
-      function showToast(message) {
-        const existingToast = document.querySelector('.copy-toast');
-        if (existingToast) existingToast.remove();
-
+    // 页面完全加载后执行（确保 MD 代码块已渲染）
+    window.onload = function() {
+      // 复制提示函数
+      function showToast(text) {
+        const oldToast = document.querySelector('.toast');
+        if (oldToast) oldToast.remove();
+        
         const toast = document.createElement('div');
-        toast.className = 'copy-toast';
-        toast.textContent = message;
+        toast.className = 'toast';
+        toast.textContent = text;
         document.body.appendChild(toast);
-
-        setTimeout(() => toast.classList.add('show'), 10);
+        
+        setTimeout(() => toast.classList.add('show'), 50);
         setTimeout(() => {
           toast.classList.remove('show');
           setTimeout(() => toast.remove(), 300);
         }, 3000);
       }
 
-      // ========== 核心修复：初始化所有代码块（兼容手动/ Jekyll 生成） ==========
-      function initAllCodeBlocks() {
-        // 1. 处理手动写的 .code-block
-        const customCodeBlocks = document.querySelectorAll('.code-block');
-        customCodeBlocks.forEach(block => {
-          initCodeBlock(block, 'code-block');
-        });
-
-        // 2. 处理 Jekyll {% highlight %} 生成的 .highlight
-        const jekyllHighlights = document.querySelectorAll('.highlight');
-        jekyllHighlights.forEach(block => {
-          // 提取 Jekyll 高亮的语言（从 class 中解析，比如 .highlight .language-ruby）
-          let lang = '代码';
-          const langClass = Array.from(block.classList).find(c => c.startsWith('language-'));
-          if (langClass) lang = langClass.replace('language-', '');
-          
-          initCodeBlock(block, 'highlight', lang);
-        });
-      }
-
-      // 通用代码块初始化函数（核心）
-      function initCodeBlock(block, prefix, lang = '代码') {
+      // 处理所有 MD ``` 代码块
+      document.querySelectorAll('.highlighter-rouge').forEach(block => {
         // 避免重复初始化
-        if (block.querySelector(`.${prefix}-header`)) return;
+        if (block.querySelector('.code-header')) return;
 
-        // 1. 创建头部（语言 + 复制按钮）
-        const header = document.createElement('div');
-        header.className = `${prefix}-header`;
-
-        // 语言显示
-        const langElement = document.createElement('div');
-        langElement.className = `${prefix}-language`;
-        langElement.textContent = block.dataset.language || lang;
-
-        // 复制按钮（仅图标）
-        const copyBtn = document.createElement('button');
-        copyBtn.className = `${prefix}-copy-btn`;
-        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-
-        // 组装头部
-        header.appendChild(langElement);
-        header.appendChild(copyBtn);
-        block.insertBefore(header, block.firstChild);
-
-        // 2. 整理代码内容容器（兼容 Jekyll 结构）
-        let contentWrapper = block.querySelector(`.${prefix}-content`);
-        if (!contentWrapper) {
-          contentWrapper = document.createElement('div');
-          contentWrapper.className = `${prefix}-content ${prefix}-code`;
-          
-          // 移动所有代码内容到容器（兼容 Jekyll 的 pre/code 结构）
-          const preElement = block.querySelector('pre') || block;
-          const codeContent = preElement.innerHTML;
-          preElement.innerHTML = '';
-          contentWrapper.innerHTML = `<pre>${codeContent}</pre>`;
-          block.appendChild(contentWrapper);
+        // 1. 提取代码块语言（支持 ```js / ``` / ```python 等）
+        let lang = '代码';
+        const preText = block.querySelector('pre').textContent;
+        const langMatch = preText.match(/^```(\w+)/);
+        if (langMatch) {
+          lang = langMatch[1];
+          // 移除 MD 代码块开头的 ```xxx 和结尾的 ```（不影响复制内容）
+          block.querySelector('pre').textContent = preText.replace(/^```\w*\n/, '').replace(/\n```$/, '');
         }
 
-        // 3. 绑定复制事件（适配 GitHub Pages 剪贴板权限）
-        copyBtn.addEventListener('click', async () => {
+        // 2. 创建头部（语言 + 复制按钮）
+        const header = document.createElement('div');
+        header.className = 'code-header';
+        
+        const langEl = document.createElement('div');
+        langEl.className = 'code-lang';
+        langEl.textContent = lang;
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; // 仅复制图标
+        
+        header.append(langEl, copyBtn);
+        block.prepend(header);
+
+        // 3. 绑定复制事件（兼容 GitHub Pages）
+        copyBtn.onclick = async function() {
           try {
-            // 获取纯文本代码（避免 HTML 标签）
-            const codeText = contentWrapper.textContent.trim();
-            // 兼容 GitHub Pages 的剪贴板 API（降级方案）
-            if (!navigator.clipboard) {
-              // 降级：创建临时 textarea 复制
+            const code = block.querySelector('pre').textContent.trim();
+            // 现代 API + 降级方案
+            if (navigator.clipboard) {
+              await navigator.clipboard.writeText(code);
+            } else {
               const textarea = document.createElement('textarea');
-              textarea.value = codeText;
+              textarea.value = code;
               document.body.appendChild(textarea);
               textarea.select();
               document.execCommand('copy');
               document.body.removeChild(textarea);
-            } else {
-              await navigator.clipboard.writeText(codeText);
             }
-
-            // 按钮状态切换（仅图标）
-            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            // 按钮状态切换
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
             copyBtn.classList.add('copied');
             showToast('代码已复制');
-
             // 恢复初始状态
             setTimeout(() => {
-              copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+              copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
               copyBtn.classList.remove('copied');
             }, 2000);
-          } catch (err) {
-            console.error('复制失败:', err);
+          } catch (e) {
             showToast('复制失败，请手动复制');
           }
-        });
-      }
-
-      // 执行初始化
-      initAllCodeBlocks();
-    });
+        };
+      });
+    };
   </script>
 </body>
 </html>
