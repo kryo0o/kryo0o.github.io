@@ -13,8 +13,8 @@ timezone: Asia/Shanghai
 safe: true
 lsi: false
 
-# 分页
-paginate: 10
+# 分页（必须保留，页码依赖此配置）
+paginate: 8
 paginate_path: "/page/:num/"
 
 # 仅保留必要插件

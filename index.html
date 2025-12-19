@@ -11,37 +11,45 @@ title: 首页
   </div>
 </div>
 
-<!-- 文章列表（移除所有标签相关代码） -->
+<!-- 文章列表 -->
 <div class="post-list">
   {% if paginator.posts.size > 0 %}
     {% for post in paginator.posts %}
       <div class="post-item">
-        <h2 class="post-title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h2>
-        <div class="post-meta">
-          <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+        <!-- 文章标题+日期（日期右对齐） -->
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h2>
+          <p class="post-date">{{ post.date | date: "%Y-%m-%d" }}</p>
         </div>
-        <div class="post-excerpt">
+        <!-- 文章简介 -->
+        <p class="post-excerpt">
           {{ post.content | strip_html | truncate: 200, "..." }}
-        </div>
+        </p>
       </div>
     {% endfor %}
   {% else %}
     <div class="post-item text-center">
-      <i class="fa-solid fa-file-alt text-4xl mb-4" style="color: #ccc;"></i>
-      <p style="color: #666;">暂无文章</p>
+      <p style="color: #999; font-size: 16px;">暂无文章</p>
     </div>
   {% endif %}
 </div>
 
-<!-- 分页 -->
-<div style="display: flex; justify-content: center; gap: 8px; margin-top: 20px;">
-  {% if paginator.previous_page %}
-    <a href="{{ paginator.previous_page_path | relative_url }}" style="padding: 8px 16px; border: 1px solid #e5e6eb; border-radius: 4px; color: #333; text-decoration: none;">上一页</a>
-  {% endif %}
-  <span style="padding: 8px 16px; border: 1px solid #d9d9d9; background: #d9d9d9; color: #666; border-radius: 4px;">{{ paginator.page }}</span>
-  {% if paginator.next_page %}
-    <a href="{{ paginator.next_page_path | relative_url }}" style="padding: 8px 16px; border: 1px solid #e5e6eb; border-radius: 4px; color: #333; text-decoration: none;">下一页</a>
-  {% endif %}
-</div>
+<!-- 页码分页（核心：无上下页，仅显示页码） -->
+{% if paginator.total_pages > 1 %}
+  <div class="pagination">
+    {% for page in (1..paginator.total_pages) %}
+      {% if page == paginator.page %}
+        <!-- 当前页高亮 -->
+        <span class="page-number current">{{ page }}</span>
+      {% elsif page == 1 %}
+        <!-- 第一页直接跳转首页 -->
+        <a href="{{ '/' | relative_url }}" class="page-number">{{ page }}</a>
+      {% else %}
+        <!-- 其他页码跳转对应页 -->
+        <a href="{{ site.paginate_path | replace: ':num', page | relative_url }}" class="page-number">{{ page }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
