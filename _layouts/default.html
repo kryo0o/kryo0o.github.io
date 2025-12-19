@@ -148,7 +148,7 @@
       font-size: 14px;
       transition: all 0.2s ease;
       z-index: 10;
-      opacity: 0;
+      opacity: 0.9;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
@@ -175,23 +175,6 @@
     .copy-code-btn i {
       font-size: 14px;
       transition: transform 0.2s ease;
-    }
-
-    /* 代码块悬停时显示复制按钮 */
-    .code-block:hover .copy-code-btn,
-    .highlight:hover .copy-code-btn {
-      opacity: 0.9;
-    }
-
-    /* 确保每个代码块只有一个复制按钮 */
-    .code-block > .copy-code-btn,
-    .highlight > .copy-code-btn {
-      opacity: 0.9;
-    }
-
-    /* 如果代码块内有pre标签，按钮在pre上 */
-    .code-block pre, .highlight pre {
-      position: relative;
     }
 
     /* 其他样式 */
@@ -366,11 +349,43 @@
   <script>
     // 等待DOM完全加载
     document.addEventListener('DOMContentLoaded', function() {
-      // 为所有代码块添加复制按钮（确保只添加一次）
-      document.querySelectorAll('.code-block, .highlight').forEach(function(codeBlock) {
+      // 精确选择最外层的代码块
+      function findOuterCodeBlocks() {
+        const allCodeBlocks = document.querySelectorAll('.code-block, .highlight');
+        const outerBlocks = [];
+        
+        allCodeBlocks.forEach(function(block) {
+          // 检查这个块是否是嵌套在其他代码块内部
+          let parent = block.parentElement;
+          let isNested = false;
+          
+          // 向上遍历DOM树，检查是否有父元素是代码块
+          while (parent && parent !== document.body) {
+            if (parent.classList && 
+                (parent.classList.contains('code-block') || 
+                 parent.classList.contains('highlight'))) {
+              isNested = true;
+              break;
+            }
+            parent = parent.parentElement;
+          }
+          
+          // 如果不是嵌套的，就添加到结果中
+          if (!isNested) {
+            outerBlocks.push(block);
+          }
+        });
+        
+        return outerBlocks;
+      }
+      
+      // 为最外层代码块添加复制按钮
+      const outerCodeBlocks = findOuterCodeBlocks();
+      
+      outerCodeBlocks.forEach(function(codeBlock) {
         // 检查是否已经添加了复制按钮
         if (codeBlock.querySelector('.copy-code-btn')) {
-          return; // 如果已经有按钮，跳过
+          return;
         }
         
         // 创建复制按钮
@@ -390,22 +405,34 @@
         
         // 添加点击事件
         copyButton.addEventListener('click', function() {
-          // 获取代码文本
+          // 获取代码文本 - 优先获取内部的code或pre标签内容
           let codeText = '';
-          const codeElement = codeBlock.querySelector('code');
           
-          if (codeElement) {
-            codeText = codeElement.textContent || codeElement.innerText;
-          } else {
-            // 如果没有<code>标签，直接获取<pre>的内容
+          // 方法1: 查找最内层的code标签
+          const codeElements = codeBlock.querySelectorAll('code');
+          if (codeElements.length > 0) {
+            // 获取最后一个code元素的内容（通常是最内层的）
+            const lastCode = codeElements[codeElements.length - 1];
+            codeText = lastCode.textContent || lastCode.innerText;
+          } 
+          // 方法2: 如果没有code标签，找pre标签
+          else if (codeBlock.querySelector('pre')) {
             const preElement = codeBlock.querySelector('pre');
-            if (preElement) {
-              codeText = preElement.textContent || preElement.innerText;
-            } else {
-              // 如果都没有，获取整个代码块的内容
-              codeText = codeBlock.textContent || codeBlock.innerText;
+            codeText = preElement.textContent || preElement.innerText;
+          } 
+          // 方法3: 直接获取代码块的内容
+          else {
+            // 克隆代码块，移除复制按钮
+            const cloneBlock = codeBlock.cloneNode(true);
+            const copyBtn = cloneBlock.querySelector('.copy-code-btn');
+            if (copyBtn) {
+              copyBtn.remove();
             }
+            codeText = cloneBlock.textContent || cloneBlock.innerText;
           }
+          
+          // 清理文本（去除首尾空白）
+          codeText = codeText.trim();
           
           // 复制到剪贴板
           navigator.clipboard.writeText(codeText).then(function() {
@@ -428,7 +455,33 @@
             showNotification('代码已复制到剪贴板', 'success');
           }).catch(function(err) {
             console.error('复制失败: ', err);
-            showNotification('复制失败，请手动复制', 'error');
+            // 备用复制方法
+            const textArea = document.createElement('textarea');
+            textArea.value = codeText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+              document.execCommand('copy');
+              // 复制成功反馈
+              const originalIcon = copyButton.querySelector('i');
+              originalIcon.className = 'fas fa-check';
+              copyButton.classList.add('copied');
+              copyButton.setAttribute('aria-label', '已复制');
+              copyButton.setAttribute('title', '已复制');
+              
+              setTimeout(function() {
+                originalIcon.className = 'far fa-copy';
+                copyButton.classList.remove('copied');
+                copyButton.setAttribute('aria-label', '复制代码');
+                copyButton.setAttribute('title', '复制代码');
+              }, 2000);
+              
+              showNotification('代码已复制到剪贴板', 'success');
+            } catch (err2) {
+              console.error('备用复制方法也失败: ', err2);
+              showNotification('复制失败，请手动选择并复制', 'error');
+            }
+            document.body.removeChild(textArea);
           });
         });
       });
@@ -462,6 +515,9 @@
           }
         }, 3000);
       }
+      
+      // 输出调试信息
+      console.log(`找到 ${outerCodeBlocks.length} 个最外层代码块，已添加复制按钮`);
     });
   </script>
 </body>
