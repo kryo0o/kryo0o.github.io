@@ -4,13 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <!-- Tailwind CSS CDN（保持豆包风格） -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome 图标 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Rouge 代码高亮样式（适配豆包深色代码块） -->
   <style>
-    /* 豆包风格代码高亮 */
     .highlight {
       background: #1f2937 !important;
       color: #e5e7eb !important;
@@ -19,16 +15,15 @@
       overflow-x: auto;
       margin: 1rem 0;
     }
-    .highlight .c { color: #6e7781 } /* 注释 */
-    .highlight .k { color: #ff7b72 } /* 关键字 */
-    .highlight .o { color: #d2a8ff } /* 操作符 */
-    .highlight .m { color: #ffa657 } /* 数字 */
-    .highlight .s { color: #a5d6ff } /* 字符串 */
-    .highlight .na { color: #79c0ff } /* 属性 */
-    .highlight .nb { color: #8b5cf6 } /* 内置函数 */
-    .highlight .nf { color: #d1d5db } /* 函数名 */
+    .highlight .c { color: #6e7781 }
+    .highlight .k { color: #ff7b72 }
+    .highlight .o { color: #d2a8ff }
+    .highlight .m { color: #ffa657 }
+    .highlight .s { color: #a5d6ff }
+    .highlight .na { color: #79c0ff }
+    .highlight .nb { color: #8b5cf6 }
+    .highlight .nf { color: #d1d5db }
     
-    /* 自定义工具类（Tailwind 扩展） */
     @layer utilities {
       .tag-item { @apply px-3 py-1 rounded-full text-sm cursor-pointer transition-all hover:bg-primary/10; }
       .tag-active { @apply bg-primary text-white hover:bg-primary/90; }
@@ -36,13 +31,12 @@
       .page-active { @apply bg-primary text-white border-primary hover:bg-primary/90; }
     }
   </style>
-  <!-- Tailwind 配置（豆包风格配色） -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#4096ff', // 豆包主色
+            primary: '#4096ff',
             dark: '#1f2937',
             light: '#f9fafb'
           },
@@ -55,15 +49,10 @@
   </script>
 </head>
 <body class="bg-light min-h-screen">
-  <!-- 引入头部导航 -->
   {% include header.html %}
-
-  <!-- 主内容区 -->
   <main class="container mx-auto px-4 py-8">
     {{ content }}
   </main>
-
-  <!-- 引入底部 -->
   {% include footer.html %}
 </body>
 </html>
