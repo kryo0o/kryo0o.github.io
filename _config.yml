@@ -18,12 +18,18 @@ lsi: false
 paginate: 10
 paginate_path: "/page/:num/"
 
-# 标签功能（强制生成tag页面，解决404）
+# 标签功能（终极修复：强制生成tag页面）
 collections:
   tags:
     output: true
     permalink: /tags/:name/
 tag_dir: tags
+defaults:
+  - scope:
+      path: ""
+      type: "tags"
+    values:
+      layout: "tag"
 
 # 插件（仅保留GitHub Pages原生支持）
 plugins:
@@ -32,13 +38,14 @@ plugins:
   - jekyll-seo-tag
   - jekyll-github-metadata
 
-# 代码高亮（适配超小尺寸）
+# 代码高亮（去边框配置）
 kramdown:
   input: GFM
   syntax_highlighter_opts:
     block:
       line_numbers: false
       wrap: div
+      css_class: "" # 清空默认类，避免边框
   auto_ids: true
   footnote_nr: 1
   entity_output: as_char
@@ -46,8 +53,8 @@ kramdown:
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   enable_coderay: false
 
-# 自定义配置（背景图片）
+# 自定义配置（banner）
 banner:
-  image: "https://picsum.photos/1920/400" # 替换为你的背景图链接
+  image: "https://picsum.photos/1920/500" # 替换为你的背景图
   title: "技术笔记与实用教程"
   subtitle: "持续分享，共同成长"

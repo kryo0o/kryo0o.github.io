@@ -3,11 +3,13 @@ layout: default
 title: 首页
 ---
 
-<!-- 主页自定义背景banner -->
-<div class="banner">
-  <div class="banner-content">
-    <h1 class="text-4xl font-bold mb-2">{{ site.banner.title }}</h1>
-    <p class="text-xl">{{ site.banner.subtitle }}</p>
+<!-- Banner：宽度和文章一致（max-w-4xl），高度300px -->
+<div class="max-w-4xl mx-auto banner-container">
+  <div class="banner">
+    <div class="banner-content">
+      <h1 class="text-4xl font-bold mb-2">{{ site.banner.title }}</h1>
+      <p class="text-xl">{{ site.banner.subtitle }}</p>
+    </div>
   </div>
 </div>
 
@@ -27,7 +29,8 @@ title: 首页
             <span><i class="fa-solid fa-calendar mr-1"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
             <div class="flex gap-2">
               {% for tag in post.tags limit:3 %}
-                <a href="{{ site.baseurl }}/tags/{{ tag | slugify: 'raw' }}/" class="tag-item bg-gray-100">
+                <!-- 标签路径终极修复：使用绝对URL -->
+                <a href="{{ site.url }}/tags/{{ tag | slugify: 'raw' }}/" class="tag-item bg-gray-100">
                   {{ tag }}
                 </a>
               {% endfor %}
