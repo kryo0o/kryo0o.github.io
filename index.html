@@ -1,20 +1,15 @@
 ---
 layout: default
 title: 首页
-pagination:
-  enabled: true
 ---
 
-<!-- 文章列表 -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
   {% for post in paginator.posts %}
     <article class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <div class="p-6">
-        <!-- 文章标题 -->
         <h2 class="text-xl font-semibold text-dark hover:text-primary transition-colors mb-2">
           <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
         </h2>
-        <!-- 文章元信息（日期+标签） -->
         <div class="flex justify-between items-center mb-3 text-sm text-gray-500">
           <span>{{ post.date | date: "%Y-%m-%d" }}</span>
           <div class="flex gap-2">
@@ -25,21 +20,13 @@ pagination:
             {% endfor %}
           </div>
         </div>
-        <!-- 文章摘要 -->
         <p class="text-gray-600 mb-4">{{ post.excerpt | strip_html | truncate: 150 }}</p>
-        <!-- 阅读更多 -->
-        <a href="{{ post.url | relative_url }}" class="text-primary hover:underline flex items-center">
-          阅读更多 <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
-        </a>
+        <a href="{{ post.url | relative_url }}" class="text-primary hover:underline">阅读更多</a>
       </div>
     </article>
   {% empty %}
-    <div class="col-span-full text-center py-12 text-gray-500">
-      <i class="fa-solid fa-file-alt text-4xl mb-4"></i>
-      <p>暂无文章</p>
-    </div>
+    <div class="col-span-full text-center py-12 text-gray-500">暂无文章</div>
   {% endfor %}
 </div>
 
-<!-- 引入分页组件 -->
 {% include pagination.html %}
