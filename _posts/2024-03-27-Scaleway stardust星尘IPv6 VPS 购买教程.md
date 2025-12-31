@@ -13,24 +13,30 @@ author: 'kryo'
 首先获取官方文件，此处环境是在Debian 10 X86系统下创建，其他系统和架构可再官方Github处获取。
 ` https://github.com/scaleway/scaleway-cli/releases`
 
-    curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.16.1/scaleway-cli_2.16.1_linux_amd64"
+```
+curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.16.1/scaleway-cli_2.16.1_linux_amd64"
+```
     
-    # Allow executing file as program
+```        
+ chmod +x /usr/local/bin/scw
+ ```
     
-    chmod +x /usr/local/bin/scw
 然后登陆并创建stardust服务器
 
     scw init  
 
-#登陆并查看账号UUID，或者在网页中创建实例的下方查看账号UUID。
+登陆并查看账号UUID，或者在网页中创建实例的下方查看账号UUID。
 
     scw instance server create type=STARDUST1-S zone=fr-par-1 image=debian_bullseye root-volume=l:10G name=Denian ip=none ipv6=true project-id=账号UUID
 
-#需要安装其他镜像的话把image=自行改为debian_buster，ubuntu_jammy，ubuntu_focal，centos_stream_9，centos_stream_8，centos_7.9。也可自行dd。地区zone=也可以选择荷兰nl-ams-1。
-
-    scw instance server list #获取机器UUID
+需要安装其他镜像的话把image=自行改为debian_buster，ubuntu_jammy，ubuntu_focal，centos_stream_9，centos_stream_8，centos_7.9。也可自行dd。地区zone=也可以选择荷兰nl-ams-1。
+获取机器UUID
     
-    scw instance server start 机器UUID #开机
+    scw instance server list 
+ 
+ 开机   
+    
+    scw instance server start 机器UUID 
 
 若想直接使用root密码登录，在网页中找到Advanced Setting ，Cloud-init处添加下列配置，保存完成后重启服务器即可。
 
