@@ -13,10 +13,11 @@ apt install mediainfo mediainfo-gui
 ```
 
 使用示例
-``` mediainfo <path_to_media_file>```
 
-例子：
-``` mediainfo xxx.mkv```
+``` 
+mediainfo <path_to_media_file>
+```
+
 
 bdinfo 
 
@@ -25,18 +26,19 @@ bdinfo
 1、```https://github.com/zoffline/BDInfoCLI-ng```的方法，推荐直接docker运行获取，bdinfo获取在原盘目录下
 
 ```
-docker run --rm -it -v <BD_PATH>:/mnt/bd zoffline/bdinfocli-ng /mnt/bd```
-
-2、
+docker run --rm -it -v <BD_PATH>:/mnt/bd zoffline/bdinfocli-ng /mnt/bd
 ```
-https://github.com/Aniverse/bluray```这个脚本可以截图
 
-运行
-```
-bash <(wget -qO- https://git.io/bluray) -u```，
+2、`https://github.com/Aniverse/bluray`
+这个脚本可以截图
 
 ```
-bluray```
+bash <(wget -qO- https://git.io/bluray) -u
+```
+
+```
+bluray
+```
 
 
 
