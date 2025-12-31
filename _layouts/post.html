@@ -10,14 +10,6 @@ layout: default
   <!-- 元信息 -->
   <div class="flex flex-wrap gap-3 mb-6 text-sm text-gray-500 border-b border-gray-200 pb-4">
     <span><i class="fa-solid fa-calendar mr-1"></i> {{ page.date | date: "%Y-%m-%d" }}</span>
-    <div class="flex gap-2">
-      <span><i class="fa-solid fa-tags mr-1"></i> 标签：</span>
-      {% for tag in page.tags %}
-        <a href="{{ site.baseurl }}/tags/{{ tag | slugify }}/" class="tag-item bg-gray-100">
-          {{ tag }}
-        </a>
-      {% endfor %}
-    </div>
   </div>
   
   <!-- 文章正文（修复代码高亮，转义$变量） -->
