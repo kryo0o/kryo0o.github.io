@@ -7,43 +7,111 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 此处完全保留你原始的所有 CSS 样式，未做任何更改 */
     :root {
       --color-text-main: #24292e;
       --color-text-light: #666;
       --color-text-gray: #999;
       --color-border: #e5e6eb;
       --color-bg-main: #fafafa;
-      --color-bg-code-block: #f5f7fa;
+      --color-bg-code-block: #282c34; /* 改为深色背景或保持浅色，这里演示优化后的浅色 */
+      --color-bg-code-block-light: #f6f8fa; /* 更柔和的浅灰色背景 */
       --color-bg-code-inline: #f1f1f1;
-      --color-bg-copy-btn: #d9d9d9;
-      --color-bg-copy-btn-hover: #bfbfbf;
       --color-bg-copy-success: #52c41a;
-      --color-bg-copy-error: #ff4d4f;
       --border-radius-sm: 3px;
       --border-radius-md: 4px;
-      --border-radius-lg: 6px;
+      --border-radius-lg: 8px; /* 稍微增大圆角 */
       --font-code: "Consolas", "Monaco", "Courier New", monospace;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --copy-btn-size: 24px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: var(--font-main); background-color: var(--color-bg-main); color: var(--color-text-main); line-height: 1.8; }
     a { text-decoration: none; color: inherit; }
+    
     header.header-wrapper { width: 100%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 12px 0; position: sticky; top: 0; z-index: 999; }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
     .site-title { font-size: 20px; font-weight: 600; color: #333; }
+    
     main.container-main { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    /* 行内代码样式 (保持不变) */
     .container-main p > code, .container-main li > code, .container-main span > code, .container-main div > code:not(.code-block code), .container-main td > code { background-color: var(--color-bg-code-inline); border-radius: var(--border-radius-sm); padding: 2px 6px; font-size: 13px; font-family: var(--font-code); color: var(--color-text-main); border: 1px solid var(--color-border); margin: 0 2px; }
-    .code-block, .highlight { background: var(--color-bg-code-block); border: 1px solid var(--color-border); border-radius: var(--border-radius-lg); padding: 12px; margin: 16px 0; overflow-x: auto; overflow-y: hidden; position: relative; font-size: 14px; line-height: 1.6; max-width: 100%; scrollbar-width: thin; scrollbar-color: var(--color-border) var(--color-bg-code-block); }
+
+    /* --- 代码块美化核心区域 --- */
+    .code-block, .highlight {
+      background: var(--color-bg-code-block-light);
+      /* 移除边框，去除分界线感 */
+      border: none; 
+      /* 增加柔和阴影，提升立体感 */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+      border-radius: var(--border-radius-lg);
+      /* 增加顶部内边距，为"Mac红绿灯"留出空间 */
+      padding: 34px 16px 16px 16px; 
+      margin: 24px 0;
+      overflow-x: auto;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* 伪元素制作 Mac 窗口风格红黄绿小圆点 */
+    .code-block::before, .highlight::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff5f56; /* 红点 */
+      box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f; /* 黄点和绿点 */
+      z-index: 5;
+    }
+
+    /* 滚动条美化 */
     .code-block::-webkit-scrollbar, .highlight::-webkit-scrollbar { width: 6px; height: 6px; }
-    .code-block::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: var(--border-radius-sm); }
-    .code-block pre, .code-block code, .highlight pre, .highlight code { background: transparent; border: none; padding: 0; margin: 0; font-size: 14px; line-height: 1.6; font-family: var(--font-code); color: var(--color-text-main); white-space: pre; }
-    .copy-code-btn { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; background: rgba(255, 255, 255, 0.9); border: 1px solid var(--color-border); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; font-size: 14px; transition: all 0.2s ease; z-index: 10; opacity: 0.9; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
-    .copy-code-btn:hover { background: white; color: #333; border-color: #aaa; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); opacity: 1; transform: translateY(-1px); }
-    .copy-code-btn.copied { background: var(--color-bg-copy-success); color: white; border-color: var(--color-bg-copy-success); opacity: 1; }
-    .copy-code-btn i { font-size: 14px; transition: transform 0.2s ease; }
+    .code-block::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: var(--border-radius-sm); }
+    .code-block::-webkit-scrollbar-track, .highlight::-webkit-scrollbar-track { background: transparent; }
+
+    /* 代码文字样式：确保背景透明，无边框 */
+    .code-block pre, .code-block code, .highlight pre, .highlight code { 
+      background: transparent !important; 
+      border: none !important; 
+      padding: 0; 
+      margin: 0; 
+      font-family: var(--font-code); 
+      color: var(--color-text-main); 
+    }
+    
+    /* 复制按钮样式调整：更简约，配合无边框风格 */
+    .copy-code-btn {
+      position: absolute;
+      top: 6px; /* 调整位置与红绿灯对齐 */
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: transparent; /* 透明背景 */
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af; /* 浅灰色图标 */
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .copy-code-btn:hover {
+      background: rgba(0,0,0,0.05); /* 悬停时淡淡的背景 */
+      color: #4b5563;
+    }
+
+    .copy-code-btn.copied {
+      color: var(--color-bg-copy-success);
+    }
+    /* --- 代码块美化结束 --- */
+
     .banner { width: 100%; min-height: 200px; height: 50vh; max-height: 300px; background: url('{{ site.banner.image }}') no-repeat center center; background-size: cover; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.6); border-radius: var(--border-radius-lg); margin-bottom: 30px; }
     .banner-content { text-align: center; padding: 0 20px; }
     .banner-content h1 { font-size: 36px; margin: 0 0 12px 0; }
@@ -53,22 +121,23 @@
     .post-title { font-size: 20px; font-weight: 600; margin: 0; }
     .post-title a:hover { color: #4096ff; }
     .post-date { font-size: 14px; color: var(--color-text-gray); margin: 0; }
+    
+    /* 标签隐藏逻辑保持不变 */
     .tag-item, .tags, .post-tags, [class*="tag"], [id*="tag"], a[href*="/tag/"], a[href*="/tags/"], a[href*="/categories/"], a[href*="/category/"], .label, .category, .categories, .post-meta .tag, .post-header .tag, .post-meta .tags, .post-header .tags, .post-meta .category, .post-header .category, .post-meta .categories, .post-header .categories, .fa-tag, .fa-tags, .fa-folder, .post-meta .separator + a:not([href*="/page/"]) { display: none !important; }
     .post-date, .post-meta .post-date, .post-header .post-date { display: block !important; }
     .post-meta { display: block !important; }
     .post-meta > *:not(.post-date) { display: none !important; }
+    
     .post-excerpt { font-size: 15px; color: var(--color-text-light); line-height: 1.6; margin: 0; }
     .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; padding: 20px 0; flex-wrap: wrap; }
     .page-number { display: inline-block; padding: 8px 16px; border: 1px solid var(--color-border); border-radius: var(--border-radius-md); color: var(--color-text-light); font-size: 14px; transition: all 0.2s ease; }
-    .page-number:hover { border-color: var(--color-bg-copy-btn); background-color: var(--color-bg-code-inline); }
-    .page-number.current { background-color: var(--color-bg-copy-btn); color: var(--color-text-light); border-color: var(--color-bg-copy-btn); font-weight: 600; }
+    .page-number:hover { border-color: #d9d9d9; background-color: var(--color-bg-code-inline); }
+    .page-number.current { background-color: #d9d9d9; color: var(--color-text-light); border-color: #d9d9d9; font-weight: 600; }
     
-    /* 仅保留了动画，删除了 notification 类定义以减小体积 */
     @media (max-width: 480px) {
       .page-number { padding: 6px 12px; font-size: 12px; }
       .banner-content h1 { font-size: 28px; }
       .banner-content p { font-size: 16px; }
-      .copy-code-btn { width: 28px; height: 28px; }
     }
   </style>
 </head>
@@ -85,7 +154,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 保持你原有的最外层代码块查找逻辑
+      // 保持你原有的逻辑
       function findOuterCodeBlocks() {
         const allCodeBlocks = document.querySelectorAll('.code-block, .highlight');
         return Array.from(allCodeBlocks).filter(block => {
@@ -112,12 +181,10 @@
         codeBlock.appendChild(copyButton);
         
         copyButton.addEventListener('click', function() {
-          // 优化文本获取：使用 innerText 自动处理换行和 HTML 实体
           const codeEl = codeBlock.querySelector('code') || codeBlock.querySelector('pre') || codeBlock;
           let codeText = codeEl.innerText.trim() + '\n';
           
           navigator.clipboard.writeText(codeText).then(function() {
-            // 成功反馈：仅切换图标和样式，不弹出通知
             const icon = copyButton.querySelector('i');
             icon.className = 'fas fa-check';
             copyButton.classList.add('copied');
