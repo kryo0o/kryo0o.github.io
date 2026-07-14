@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>获取mediainfo和bdinfo</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>获取mediainfo和bdinfo | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="获取mediainfo和bdinfo" />
+<meta name="author" content="kryo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="获取mediainfo和bdinfo。" />
+<meta name="twitter:description" property="og:description" content="获取mediainfo和bdinfo。" />
+<link rel="canonical" href="https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/" />
+<meta property="og:url" content="https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-12-02T00:00:00+08:00" />
+<meta property="article:modified_time" content="2024-12-02T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="获取mediainfo和bdinfo" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2024-12-02T00:00:00+08:00","datePublished":"2024-12-02T00:00:00+08:00","description":"获取mediainfo和bdinfo。","headline":"获取mediainfo和bdinfo","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/"},"url":"https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +162,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +612,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +620,66 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <article class="article-card">
+  <h1 class="article-title">获取mediainfo和bdinfo</h1>
+
+  <div class="article-meta">
+    <span><i class="fa-regular fa-calendar"></i> 2024-12-02</span>
+    
+    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+  </div>
+
+  <div class="article-content">
+    <p><code class="language-plaintext highlighter-rouge">Debian</code>安装</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt install mediainfo mediainfo-gui
+</code></pre></div></div>
+
+<p>使用示例</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mediainfo &lt;path_to_media_file&gt;
+</code></pre></div></div>
+
+<p>bdinfo</p>
+
+<p>两种方法</p>
+
+<p>1、<code class="language-plaintext highlighter-rouge">https://github.com/zoffline/BDInfoCLI-ng</code>的方法，推荐直接docker运行获取，bdinfo获取在原盘目录下</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --rm -it -v &lt;BD_PATH&gt;:/mnt/bd zoffline/bdinfocli-ng /mnt/bd
+</code></pre></div></div>
+
+<p>2、<code class="language-plaintext highlighter-rouge">https://github.com/Aniverse/bluray</code>
+这个脚本可以截图</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(wget -qO- https://git.io/bluray) -u
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bluray
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>
+
+  </div>
+</article>
+
+<div class="back-link">
+  <a href="/">
+    <i class="fa-solid fa-arrow-left"></i> 返回首页
+  </a>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

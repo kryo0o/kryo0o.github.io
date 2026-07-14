@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>2025常用脚本</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>2025常用脚本 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="2025常用脚本" />
+<meta name="author" content="kryo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="常用脚本" />
+<meta name="twitter:description" property="og:description" content="常用脚本" />
+<link rel="canonical" href="https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/" />
+<meta property="og:url" content="https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-12-17T00:00:00+08:00" />
+<meta property="article:modified_time" content="2025-12-17T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="2025常用脚本" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2025-12-17T00:00:00+08:00","datePublished":"2025-12-17T00:00:00+08:00","description":"常用脚本","headline":"2025常用脚本","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/"},"url":"https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +162,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +612,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +620,247 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <article class="article-card">
+  <h1 class="article-title">2025常用脚本</h1>
+
+  <div class="article-meta">
+    <span><i class="fa-regular fa-calendar"></i> 2025-12-17</span>
+    
+    <span><i class="fa-regular fa-clock"></i> 3 分钟阅读</span>
+  </div>
+
+  <div class="article-content">
+    <h2 id="1-安装-docker">1. 安装 Docker</h2>
+
+<p>一键执行官方脚本安装 Docker：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -fsSL get.docker.com -o get-docker.sh &amp;&amp; sh get-docker.sh
+</code></pre></div></div>
+
+<h2 id="2-安装-qb-刷流环境">2. 安装 QB 刷流环境</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>一键安装脚本（参数可自定义：<code class="language-plaintext highlighter-rouge">-u</code> 用户名</td>
+      <td><code class="language-plaintext highlighter-rouge">-p</code> 密码</td>
+      <td><code class="language-plaintext highlighter-rouge">-c</code> 内存限制</td>
+      <td><code class="language-plaintext highlighter-rouge">-q</code> QB 版本</td>
+      <td><code class="language-plaintext highlighter-rouge">-l</code> libtorrent 版本）：</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(wget -qO- https://raw.githubusercontent.com/jerry048/Dedicated-Seedbox/main/Install.sh) -u user -p password -c 1024 -q 4.3.9 -l v1.2.19
+</code></pre></div></div>
+
+<h2 id="3-安装-filebrowser-fb">3. 安装 FileBrowser (FB)</h2>
+
+<p>通过 Docker 部署 FileBrowser，映射端口与文件目录：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d --name fb \
+       --restart=unless-stopped \
+       -e PUID=0 \
+       -e PGID=0 \
+       -e WEB_PORT=8088 \
+       -p 8300:8088 \
+       -v /root/filebrowser/config:/config \
+       -v /home/wpforwg/qbittorrent/Downloads:/myfiles \
+       80x86/filebrowser:2.10.3-amd64
+</code></pre></div></div>
+
+<h3 id="关键说明">关键说明：</h3>
+
+<ul>
+  <li>
+    <p>端口映射：宿主机 <code class="language-plaintext highlighter-rouge">8300</code> 端口 → 容器 <code class="language-plaintext highlighter-rouge">8088</code> 端口（可自行修改）</p>
+  </li>
+  <li>
+    <p>目录挂载：</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/root/filebrowser/config</code>：存储 FileBrowser 配置文件</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/home/wpforwg/qbittorrent/Downloads</code>：映射为 FB 可管理的文件目录（按需修改）</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="4-服务器性能网络测试">4. 服务器性能/网络测试</h2>
+
+<h3 id="41-yabs-综合测试性能网络">4.1 YABS 综合测试（性能+网络）</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -sL yabs.sh | bash
+</code></pre></div></div>
+
+<h3 id="42-checkplace-网络测试">4.2 Check.Place 网络测试</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -Ls https://Check.Place) -I
+</code></pre></div></div>
+
+<h3 id="43-gb5-跑分测试">4.3 GB5 跑分测试</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -sL bash.icu/gb5)
+</code></pre></div></div>
+
+<h3 id="44-nodequality-节点质量测试">4.4 NodeQuality 节点质量测试</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -sL https://run.NodeQuality.com)
+</code></pre></div></div>
+
+<h2 id="5-科学上网脚本">5. 科学上网脚本</h2>
+
+<h3 id="51-八合一-v2ray-代理脚本">5.1 八合一 V2Ray 代理脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" &amp;&amp; chmod 700 /root/install.sh &amp;&amp; /root/install.sh
+</code></pre></div></div>
+
+<h3 id="52-3x-ui-面板脚本">5.2 3X-UI 面板脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+</code></pre></div></div>
+
+<h2 id="6-warp-一键脚本二选一">6. Warp 一键脚本（二选一）</h2>
+
+<h3 id="61-fscarmen-版-warp-菜单脚本">6.1 fscarmen 版 Warp 菜单脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh
+</code></pre></div></div>
+
+<h3 id="62-misaka-blog-版-warp-脚本">6.2 Misaka-blog 版 Warp 脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/Misaka-blog/warp-script/-/raw/main/warp.sh &amp;&amp; bash warp.sh
+</code></pre></div></div>
+
+<h2 id="7-debian-12-配置-ssh-密钥登录禁用密码登录">7. Debian 12 配置 SSH 密钥登录（禁用密码登录）</h2>
+
+<h3 id="71-创建-ssh-密钥目录并添加公钥">7.1 创建 SSH 密钥目录并添加公钥</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 创建 .ssh 目录（若不存在）
+mkdir -p ~/.ssh
+
+# 编辑 authorized_keys 文件，粘贴你的 SSH 公钥
+nano ~/.ssh/authorized_keys
+</code></pre></div></div>
+
+<p>保存退出：<code class="language-plaintext highlighter-rouge">Ctrl+O</code> → 回车 → <code class="language-plaintext highlighter-rouge">Ctrl+X</code></p>
+
+<h3 id="72-修改-ssh-配置文件">7.2 修改 SSH 配置文件</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/ssh/sshd_config
+</code></pre></div></div>
+
+<p>将以下配置项修改为：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PasswordAuthentication no  # 禁用密码登录（仅保留密钥登录时开启）
+PubkeyAuthentication yes   # 启用公钥认证
+AuthorizedKeysFile      %h/.ssh/authorized_keys  # 指定公钥文件路径
+</code></pre></div></div>
+
+<h3 id="73-重启-ssh-服务生效">7.3 重启 SSH 服务生效</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart sshd
+</code></pre></div></div>
+
+<p>注意：操作前确保公钥已正确配置，避免无法登录；如需临时恢复密码登录，将 <code class="language-plaintext highlighter-rouge">PasswordAuthentication</code> 改为 <code class="language-plaintext highlighter-rouge">yes</code> 并重启 sshd</p>
+
+<h2 id="8-一键-vps-系统重装脚本">8. 一键 VPS 系统重装脚本</h2>
+
+<h3 id="81-下载重装脚本">8.1 下载重装脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -O https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.sh || wget -O ${_##*/} $_
+</code></pre></div></div>
+
+<h3 id="82-执行重装支持的系统版本">8.2 执行重装（支持的系统版本）</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash reinstall.sh
+</code></pre></div></div>
+
+<p>支持的系统及版本列表：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anolis      7|8|23
+rocky       8|9|10
+oracle      8|9|10
+almalinux   8|9|10
+opencloudos 8|9|23
+centos      9|10
+fedora      42|43
+nixos       25.05
+debian      9|10|11|12|13
+alpine      3.19|3.20|3.21|3.22
+opensuse    15.6|16.0|tumbleweed
+openeuler   20.03|22.03|24.03|25.09
+ubuntu      16.04|18.04|20.04|22.04|24.04|25.10[--minimal]
+kali
+arch
+gentoo
+aosc
+fnos
+redhat      --img="http://access.cdn.redhat.com/xxx.qcow2"
+</code></pre></div></div>
+
+<p>示例：重装为 Debian 12 → <code class="language-plaintext highlighter-rouge">bash reinstall.sh debian 12</code></p>
+
+<h2 id="9-debian-开启-bbr-网络加速">9. Debian 开启 BBR 网络加速</h2>
+
+<h3 id="91-检查并加载-bbr-模块">9.1 检查并加载 BBR 模块</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 检查 BBR 模块是否加载，未加载则手动加载
+lsmod | grep tcp_bbr || modprobe tcp_bbr
+
+# 设置开机自动加载 BBR 模块
+echo "tcp_bbr" &gt;&gt; /etc/modules-load.d/bbr.conf
+</code></pre></div></div>
+
+<h3 id="92-清理原有重复配置避免冲突">9.2 清理原有重复配置（避免冲突）</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
+sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+</code></pre></div></div>
+
+<h3 id="93-写入-bbr-永久配置">9.3 写入 BBR 永久配置</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "net.core.default_qdisc=fq" &gt;&gt; /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control=bbr" &gt;&gt; /etc/sysctl.conf
+</code></pre></div></div>
+
+<h3 id="94-使配置立即生效">9.4 使配置立即生效</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl -p
+</code></pre></div></div>
+
+<h3 id="95-验证-bbr-是否生效">9.5 验证 BBR 是否生效</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl net.ipv4.tcp_congestion_control net.core.default_qdisc
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>
+
+
+  </div>
+</article>
+
+<div class="back-link">
+  <a href="/">
+    <i class="fa-solid fa-arrow-left"></i> 返回首页
+  </a>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

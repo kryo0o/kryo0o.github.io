@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>Windows 10 使用小鹤双拼</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>Windows 10 使用小鹤双拼 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Windows 10 使用小鹤双拼" />
+<meta name="author" content="kryo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Windows 10 使用小鹤双拼。" />
+<meta name="twitter:description" property="og:description" content="Windows 10 使用小鹤双拼。" />
+<link rel="canonical" href="https://blog.kryoo.de/posts/Windows-10-%E4%BD%BF%E7%94%A8%E5%B0%8F%E9%B9%A4%E5%8F%8C%E6%8B%BC/" />
+<meta property="og:url" content="https://blog.kryoo.de/posts/Windows-10-%E4%BD%BF%E7%94%A8%E5%B0%8F%E9%B9%A4%E5%8F%8C%E6%8B%BC/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-27T00:00:00+08:00" />
+<meta property="article:modified_time" content="2020-08-27T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Windows 10 使用小鹤双拼" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2020-08-27T00:00:00+08:00","datePublished":"2020-08-27T00:00:00+08:00","description":"Windows 10 使用小鹤双拼。","headline":"Windows 10 使用小鹤双拼","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/Windows-10-%E4%BD%BF%E7%94%A8%E5%B0%8F%E9%B9%A4%E5%8F%8C%E6%8B%BC/"},"url":"https://blog.kryoo.de/posts/Windows-10-%E4%BD%BF%E7%94%A8%E5%B0%8F%E9%B9%A4%E5%8F%8C%E6%8B%BC/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +162,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +612,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +620,53 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <article class="article-card">
+  <h1 class="article-title">Windows 10 使用小鹤双拼</h1>
+
+  <div class="article-meta">
+    <span><i class="fa-regular fa-calendar"></i> 2020-08-27</span>
+    
+    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+  </div>
+
+  <div class="article-content">
+    <h1 id="windows-10-使用小鹤双拼">Windows 10 使用小鹤双拼</h1>
+<p>使用 Windows 10 自带输入法
+先 <code class="language-plaintext highlighter-rouge">win+r </code>输入regedit，定位到</p>
+
+<p><code class="language-plaintext highlighter-rouge">「计算机\HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS」</code></p>
+
+<p>右键新建新建字符串值</p>
+
+<p>数值名称：<code class="language-plaintext highlighter-rouge">UserDefinedDoublePinyinScheme0</code></p>
+
+<p>数值数据：<code class="language-plaintext highlighter-rouge">小鹤双拼*2*^*iuvdjhcwfg^xmlnpbksqszxkrltvyovt</code></p>
+
+<p>然后打开控制面板，找到微软拼音的配置页面，把新出现的小鹤双拼设置为默认值。
+直接修改注册表的最大意义在于，不需要自己一个个去定义按键和音节的对应关系了</p>
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>
+
+  </div>
+</article>
+
+<div class="back-link">
+  <a href="/">
+    <i class="fa-solid fa-arrow-left"></i> 返回首页
+  </a>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>vba脚本提取表格数据</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>vba脚本提取表格数据 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="vba脚本提取表格数据" />
+<meta name="author" content="kryo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="vba脚本提取表格数据" />
+<meta name="twitter:description" property="og:description" content="vba脚本提取表格数据" />
+<link rel="canonical" href="https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/" />
+<meta property="og:url" content="https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-11-07T00:00:00+08:00" />
+<meta property="article:modified_time" content="2024-11-07T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="vba脚本提取表格数据" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2024-11-07T00:00:00+08:00","datePublished":"2024-11-07T00:00:00+08:00","description":"vba脚本提取表格数据","headline":"vba脚本提取表格数据","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/"},"url":"https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +162,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +612,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +620,106 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <article class="article-card">
+  <h1 class="article-title">vba脚本提取表格数据</h1>
+
+  <div class="article-meta">
+    <span><i class="fa-regular fa-calendar"></i> 2024-11-07</span>
+    
+    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+  </div>
+
+  <div class="article-content">
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sub name()
+    Dim FolderPath As String
+    Dim FileName As String
+    Dim WorkbookPath As String
+    Dim SourceSheet As Worksheet
+    Dim TargetSheet As Worksheet
+    Dim NextRow As Long
+    Dim wsName As String
+    Dim dataRange As Range
+    Dim data As Variant
+    Dim i As Integer
+    Dim found As Boolean
+
+    ' 设置文件夹路径
+    FolderPath = "D:\Work\"
+    
+    ' 获取文件夹中的第一个文件名
+    FileName = Dir(FolderPath &amp; "*.xls*")
+    
+    ' 在当前工作簿中添加一个新的工作表
+    Set TargetSheet = ThisWorkbook.Sheets.Add
+    TargetSheet.Name = "name"
+    NextRow = 1
+    
+    ' 遍历文件夹中的所有Excel文件
+    Do While FileName &lt;&gt; ""
+        WorkbookPath = FolderPath &amp; FileName
+        found = False
+        
+        ' 打开当前Excel文件
+        With Workbooks.Open(WorkbookPath)
+            ' 检查是否存在目标工作表
+            For Each SourceSheet In .Worksheets
+                If SourceSheet.Name = "技术改造工程总表(表一)" Or SourceSheet.Name = "检修工程总表(表一)" Then
+                    found = True
+                    ' 提取C列第4到17行的数据
+                    Set dataRange = SourceSheet.Range("C4:C17")
+                    data = dataRange.Value
+                    
+                    ' 将文件名写入A列
+                    TargetSheet.Cells(NextRow, 1).Value = FileName
+                    
+                    ' 将数据横向排列写入B列及之后的列
+                    For i = 1 To UBound(data, 1)
+                        TargetSheet.Cells(NextRow, 1 + i).Value = data(i, 1)
+                    Next i
+                    
+                    ' 移动到下一行
+                    NextRow = NextRow + 1
+                End If
+            Next SourceSheet
+            
+            ' 关闭当前工作簿，不保存更改
+            .Close False
+        End With
+        
+        ' 如果没有找到目标工作表，继续下一个文件
+        If Not found Then
+            Debug.Print "未在文件 " &amp; FileName &amp; " 中找到目标工作表"
+        End If
+        
+        ' 获取下一个文件名
+        FileName = Dir
+    Loop
+End Sub
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>
+
+  </div>
+</article>
+
+<div class="back-link">
+  <a href="/">
+    <i class="fa-solid fa-arrow-left"></i> 返回首页
+  </a>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

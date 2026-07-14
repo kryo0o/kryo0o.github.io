@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>Scaleway stardust星尘IPv6 VPS 购买教程</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>Scaleway stardust星尘IPv6 VPS 购买教程 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Scaleway stardust星尘IPv6 VPS 购买教程" />
+<meta name="author" content="kryo" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Scaleway stardust星尘IPv6 VPS 购买教程。" />
+<meta name="twitter:description" property="og:description" content="Scaleway stardust星尘IPv6 VPS 购买教程。" />
+<link rel="canonical" href="https://blog.kryoo.de/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/" />
+<meta property="og:url" content="https://blog.kryoo.de/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-27T00:00:00+08:00" />
+<meta property="article:modified_time" content="2024-03-27T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Scaleway stardust星尘IPv6 VPS 购买教程" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2024-03-27T00:00:00+08:00","datePublished":"2024-03-27T00:00:00+08:00","description":"Scaleway stardust星尘IPv6 VPS 购买教程。","headline":"Scaleway stardust星尘IPv6 VPS 购买教程","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/"},"url":"https://blog.kryoo.de/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +162,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +612,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +620,81 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <article class="article-card">
+  <h1 class="article-title">Scaleway stardust星尘IPv6 VPS 购买教程</h1>
+
+  <div class="article-meta">
+    <span><i class="fa-regular fa-calendar"></i> 2024-03-27</span>
+    
+    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+  </div>
+
+  <div class="article-content">
+    <p>官方教程：<code class="language-plaintext highlighter-rouge">https://www.scaleway.com/en/docs/compute/instances/api-cli/creating-managing-instances-with-cliv2</code></p>
+
+<p>建议在网页后台直接添加个SSH KEY，避免后续无法登陆。</p>
+
+<p>首先获取官方文件，此处环境是在Debian 10 X86系统下创建，其他系统和架构可再官方Github处获取。
+` https://github.com/scaleway/scaleway-cli/releases`</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.16.1/scaleway-cli_2.16.1_linux_amd64"
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> chmod +x /usr/local/bin/scw
+</code></pre></div></div>
+
+<p>然后登陆并创建stardust服务器</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw init  
+</code></pre></div></div>
+
+<p>登陆并查看账号UUID，或者在网页中创建实例的下方查看账号UUID。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server create type=STARDUST1-S zone=fr-par-1 image=debian_bullseye root-volume=l:10G name=Denian ip=none ipv6=true project-id=账号UUID
+</code></pre></div></div>
+
+<p>需要安装其他镜像的话把image=自行改为debian_buster，ubuntu_jammy，ubuntu_focal，centos_stream_9，centos_stream_8，centos_7.9。也可自行dd。地区zone=也可以选择荷兰nl-ams-1。
+获取机器UUID</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server list 
+</code></pre></div></div>
+
+<p>开机</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server start 机器UUID 
+</code></pre></div></div>
+
+<p>若想直接使用root密码登录，在网页中找到Advanced Setting ，Cloud-init处添加下列配置，保存完成后重启服务器即可。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>users:
+  - name: root
+    plain_text_passwd: 'yourpasswd'
+    lock_passwd: false
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>
+
+  </div>
+</article>
+
+<div class="back-link">
+  <a href="/">
+    <i class="fa-solid fa-arrow-left"></i> 返回首页
+  </a>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

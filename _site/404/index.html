@@ -3,9 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>404 - 页面未找到</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>404 - 页面未找到 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="404 - 页面未找到" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="基于 Jekyll + GitHub Pages 构建的博客" />
+<meta name="twitter:description" property="og:description" content="基于 Jekyll + GitHub Pages 构建的博客" />
+<link rel="canonical" href="https://blog.kryoo.de/404/" />
+<meta property="og:url" content="https://blog.kryoo.de/404/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="404 - 页面未找到" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"基于 Jekyll + GitHub Pages 构建的博客","headline":"404 - 页面未找到","url":"https://blog.kryoo.de/404/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +159,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +609,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +617,37 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <div class="error-page">
+  <div class="error-404">404</div>
+
+  <h2 class="error-title">页面好像迷路了</h2>
+  <p class="error-desc">
+    你访问的页面可能已被删除、移动或从未存在过<br>
+    可以尝试搜索内容或返回首页继续浏览
+  </p>
+
+  <div class="error-actions">
+    <a href="/" class="btn btn-primary">
+      <i class="fa-solid fa-home"></i> 回到首页
+    </a>
+    <a href="javascript:void(0)" class="btn btn-secondary" onclick="history.back()">
+      <i class="fa-solid fa-arrow-left"></i> 返回上页
+    </a>
+  </div>
+
+  <div class="error-extra">
+    <p>如果认为这是一个错误，可以 <a href="mailto:wpforwg@gmail.com">联系我们</a></p>
+  </div>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>首页</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>首页 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="首页" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="基于 Jekyll + GitHub Pages 构建的博客" />
+<meta name="twitter:description" property="og:description" content="基于 Jekyll + GitHub Pages 构建的博客" />
+<link rel="canonical" href="https://blog.kryoo.de/" />
+<meta property="og:url" content="https://blog.kryoo.de/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="website" />
+<link rel="next" href="https://blog.kryoo.de/page/2/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="首页" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"基于 Jekyll + GitHub Pages 构建的博客","headline":"首页","name":"kryo","url":"https://blog.kryoo.de/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +160,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +610,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +618,296 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <div class="banner">
+  <div class="banner-content">
+    <h1>一点记录</h1>
+    <p>沉默</p>
+  </div>
+</div>
+
+<div class="post-list">
+  
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/">2025常用脚本</a>
+          </h2>
+          <p class="post-date">2025-12-17</p>
+        </div>
+        <p class="post-excerpt">
+          1. 安装 Docker
+
+一键执行官方脚本安装 Docker：
+
+curl -fsSL get.docker.com -o get-docker.sh &amp;&amp; sh get-docker.sh
+
+
+2. 安装 QB 刷流环境
+
+
+  
+    
+      一键安装脚本（参数可自定义：-u 用户名
+      -p 密码
+      -c 内存限制
+      -q QB 版...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/Windows11-%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E5%8F%B3%E9%94%AE%E7%BB%8F%E5%85%B8%E8%8F%9C%E5%8D%95/">Windows11 恢复完整右键经典菜单</a>
+          </h2>
+          <p class="post-date">2024-12-18</p>
+        </div>
+        <p class="post-excerpt">
+          右击左下角的徽标，在弹出菜单中选择 Windows 终端（管理员）
+粘贴如下命令，回车即可完成设置。此操作将强制重启资源管理器！
+Win11切换经典右键菜单：
+reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+taskkill /f /im ex...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/">获取mediainfo和bdinfo</a>
+          </h2>
+          <p class="post-date">2024-12-02</p>
+        </div>
+        <p class="post-excerpt">
+          Debian安装
+apt install mediainfo mediainfo-gui
+
+
+使用示例
+
+mediainfo &lt;path_to_media_file&gt;
+
+
+bdinfo
+
+两种方法
+
+1、https://github.com/zoffline/BDInfoCLI-ng的方法，推荐直接docker运行获取，bdinfo获取在原盘目录下
+
+docker run --r...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/">vba脚本提取表格数据</a>
+          </h2>
+          <p class="post-date">2024-11-07</p>
+        </div>
+        <p class="post-excerpt">
+          Sub name()
+    Dim FolderPath As String
+    Dim FileName As String
+    Dim WorkbookPath As String
+    Dim SourceSheet As Worksheet
+    Dim TargetSheet As Worksheet
+    Dim NextRow As Long
+    Dim w...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/frp%E7%AB%AF%E5%8F%A3%E8%8C%83%E5%9B%B4%E6%98%A0%E5%B0%84/">frp端口范围映射</a>
+          </h2>
+          <p class="post-date">2024-03-27</p>
+        </div>
+        <p class="post-excerpt">
+          frp端口范围映射
+
+我们可以利用 Go template 的 range 语法结合内置的 parseNumberRangePair 函数来实现端口范围映射。
+
+下面的示例，应用运行后会创建 8 个代理，名称为 test-6000, test-6001 ... test-6007，分别将远端的端口映射到本地。
+
+    [[proxies]]
+    name = "tcp-"
+    ty...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/%E7%BC%96%E5%86%99docker-compose.yml%E6%96%87%E4%BB%B6%E6%9D%A5%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6/">编写docker-compose.yml文件来定义服务并设置资源限制</a>
+          </h2>
+          <p class="post-date">2024-03-27</p>
+        </div>
+        <p class="post-excerpt">
+          编写 docker-compose.yml 文件来定义服务并设置资源限制
+
+services:
+  my_service:
+    image: some/image
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5' # 最多使用50%的CPU资源
+          memory: 512M # 限制内存最...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/layer7-10%E6%AC%A7%E4%B8%80%E5%B9%B42c8g%E7%9A%84ipv6%E5%B0%8F%E9%B8%A1-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97-%E8%BD%AC%E8%87%AALOC/">layer7 10欧一年2c8g的ipv6小鸡 食用指南</a>
+          </h2>
+          <p class="post-date">2024-03-27</p>
+        </div>
+        <p class="post-excerpt">
+          1.装完系统要在控制台右边蓝色按钮Redeem password拿私钥登录ssh
+
+2.DNS6加载不上，/etc/resolv.conf被systemd-resolved劫持了，要修改/etc/systemd/resolved.conf
+
+nano /etc/systemd/resolved.conf
+
+
+[Resolve]下面添加
+
+DNS=2001:4860:4860::8888 20...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/">Scaleway stardust星尘IPv6 VPS 购买教程</a>
+          </h2>
+          <p class="post-date">2024-03-27</p>
+        </div>
+        <p class="post-excerpt">
+          官方教程：https://www.scaleway.com/en/docs/compute/instances/api-cli/creating-managing-instances-with-cliv2
+
+建议在网页后台直接添加个SSH KEY，避免后续无法登陆。
+
+首先获取官方文件，此处环境是在Debian 10 X86系统下创建，其他系统和架构可再官方Github处获取。
+` http...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/">ServerStatus中文版</a>
+          </h2>
+          <p class="post-date">2022-12-27</p>
+        </div>
+        <p class="post-excerpt">
+          部署：
+【服务端】：
+
+Docker:
+
+wget --no-check-certificate -qO ~/serverstatus-config.json https://raw.githubusercontent.com/cppla/ServerStatus/master/server/config.json &amp;&amp; mkdir ~/serverstatus-montht...
+        </p>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-header">
+          <h2 class="post-title">
+            <a href="/posts/%E5%AE%9E%E6%97%B6%E7%BD%91%E9%80%9F-CPU%E5%8F%8A%E5%86%85%E5%AD%98%E7%9A%84%E7%9B%91%E6%8E%A7%E8%BD%AF%E4%BB%B6-TrafficMonitor/">实时网速、CPU及内存的监控软件 – TrafficMonitor</a>
+          </h2>
+          <p class="post-date">2020-08-27</p>
+        </div>
+        <p class="post-excerpt">
+          实时网速、CPU及内存的监控软件 – TrafficMonitor
+Traffic Monitor 是一款用于Windows平台的网速监控悬浮窗软件，可以显示当前网速、CPU及内存利用率，支持嵌入到任务栏显示，支持更换皮肤、历史流量统计等功能。
+
+显示当前实时网速、CPU和内存使用率
+多个网卡时，支持自动和手动选择网络连接
+查看网络详细信息
+支持 任务栏显示
+支持更换皮肤和自定义皮肤
+历史流...
+        </p>
+      </div>
+    
+  
+</div>
+
+
+  <nav class="pagination" aria-label="分页导航">
+    <div class="flex justify-center items-center gap-2 mt-8 flex-wrap">
+      <!-- 上一页 -->
+      
+        <span 
+          class="page-number opacity-50 pointer-events-none" 
+          aria-disabled="true"
+          aria-label="没有上一页"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </span>
+      
+
+      <!-- 页码（优化大量页码显示） -->
+      
+      
+      
+      
+        
+        
+          
+          
+          
+            <span 
+              class="page-number current" 
+              aria-current="page"
+              aria-label="当前页，第1页"
+            >
+              1
+            </span>
+          
+        
+      
+        
+        
+          
+          
+          
+            <a 
+              href="/page/2/" 
+              class="page-number" 
+              aria-label="第2页"
+            >
+              2
+            </a>
+          
+        
+      
+
+      <!-- 下一页 -->
+      
+        <a 
+          href="/page/2/" 
+          class="page-number" 
+          aria-label="下一页"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+      
+    </div>
+  </nav>
+
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>

@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://blog.kryoo.de/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.kryoo.de/" rel="alternate" type="text/html" /><updated>2026-07-14T15:34:42+08:00</updated><id>https://blog.kryoo.de/feed.xml</id><title type="html">kryo</title><subtitle>基于 Jekyll + GitHub Pages 构建的博客</subtitle><entry><title type="html">2025常用脚本</title><link href="https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/" rel="alternate" type="text/html" title="2025常用脚本" /><published>2025-12-17T00:00:00+08:00</published><updated>2025-12-17T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC</id><content type="html" xml:base="https://blog.kryoo.de/posts/2025%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/"><![CDATA[<h2 id="1-安装-docker">1. 安装 Docker</h2>
+
+<p>一键执行官方脚本安装 Docker：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -fsSL get.docker.com -o get-docker.sh &amp;&amp; sh get-docker.sh
+</code></pre></div></div>
+
+<h2 id="2-安装-qb-刷流环境">2. 安装 QB 刷流环境</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>一键安装脚本（参数可自定义：<code class="language-plaintext highlighter-rouge">-u</code> 用户名</td>
+      <td><code class="language-plaintext highlighter-rouge">-p</code> 密码</td>
+      <td><code class="language-plaintext highlighter-rouge">-c</code> 内存限制</td>
+      <td><code class="language-plaintext highlighter-rouge">-q</code> QB 版本</td>
+      <td><code class="language-plaintext highlighter-rouge">-l</code> libtorrent 版本）：</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(wget -qO- https://raw.githubusercontent.com/jerry048/Dedicated-Seedbox/main/Install.sh) -u user -p password -c 1024 -q 4.3.9 -l v1.2.19
+</code></pre></div></div>
+
+<h2 id="3-安装-filebrowser-fb">3. 安装 FileBrowser (FB)</h2>
+
+<p>通过 Docker 部署 FileBrowser，映射端口与文件目录：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d --name fb \
+       --restart=unless-stopped \
+       -e PUID=0 \
+       -e PGID=0 \
+       -e WEB_PORT=8088 \
+       -p 8300:8088 \
+       -v /root/filebrowser/config:/config \
+       -v /home/wpforwg/qbittorrent/Downloads:/myfiles \
+       80x86/filebrowser:2.10.3-amd64
+</code></pre></div></div>
+
+<h3 id="关键说明">关键说明：</h3>
+
+<ul>
+  <li>
+    <p>端口映射：宿主机 <code class="language-plaintext highlighter-rouge">8300</code> 端口 → 容器 <code class="language-plaintext highlighter-rouge">8088</code> 端口（可自行修改）</p>
+  </li>
+  <li>
+    <p>目录挂载：</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/root/filebrowser/config</code>：存储 FileBrowser 配置文件</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/home/wpforwg/qbittorrent/Downloads</code>：映射为 FB 可管理的文件目录（按需修改）</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="4-服务器性能网络测试">4. 服务器性能/网络测试</h2>
+
+<h3 id="41-yabs-综合测试性能网络">4.1 YABS 综合测试（性能+网络）</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -sL yabs.sh | bash
+</code></pre></div></div>
+
+<h3 id="42-checkplace-网络测试">4.2 Check.Place 网络测试</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -Ls https://Check.Place) -I
+</code></pre></div></div>
+
+<h3 id="43-gb5-跑分测试">4.3 GB5 跑分测试</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -sL bash.icu/gb5)
+</code></pre></div></div>
+
+<h3 id="44-nodequality-节点质量测试">4.4 NodeQuality 节点质量测试</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -sL https://run.NodeQuality.com)
+</code></pre></div></div>
+
+<h2 id="5-科学上网脚本">5. 科学上网脚本</h2>
+
+<h3 id="51-八合一-v2ray-代理脚本">5.1 八合一 V2Ray 代理脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" &amp;&amp; chmod 700 /root/install.sh &amp;&amp; /root/install.sh
+</code></pre></div></div>
+
+<h3 id="52-3x-ui-面板脚本">5.2 3X-UI 面板脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+</code></pre></div></div>
+
+<h2 id="6-warp-一键脚本二选一">6. Warp 一键脚本（二选一）</h2>
+
+<h3 id="61-fscarmen-版-warp-菜单脚本">6.1 fscarmen 版 Warp 菜单脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh
+</code></pre></div></div>
+
+<h3 id="62-misaka-blog-版-warp-脚本">6.2 Misaka-blog 版 Warp 脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/Misaka-blog/warp-script/-/raw/main/warp.sh &amp;&amp; bash warp.sh
+</code></pre></div></div>
+
+<h2 id="7-debian-12-配置-ssh-密钥登录禁用密码登录">7. Debian 12 配置 SSH 密钥登录（禁用密码登录）</h2>
+
+<h3 id="71-创建-ssh-密钥目录并添加公钥">7.1 创建 SSH 密钥目录并添加公钥</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 创建 .ssh 目录（若不存在）
+mkdir -p ~/.ssh
+
+# 编辑 authorized_keys 文件，粘贴你的 SSH 公钥
+nano ~/.ssh/authorized_keys
+</code></pre></div></div>
+
+<p>保存退出：<code class="language-plaintext highlighter-rouge">Ctrl+O</code> → 回车 → <code class="language-plaintext highlighter-rouge">Ctrl+X</code></p>
+
+<h3 id="72-修改-ssh-配置文件">7.2 修改 SSH 配置文件</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/ssh/sshd_config
+</code></pre></div></div>
+
+<p>将以下配置项修改为：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PasswordAuthentication no  # 禁用密码登录（仅保留密钥登录时开启）
+PubkeyAuthentication yes   # 启用公钥认证
+AuthorizedKeysFile      %h/.ssh/authorized_keys  # 指定公钥文件路径
+</code></pre></div></div>
+
+<h3 id="73-重启-ssh-服务生效">7.3 重启 SSH 服务生效</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart sshd
+</code></pre></div></div>
+
+<p>注意：操作前确保公钥已正确配置，避免无法登录；如需临时恢复密码登录，将 <code class="language-plaintext highlighter-rouge">PasswordAuthentication</code> 改为 <code class="language-plaintext highlighter-rouge">yes</code> 并重启 sshd</p>
+
+<h2 id="8-一键-vps-系统重装脚本">8. 一键 VPS 系统重装脚本</h2>
+
+<h3 id="81-下载重装脚本">8.1 下载重装脚本</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -O https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.sh || wget -O ${_##*/} $_
+</code></pre></div></div>
+
+<h3 id="82-执行重装支持的系统版本">8.2 执行重装（支持的系统版本）</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash reinstall.sh
+</code></pre></div></div>
+
+<p>支持的系统及版本列表：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anolis      7|8|23
+rocky       8|9|10
+oracle      8|9|10
+almalinux   8|9|10
+opencloudos 8|9|23
+centos      9|10
+fedora      42|43
+nixos       25.05
+debian      9|10|11|12|13
+alpine      3.19|3.20|3.21|3.22
+opensuse    15.6|16.0|tumbleweed
+openeuler   20.03|22.03|24.03|25.09
+ubuntu      16.04|18.04|20.04|22.04|24.04|25.10[--minimal]
+kali
+arch
+gentoo
+aosc
+fnos
+redhat      --img="http://access.cdn.redhat.com/xxx.qcow2"
+</code></pre></div></div>
+
+<p>示例：重装为 Debian 12 → <code class="language-plaintext highlighter-rouge">bash reinstall.sh debian 12</code></p>
+
+<h2 id="9-debian-开启-bbr-网络加速">9. Debian 开启 BBR 网络加速</h2>
+
+<h3 id="91-检查并加载-bbr-模块">9.1 检查并加载 BBR 模块</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 检查 BBR 模块是否加载，未加载则手动加载
+lsmod | grep tcp_bbr || modprobe tcp_bbr
+
+# 设置开机自动加载 BBR 模块
+echo "tcp_bbr" &gt;&gt; /etc/modules-load.d/bbr.conf
+</code></pre></div></div>
+
+<h3 id="92-清理原有重复配置避免冲突">9.2 清理原有重复配置（避免冲突）</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
+sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+</code></pre></div></div>
+
+<h3 id="93-写入-bbr-永久配置">9.3 写入 BBR 永久配置</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "net.core.default_qdisc=fq" &gt;&gt; /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control=bbr" &gt;&gt; /etc/sysctl.conf
+</code></pre></div></div>
+
+<h3 id="94-使配置立即生效">9.4 使配置立即生效</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl -p
+</code></pre></div></div>
+
+<h3 id="95-验证-bbr-是否生效">9.5 验证 BBR 是否生效</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl net.ipv4.tcp_congestion_control net.core.default_qdisc
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[常用脚本]]></summary></entry><entry><title type="html">Windows11 恢复完整右键经典菜单</title><link href="https://blog.kryoo.de/posts/Windows11-%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E5%8F%B3%E9%94%AE%E7%BB%8F%E5%85%B8%E8%8F%9C%E5%8D%95/" rel="alternate" type="text/html" title="Windows11 恢复完整右键经典菜单" /><published>2024-12-18T00:00:00+08:00</published><updated>2024-12-18T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/Windows11%20%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E5%8F%B3%E9%94%AE%E7%BB%8F%E5%85%B8%E8%8F%9C%E5%8D%95</id><content type="html" xml:base="https://blog.kryoo.de/posts/Windows11-%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E5%8F%B3%E9%94%AE%E7%BB%8F%E5%85%B8%E8%8F%9C%E5%8D%95/"><![CDATA[<p>右击左下角的徽标，在弹出菜单中选择 Windows 终端（管理员）
+粘贴如下命令，回车即可完成设置。此操作将强制重启资源管理器！
+Win11切换经典右键菜单：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+taskkill /f /im explorer.exe &amp; start explorer.exe
+</code></pre></div></div>
+<p>Win11恢复回新右键菜单：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reg delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" /f
+taskkill /f /im explorer.exe &amp; start explorer.exe 
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[Windows11 恢复完整右键经典菜单。]]></summary></entry><entry><title type="html">获取mediainfo和bdinfo</title><link href="https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/" rel="alternate" type="text/html" title="获取mediainfo和bdinfo" /><published>2024-12-02T00:00:00+08:00</published><updated>2024-12-02T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo</id><content type="html" xml:base="https://blog.kryoo.de/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/"><![CDATA[<p><code class="language-plaintext highlighter-rouge">Debian</code>安装</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt install mediainfo mediainfo-gui
+</code></pre></div></div>
+
+<p>使用示例</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mediainfo &lt;path_to_media_file&gt;
+</code></pre></div></div>
+
+<p>bdinfo</p>
+
+<p>两种方法</p>
+
+<p>1、<code class="language-plaintext highlighter-rouge">https://github.com/zoffline/BDInfoCLI-ng</code>的方法，推荐直接docker运行获取，bdinfo获取在原盘目录下</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --rm -it -v &lt;BD_PATH&gt;:/mnt/bd zoffline/bdinfocli-ng /mnt/bd
+</code></pre></div></div>
+
+<p>2、<code class="language-plaintext highlighter-rouge">https://github.com/Aniverse/bluray</code>
+这个脚本可以截图</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(wget -qO- https://git.io/bluray) -u
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bluray
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[获取mediainfo和bdinfo。]]></summary></entry><entry><title type="html">vba脚本提取表格数据</title><link href="https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/" rel="alternate" type="text/html" title="vba脚本提取表格数据" /><published>2024-11-07T00:00:00+08:00</published><updated>2024-11-07T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE</id><content type="html" xml:base="https://blog.kryoo.de/posts/vba%E8%84%9A%E6%9C%AC%E6%8F%90%E5%8F%96%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE/"><![CDATA[<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sub name()
+    Dim FolderPath As String
+    Dim FileName As String
+    Dim WorkbookPath As String
+    Dim SourceSheet As Worksheet
+    Dim TargetSheet As Worksheet
+    Dim NextRow As Long
+    Dim wsName As String
+    Dim dataRange As Range
+    Dim data As Variant
+    Dim i As Integer
+    Dim found As Boolean
+
+    ' 设置文件夹路径
+    FolderPath = "D:\Work\"
+    
+    ' 获取文件夹中的第一个文件名
+    FileName = Dir(FolderPath &amp; "*.xls*")
+    
+    ' 在当前工作簿中添加一个新的工作表
+    Set TargetSheet = ThisWorkbook.Sheets.Add
+    TargetSheet.Name = "name"
+    NextRow = 1
+    
+    ' 遍历文件夹中的所有Excel文件
+    Do While FileName &lt;&gt; ""
+        WorkbookPath = FolderPath &amp; FileName
+        found = False
+        
+        ' 打开当前Excel文件
+        With Workbooks.Open(WorkbookPath)
+            ' 检查是否存在目标工作表
+            For Each SourceSheet In .Worksheets
+                If SourceSheet.Name = "技术改造工程总表(表一)" Or SourceSheet.Name = "检修工程总表(表一)" Then
+                    found = True
+                    ' 提取C列第4到17行的数据
+                    Set dataRange = SourceSheet.Range("C4:C17")
+                    data = dataRange.Value
+                    
+                    ' 将文件名写入A列
+                    TargetSheet.Cells(NextRow, 1).Value = FileName
+                    
+                    ' 将数据横向排列写入B列及之后的列
+                    For i = 1 To UBound(data, 1)
+                        TargetSheet.Cells(NextRow, 1 + i).Value = data(i, 1)
+                    Next i
+                    
+                    ' 移动到下一行
+                    NextRow = NextRow + 1
+                End If
+            Next SourceSheet
+            
+            ' 关闭当前工作簿，不保存更改
+            .Close False
+        End With
+        
+        ' 如果没有找到目标工作表，继续下一个文件
+        If Not found Then
+            Debug.Print "未在文件 " &amp; FileName &amp; " 中找到目标工作表"
+        End If
+        
+        ' 获取下一个文件名
+        FileName = Dir
+    Loop
+End Sub
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[vba脚本提取表格数据]]></summary></entry><entry><title type="html">frp端口范围映射</title><link href="https://blog.kryoo.de/posts/frp%E7%AB%AF%E5%8F%A3%E8%8C%83%E5%9B%B4%E6%98%A0%E5%B0%84/" rel="alternate" type="text/html" title="frp端口范围映射" /><published>2024-03-27T00:00:00+08:00</published><updated>2024-03-27T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/frp%E7%AB%AF%E5%8F%A3%E8%8C%83%E5%9B%B4%E6%98%A0%E5%B0%84</id><content type="html" xml:base="https://blog.kryoo.de/posts/frp%E7%AB%AF%E5%8F%A3%E8%8C%83%E5%9B%B4%E6%98%A0%E5%B0%84/"><![CDATA[<p>frp端口范围映射</p>
+
+<p>我们可以利用 Go template 的 range 语法结合内置的 parseNumberRangePair 函数来实现端口范围映射。</p>
+
+<p>下面的示例，应用运行后会创建 8 个代理，名称为 <code class="language-plaintext highlighter-rouge">test-6000, test-6001 ... test-6007</code>，分别将远端的端口映射到本地。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [[proxies]]
+    name = "tcp-"
+    type = "tcp"
+    localPort = 
+    remotePort =  
+
+</code></pre></div></div>
+
+<p>frp文档链接<code class="language-plaintext highlighter-rouge">https://gofrp.org/zh-cn/docs/features/common/range/</code></p>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[frp端口范围映射]]></summary></entry><entry><title type="html">编写docker-compose.yml文件来定义服务并设置资源限制</title><link href="https://blog.kryoo.de/posts/%E7%BC%96%E5%86%99docker-compose.yml%E6%96%87%E4%BB%B6%E6%9D%A5%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6/" rel="alternate" type="text/html" title="编写docker-compose.yml文件来定义服务并设置资源限制" /><published>2024-03-27T00:00:00+08:00</published><updated>2024-03-27T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/%E7%BC%96%E5%86%99docker-compose.yml%E6%96%87%E4%BB%B6%E6%9D%A5%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6</id><content type="html" xml:base="https://blog.kryoo.de/posts/%E7%BC%96%E5%86%99docker-compose.yml%E6%96%87%E4%BB%B6%E6%9D%A5%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6/"><![CDATA[<p>编写 <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> 文件来定义服务并设置资源限制</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
+  my_service:
+    image: some/image
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5' # 最多使用50%的CPU资源
+          memory: 512M # 限制内存最大为512MB
+        reservations:
+          cpus: '0.25' # 确保至少有25%的CPU资源可用
+          memory: 256M # 至少预留256MB内存给该容器
+    # 其他服务配置...
+</code></pre></div></div>
+
+<p>请注意，在 <code class="language-plaintext highlighter-rouge">docker-compose</code> v3 及以上版本中，为了应用这些资源限制，您可能需要在 Swarm 模式下部署服务。如果仅在单机环境或非 Swarm 模式下运行，直接在服务配置中设置资源限制可能不会生效。在这种情况下，可以直接在服务容器级别设置资源限制，如下所示：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
+  my_service:
+    image: some/image
+    container_name: my_container
+    mem_limit: 512M # 单纯设置内存限制，适用于非Swarm模式部署
+    mem_reservation: 256M # 设置内存预留量，同样适用于非Swarm模式
+    cpu_shares: 512 # 在非Swarm模式下设置相对CPU权重（不是严格的CPU限制）
+    # （严格CPU核心数限制在非Swarm模式下难以实现，需借助其他手段如使用约束或使用较新版本的Docker）
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">cpu_shares</code> 是一个相对权重值，而不是绝对的CPU使用率百分比。要实现更精确的CPU限制，尤其是硬性限制，通常需要在Swarm模式下部署或者在较新的Docker版本中使用类似 <code class="language-plaintext highlighter-rouge">cpus:</code> 的配置。</p>
+
+<p>另外，对于IO资源限制，Docker本身提供了一定程度的IO带宽限制，但在 <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> 文件中并不直接支持。在较新的Docker版本中，可能需要通过额外的存储驱动器选项或Linux的 blkio cgroup 来间接控制容器的IO资源。</p>
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[编写docker-compose.yml文件来定义服务并设置资源限制]]></summary></entry><entry><title type="html">layer7 10欧一年2c8g的ipv6小鸡 食用指南</title><link href="https://blog.kryoo.de/posts/layer7-10%E6%AC%A7%E4%B8%80%E5%B9%B42c8g%E7%9A%84ipv6%E5%B0%8F%E9%B8%A1-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97-%E8%BD%AC%E8%87%AALOC/" rel="alternate" type="text/html" title="layer7 10欧一年2c8g的ipv6小鸡 食用指南" /><published>2024-03-27T00:00:00+08:00</published><updated>2024-03-27T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/layer7%2010%E6%AC%A7%E4%B8%80%E5%B9%B42c8g%E7%9A%84ipv6%E5%B0%8F%E9%B8%A1%20%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97%20%E8%BD%AC%E8%87%AALOC</id><content type="html" xml:base="https://blog.kryoo.de/posts/layer7-10%E6%AC%A7%E4%B8%80%E5%B9%B42c8g%E7%9A%84ipv6%E5%B0%8F%E9%B8%A1-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97-%E8%BD%AC%E8%87%AALOC/"><![CDATA[<p>1.装完系统要在控制台右边蓝色按钮Redeem password拿私钥登录ssh</p>
+
+<p>2.DNS6加载不上，<code class="language-plaintext highlighter-rouge">/etc/resolv.conf</code>被<code class="language-plaintext highlighter-rouge">systemd-resolved</code>劫持了，要修改<code class="language-plaintext highlighter-rouge">/etc/systemd/resolved.conf</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/systemd/resolved.conf
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">[Resolve]</code>下面添加</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DNS=2001:4860:4860::8888 2001:4860:4860::8844
+</code></pre></div></div>
+<p>然后</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart systemd-resolved
+</code></pre></div></div>
+
+<p>3.dns6虽然通了，但github只支持ipv4，需要接个warp来git</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh
+</code></pre></div></div>
+
+<p>TGbot抓个warp+的秘钥，开上全局模式，村终于通网了</p>
+
+<p>4.warp脚本会卸掉systemd-resolved，还需要再重新配置一下dns</p>
+
+<p>先删掉<code class="language-plaintext highlighter-rouge">systemd-resolved</code>对<code class="language-plaintext highlighter-rouge">/etc/resolv.conf</code>的管理</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm /etc/resolv.conf
+</code></pre></div></div>
+
+<p>再添上dns就好了</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo -e "nameserver 2001:4860:4860::8888\nnameserver 2001:4860:4860::8844" &gt;&gt; /etc/resolv.conf
+</code></pre></div></div>
+
+<ol>
+  <li>硬盘io优化技巧</li>
+</ol>
+
+<p>由于我们使用开源虚拟化软件，因此使用 Virtio 仿真将获得最佳性能结果。</p>
+
+<p>所以你应该配置</p>
+
+<p>-&gt; Harddisk Bus Emulation to use virtio
+-&gt; 使用 virtio 的硬盘总线仿真</p>
+
+<p>-&gt; SCSI Controller Type Emulation to use virtio single
+-&gt; SCSI 控制器类型仿真以使用 virtio single
+商家说可以提升10%的硬盘性能</p>
+
+<p>官方文档<code class="language-plaintext highlighter-rouge">https://login.layer7.net/index.php?rp=/knowledgebase/4/Disk-Performance.html</code></p>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[layer7 10欧一年2c8g的ipv6小鸡 食用指南 。]]></summary></entry><entry><title type="html">Scaleway stardust星尘IPv6 VPS 购买教程</title><link href="https://blog.kryoo.de/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/" rel="alternate" type="text/html" title="Scaleway stardust星尘IPv6 VPS 购买教程" /><published>2024-03-27T00:00:00+08:00</published><updated>2024-03-27T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/Scaleway%20stardust%E6%98%9F%E5%B0%98IPv6%20VPS%20%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B</id><content type="html" xml:base="https://blog.kryoo.de/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/"><![CDATA[<p>官方教程：<code class="language-plaintext highlighter-rouge">https://www.scaleway.com/en/docs/compute/instances/api-cli/creating-managing-instances-with-cliv2</code></p>
+
+<p>建议在网页后台直接添加个SSH KEY，避免后续无法登陆。</p>
+
+<p>首先获取官方文件，此处环境是在Debian 10 X86系统下创建，其他系统和架构可再官方Github处获取。
+` https://github.com/scaleway/scaleway-cli/releases`</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.16.1/scaleway-cli_2.16.1_linux_amd64"
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> chmod +x /usr/local/bin/scw
+</code></pre></div></div>
+
+<p>然后登陆并创建stardust服务器</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw init  
+</code></pre></div></div>
+
+<p>登陆并查看账号UUID，或者在网页中创建实例的下方查看账号UUID。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server create type=STARDUST1-S zone=fr-par-1 image=debian_bullseye root-volume=l:10G name=Denian ip=none ipv6=true project-id=账号UUID
+</code></pre></div></div>
+
+<p>需要安装其他镜像的话把image=自行改为debian_buster，ubuntu_jammy，ubuntu_focal，centos_stream_9，centos_stream_8，centos_7.9。也可自行dd。地区zone=也可以选择荷兰nl-ams-1。
+获取机器UUID</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server list 
+</code></pre></div></div>
+
+<p>开机</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server start 机器UUID 
+</code></pre></div></div>
+
+<p>若想直接使用root密码登录，在网页中找到Advanced Setting ，Cloud-init处添加下列配置，保存完成后重启服务器即可。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>users:
+  - name: root
+    plain_text_passwd: 'yourpasswd'
+    lock_passwd: false
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[Scaleway stardust星尘IPv6 VPS 购买教程。]]></summary></entry><entry><title type="html">ServerStatus中文版</title><link href="https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/" rel="alternate" type="text/html" title="ServerStatus中文版" /><published>2022-12-27T00:00:00+08:00</published><updated>2022-12-27T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88</id><content type="html" xml:base="https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/"><![CDATA[<p>部署：
+【服务端】：</p>
+
+<p><code class="language-plaintext highlighter-rouge">Docker</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --no-check-certificate -qO ~/serverstatus-config.json https://raw.githubusercontent.com/cppla/ServerStatus/master/server/config.json &amp;&amp; mkdir ~/serverstatus-monthtraffic
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d --restart=always --name=serverstatus -v ~/serverstatus-config.json:/ServerStatus/server/config.json -v ~/serverstatus-monthtraffic:/usr/share/nginx/html/json -p 80:80 -p 35601:35601 cppla/serverstatus:latest 
+</code></pre></div></div>
+
+<p>【客户端】：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --no-check-certificate -qO client-linux.py 'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py' &amp;&amp; nohup python3 client-linux.py SERVER={$SERVER} USER={$USER} PASSWORD={$PASSWORD} &gt;/dev/null 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --no-check-certificate -qO client-linux.py 'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py' &amp;&amp; nohup python3 client-linux.py SERVER=45.79.67.132 USER=s04  &gt;/dev/null 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<p>【客户端配置】</p>
+
+<p>客户端有两个版本，client-linux为普通linux，client-psutil为跨平台版，普通版不成功，换成跨平台版即可。</p>
+
+<p>一、client-linux版配置：
+1、<code class="language-plaintext highlighter-rouge">nano client-linux.py</code>, 修改SERVER地址，username帐号， password密码
+2、<code class="language-plaintext highlighter-rouge">python3 client-linux.py </code>运行即可。</p>
+
+<p>二、client-psutil版配置:
+1、安装psutil跨平台依赖库</p>
+
+<p>Debian/Ubuntu</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt -y install python3-pip &amp;&amp; pip3 install psutil
+</code></pre></div></div>
+<p>Centos/Redhat</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum -y install python3-pip gcc python3-devel &amp;&amp; pip3 install psutil
+</code></pre></div></div>
+
+<p>修改SERVER地址，username帐号， password密码</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano client-psutil.py
+</code></pre></div></div>
+
+<p>3、<code class="language-plaintext highlighter-rouge">python3 client-psutil.py </code>运行即可。</p>
+
+<p>服务器和客户端自行加入开机启动，或进程守护，或后台方式运行。 
+例如:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nohup python3 client-linux.py &amp;
+</code></pre></div></div>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[ServerStatus中文版]]></summary></entry><entry><title type="html">实时网速、CPU及内存的监控软件 – TrafficMonitor</title><link href="https://blog.kryoo.de/posts/%E5%AE%9E%E6%97%B6%E7%BD%91%E9%80%9F-CPU%E5%8F%8A%E5%86%85%E5%AD%98%E7%9A%84%E7%9B%91%E6%8E%A7%E8%BD%AF%E4%BB%B6-TrafficMonitor/" rel="alternate" type="text/html" title="实时网速、CPU及内存的监控软件 – TrafficMonitor" /><published>2020-08-27T00:00:00+08:00</published><updated>2020-08-27T00:00:00+08:00</updated><id>https://blog.kryoo.de/posts/%E5%AE%9E%E6%97%B6%E7%BD%91%E9%80%9F%E3%80%81CPU%E5%8F%8A%E5%86%85%E5%AD%98%E7%9A%84%E7%9B%91%E6%8E%A7%E8%BD%AF%E4%BB%B6%20%E2%80%93%20TrafficMonitor</id><content type="html" xml:base="https://blog.kryoo.de/posts/%E5%AE%9E%E6%97%B6%E7%BD%91%E9%80%9F-CPU%E5%8F%8A%E5%86%85%E5%AD%98%E7%9A%84%E7%9B%91%E6%8E%A7%E8%BD%AF%E4%BB%B6-TrafficMonitor/"><![CDATA[<h1 id="实时网速cpu及内存的监控软件--trafficmonitor">实时网速、CPU及内存的监控软件 – TrafficMonitor</h1>
+<p>Traffic Monitor 是一款用于Windows平台的网速监控悬浮窗软件，可以显示当前网速、CPU及内存利用率，支持嵌入到任务栏显示，支持更换皮肤、历史流量统计等功能。</p>
+
+<p>显示当前实时网速、CPU和内存使用率
+多个网卡时，支持自动和手动选择网络连接
+查看网络详细信息
+支持 任务栏显示
+支持更换皮肤和自定义皮肤
+历史流量统计
+Github 项目地址：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://github.com/zhongyang219/TrafficMonitor
+</code></pre></div></div>
+
+<p>这个软件分为两种显示方式，分别为：悬浮窗口、任务栏窗口。</p>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>]]></content><author><name>kryo</name></author><category term="blog" /><summary type="html"><![CDATA[实时网速、CPU及内存的监控软件 – TrafficMonitor]]></summary></entry></feed>

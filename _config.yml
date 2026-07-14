@@ -22,7 +22,6 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
-# 简化Kramdown配置（无冗余）
 kramdown:
   input: GFM
   parse_block_html: true
@@ -30,6 +29,9 @@ kramdown:
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   footnote_nr: 1
   entity_output: as_char
+  syntax_highlighter: rouge
+
+highlighter: rouge
 
 # Banner配置
 banner:

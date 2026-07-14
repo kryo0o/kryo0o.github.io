@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% seo %}
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <title>frp部署小记</title>
+  <!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>frp部署小记 | kryo</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="frp部署小记" />
+<meta name="author" content="musk" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="frp部署小记。" />
+<meta name="twitter:description" property="og:description" content="frp部署小记。" />
+<link rel="canonical" href="https://blog.kryoo.de/posts/frp%E9%83%A8%E7%BD%B2%E5%B0%8F%E8%AE%B0/" />
+<meta property="og:url" content="https://blog.kryoo.de/posts/frp%E9%83%A8%E7%BD%B2%E5%B0%8F%E8%AE%B0/" />
+<meta property="og:site_name" content="kryo" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-27T00:00:00+08:00" />
+<meta property="article:modified_time" content="2020-08-27T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="frp部署小记" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"musk"},"dateModified":"2020-08-27T00:00:00+08:00","datePublished":"2020-08-27T00:00:00+08:00","description":"frp部署小记。","headline":"frp部署小记","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/frp%E9%83%A8%E7%BD%B2%E5%B0%8F%E8%AE%B0/"},"url":"https://blog.kryoo.de/posts/frp%E9%83%A8%E7%BD%B2%E5%B0%8F%E8%AE%B0/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -143,7 +162,7 @@
       min-height: 200px;
       height: 50vh;
       max-height: 300px;
-      background: url('{{ site.banner.image }}') no-repeat center center;
+      background: url('https://static.hdcmct.org/cmct-images/2025/08/04/gcskE.png') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -593,7 +612,7 @@
 
   <header class="header-wrapper">
     <div class="header-inner">
-      <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      <a href="/" class="site-title">kryo</a>
       <button id="theme-toggle" title="切换暗色模式" aria-label="切换暗色模式">
         <i class="fas fa-moon"></i>
       </button>
@@ -601,15 +620,108 @@
   </header>
 
   <main class="container-main">
-    {{ content }}
+    <article class="article-card">
+  <h1 class="article-title">frp部署小记</h1>
+
+  <div class="article-meta">
+    <span><i class="fa-regular fa-calendar"></i> 2020-08-27</span>
+    
+    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+  </div>
+
+  <div class="article-content">
+    <h1 id="frp部署小记">frp部署小记</h1>
+<p>首先在<code class="language-plaintext highlighter-rouge">https://github.com/fatedier/frp/releases</code>页面找到自己使用的版本</p>
+
+<p>下载</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://github.com/fatedier/frp/releases/download/v0.27.0/frp_0.27.0_linux_amd64.tar.gz
+</code></pre></div></div>
+<p>解压</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tar -zxvf frp_0.27.0_linux_amd64.tar.gz
+</code></pre></div></div>
+<p>重命名文件夹
+<code class="language-plaintext highlighter-rouge">mv frp_0.27.0_linux_amd64 frp</code>
+使用cd指令进入解压出来的文件夹
+``
+cd frp</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>删除不必要的文件
+</code></pre></div></div>
+<p>rm -f frpc
+rm -f frpc.ini</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>习惯用nano编辑，主要是复制方便。
+
+   ```nano frps.ini```
+
+配置文件参考官方文档
+
+   ``` screen```
+   ``` ./frps -c ./frps.ini```
+
+就完成了
+也可以设置自动启动
+这个方法比较好用，很方便```nano /lib/systemd/system/frps.service ```
+
+在`frps.service`里写入以下内容
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Unit]
+Description=fraps service
+After=network.target syslog.target
+Wants=network.target
+ 
+[Service]
+Type=simple #启动服务的命令（此处写你的frps的实际安装目录）
+ExecStart=/root/frp/frps -c /root/frp/frps.ini
+ 
+[Install]
+WantedBy=multi-user.target```
+</code></pre></div></div>
+
+<p>然后就启动frps <code class="language-plaintext highlighter-rouge">sudo systemctl start frps</code></p>
+
+<p>再打开自启动 <code class="language-plaintext highlighter-rouge">sudo systemctl enable frps</code></p>
+
+<p>如果要重启应用，可以这样，<code class="language-plaintext highlighter-rouge">sudo systemctl restart frps</code></p>
+
+<p>如果要停止应用，可以输入，<code class="language-plaintext highlighter-rouge">sudo systemctl stop frps</code></p>
+
+<p>使用supervisor来控制
+创建 <code class="language-plaintext highlighter-rouge">supervisor frps</code> 配置文件,在<code class="language-plaintext highlighter-rouge"> /etc/supervisor/conf.d 创建 frp.conf</code>
+<code class="language-plaintext highlighter-rouge">
+[program:frp]
+command = /root/frp/frps -c /root/frp/frps.ini
+autostart = true
+</code><code class="language-plaintext highlighter-rouge">
+同样是你的绝对路径。
+写完以后，要重新加载一下supervisor
+ 重启supervisor
+</code>systemctl restart supervisor<code class="language-plaintext highlighter-rouge">
+查看supervisor运行状态
+</code>supervisorctl status`</p>
+
+<blockquote>
+  <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
+
+  <p>转载请注明原作者及以上信息。</p>
+</blockquote>
+
+  </div>
+</article>
+
+<div class="back-link">
+  <a href="/">
+    <i class="fa-solid fa-arrow-left"></i> 返回首页
+  </a>
+</div>
+
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }} | 基于 Jekyll & GitHub Pages 构建</p>
+      <p>© 2026 kryo | 基于 Jekyll & GitHub Pages 构建</p>
       <p>
-        <a href="https://github.com/{{ site.github_username }}">
-          <i class="fab fa-github"></i> {{ site.github_username }}
+        <a href="https://github.com/kryo0o">
+          <i class="fab fa-github"></i> kryo0o
         </a>
       </p>
     </div>
