@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 编写docker-compose.yml文件来定义服务并设置资源限制 
-date: 2024-3-27
+date: 2024-03-27
 categories: blog
 description: 编写docker-compose.yml文件来定义服务并设置资源限制
 author: 'kryo'
@@ -9,7 +9,7 @@ author: 'kryo'
 
 编写 `docker-compose.yml` 文件来定义服务并设置资源限制
 
-```
+```yaml
 services:
   my_service:
     image: some/image
@@ -26,7 +26,7 @@ services:
 
 请注意，在 `docker-compose` v3 及以上版本中，为了应用这些资源限制，您可能需要在 Swarm 模式下部署服务。如果仅在单机环境或非 Swarm 模式下运行，直接在服务配置中设置资源限制可能不会生效。在这种情况下，可以直接在服务容器级别设置资源限制，如下所示：
 
-```
+```yaml
 services:
   my_service:
     image: some/image

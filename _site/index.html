@@ -952,7 +952,7 @@
           <div class="post-meta-line">
             <span class="post-date">2025-12-17</span>
             
-            <span class="post-reading">· 3 分钟</span>
+            <span class="post-reading">· 4 分钟</span>
           </div>
         </div>
         <p class="post-excerpt">
@@ -988,11 +988,13 @@ curl -fsSL get.docker.com -o get-docker.sh &amp;&amp; sh get-docker.sh
           </div>
         </div>
         <p class="post-excerpt">
-          右击左下角的徽标，在弹出菜单中选择 Windows 终端（管理员）
+          右击左下角的徽标，在弹出菜单中选择 Windows 终端（管理员）。
 粘贴如下命令，回车即可完成设置。此操作将强制重启资源管理器！
+
 Win11切换经典右键菜单：
+
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
-taskkill /f /im ex...
+taskkill /f /im...
           <a href="/posts/Windows11-%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E5%8F%B3%E9%94%AE%E7%BB%8F%E5%85%B8%E8%8F%9C%E5%8D%95/" class="read-more">阅读全文 &rarr;</a>
         </p>
       </div>
@@ -1009,7 +1011,8 @@ taskkill /f /im ex...
           </div>
         </div>
         <p class="post-excerpt">
-          Debian安装
+          Debian 安装
+
 apt install mediainfo mediainfo-gui
 
 
@@ -1018,13 +1021,11 @@ apt install mediainfo mediainfo-gui
 mediainfo &lt;path_to_media_file&gt;
 
 
-bdinfo
+bdinfo 两种方法
 
-两种方法
+1、BDInfoCLI-ng 的方法，推荐直接 docker 运行获取，bdinfo 获取在原盘目录下
 
-1、https://github.com/zoffline/BDInfoCLI-ng的方法，推荐直接docker运行获取，bdinfo获取在原盘目录下
-
-docker run --r...
+docker run --rm -it -v &lt;BD_PATH&gt...
           <a href="/posts/%E8%8E%B7%E5%8F%96mediainfo%E5%92%8Cbdinfo/" class="read-more">阅读全文 &rarr;</a>
         </p>
       </div>
@@ -1071,9 +1072,7 @@ docker run --r...
 
 下面的示例，应用运行后会创建 8 个代理，名称为 test-6000, test-6001 ... test-6007，分别将远端的端口映射到本地。
 
-    [[proxies]]
-    name = "tcp-"
-    ty...
+{{- range $_, $v := parseNumberRangePair...
           <a href="/posts/frp%E7%AB%AF%E5%8F%A3%E8%8C%83%E5%9B%B4%E6%98%A0%E5%B0%84/" class="read-more">阅读全文 &rarr;</a>
         </p>
       </div>
@@ -1142,12 +1141,13 @@ DNS=2001:4860:4860::8888 20...
           </div>
         </div>
         <p class="post-excerpt">
-          官方教程：https://www.scaleway.com/en/docs/compute/instances/api-cli/creating-managing-instances-with-cliv2
+          官方教程：Scaleway CLI
 
 建议在网页后台直接添加个SSH KEY，避免后续无法登陆。
 
-首先获取官方文件，此处环境是在Debian 10 X86系统下创建，其他系统和架构可再官方Github处获取。
-` http...
+首先获取官方文件，此处环境是在 Debian 10 X86 系统下创建，其他系统和架构可在官方 Github 处获取：scaleway-cli/releases
+
+curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scalew...
           <a href="/posts/Scaleway-stardust%E6%98%9F%E5%B0%98IPv6-VPS-%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B/" class="read-more">阅读全文 &rarr;</a>
         </p>
       </div>
@@ -1158,9 +1158,9 @@ DNS=2001:4860:4860::8888 20...
             <a href="/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/">ServerStatus中文版</a>
           </h2>
           <div class="post-meta-line">
-            <span class="post-date">2022-12-27</span>
+            <span class="post-date">2023-12-27</span>
             
-            <span class="post-reading">· 1 分钟</span>
+            <span class="post-reading">· 2 分钟</span>
           </div>
         </div>
         <p class="post-excerpt">

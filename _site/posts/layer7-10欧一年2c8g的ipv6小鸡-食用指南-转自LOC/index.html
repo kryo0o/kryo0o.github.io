@@ -950,21 +950,22 @@
 
 <p>2.DNS6加载不上，<code class="language-plaintext highlighter-rouge">/etc/resolv.conf</code>被<code class="language-plaintext highlighter-rouge">systemd-resolved</code>劫持了，要修改<code class="language-plaintext highlighter-rouge">/etc/systemd/resolved.conf</code></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/systemd/resolved.conf
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/systemd/resolved.conf
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">[Resolve]</code>下面添加</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DNS=2001:4860:4860::8888 2001:4860:4860::8844
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">DNS</span><span class="p">=</span><span class="s">2001:4860:4860::8888 2001:4860:4860::8844</span>
 </code></pre></div></div>
+
 <p>然后</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart systemd-resolved
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart systemd-resolved
 </code></pre></div></div>
 
 <p>3.dns6虽然通了，但github只支持ipv4，需要接个warp来git</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-N</span> https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh <span class="o">&amp;&amp;</span> bash menu.sh
 </code></pre></div></div>
 
 <p>TGbot抓个warp+的秘钥，开上全局模式，村终于通网了</p>
@@ -973,12 +974,12 @@
 
 <p>先删掉<code class="language-plaintext highlighter-rouge">systemd-resolved</code>对<code class="language-plaintext highlighter-rouge">/etc/resolv.conf</code>的管理</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm /etc/resolv.conf
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> /etc/resolv.conf
 </code></pre></div></div>
 
 <p>再添上dns就好了</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo -e "nameserver 2001:4860:4860::8888\nnameserver 2001:4860:4860::8844" &gt;&gt; /etc/resolv.conf
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"nameserver 2001:4860:4860::8888</span><span class="se">\n</span><span class="s2">nameserver 2001:4860:4860::8844"</span> <span class="o">&gt;&gt;</span> /etc/resolv.conf
 </code></pre></div></div>
 
 <ol>
@@ -996,7 +997,7 @@
 -&gt; SCSI 控制器类型仿真以使用 virtio single
 商家说可以提升10%的硬盘性能</p>
 
-<p>官方文档<code class="language-plaintext highlighter-rouge">https://login.layer7.net/index.php?rp=/knowledgebase/4/Disk-Performance.html</code></p>
+<p>官方文档：<a href="https://login.layer7.net/index.php?rp=/knowledgebase/4/Disk-Performance.html">login.layer7.net</a></p>
 
 <blockquote>
   <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>

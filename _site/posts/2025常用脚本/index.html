@@ -942,7 +942,7 @@
   <div class="article-meta">
     <span><i class="fa-regular fa-calendar"></i> 2025-12-17</span>
     
-    <span><i class="fa-regular fa-clock"></i> 3 分钟阅读</span>
+    <span><i class="fa-regular fa-clock"></i> 4 分钟阅读</span>
   </div>
 
   <div class="article-content">
@@ -950,7 +950,7 @@
 
 <p>一键执行官方脚本安装 Docker：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -fsSL get.docker.com -o get-docker.sh &amp;&amp; sh get-docker.sh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-fsSL</span> get.docker.com <span class="nt">-o</span> get-docker.sh <span class="o">&amp;&amp;</span> sh get-docker.sh
 </code></pre></div></div>
 
 <h2 id="2-安装-qb-刷流环境">2. 安装 QB 刷流环境</h2>
@@ -967,21 +967,21 @@
   </tbody>
 </table>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(wget -qO- https://raw.githubusercontent.com/jerry048/Dedicated-Seedbox/main/Install.sh) -u user -p password -c 1024 -q 4.3.9 -l v1.2.19
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>wget <span class="nt">-qO-</span> https://raw.githubusercontent.com/jerry048/Dedicated-Seedbox/main/Install.sh<span class="o">)</span> <span class="nt">-u</span> user <span class="nt">-p</span> password <span class="nt">-c</span> 1024 <span class="nt">-q</span> 4.3.9 <span class="nt">-l</span> v1.2.19
 </code></pre></div></div>
 
 <h2 id="3-安装-filebrowser-fb">3. 安装 FileBrowser (FB)</h2>
 
 <p>通过 Docker 部署 FileBrowser，映射端口与文件目录：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d --name fb \
-       --restart=unless-stopped \
-       -e PUID=0 \
-       -e PGID=0 \
-       -e WEB_PORT=8088 \
-       -p 8300:8088 \
-       -v /root/filebrowser/config:/config \
-       -v /home/wpforwg/qbittorrent/Downloads:/myfiles \
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">--name</span> fb <span class="se">\</span>
+       <span class="nt">--restart</span><span class="o">=</span>unless-stopped <span class="se">\</span>
+       <span class="nt">-e</span> <span class="nv">PUID</span><span class="o">=</span>0 <span class="se">\</span>
+       <span class="nt">-e</span> <span class="nv">PGID</span><span class="o">=</span>0 <span class="se">\</span>
+       <span class="nt">-e</span> <span class="nv">WEB_PORT</span><span class="o">=</span>8088 <span class="se">\</span>
+       <span class="nt">-p</span> 8300:8088 <span class="se">\</span>
+       <span class="nt">-v</span> /root/filebrowser/config:/config <span class="se">\</span>
+       <span class="nt">-v</span> /home/wpforwg/qbittorrent/Downloads:/myfiles <span class="se">\</span>
        80x86/filebrowser:2.10.3-amd64
 </code></pre></div></div>
 
@@ -1009,56 +1009,56 @@
 
 <h3 id="41-yabs-综合测试性能网络">4.1 YABS 综合测试（性能+网络）</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -sL yabs.sh | bash
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-sL</span> yabs.sh | bash
 </code></pre></div></div>
 
 <h3 id="42-checkplace-网络测试">4.2 Check.Place 网络测试</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -Ls https://Check.Place) -I
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>curl <span class="nt">-Ls</span> https://Check.Place<span class="o">)</span> <span class="nt">-I</span>
 </code></pre></div></div>
 
 <h3 id="43-gb5-跑分测试">4.3 GB5 跑分测试</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -sL bash.icu/gb5)
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>curl <span class="nt">-sL</span> bash.icu/gb5<span class="o">)</span>
 </code></pre></div></div>
 
 <h3 id="44-nodequality-节点质量测试">4.4 NodeQuality 节点质量测试</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -sL https://run.NodeQuality.com)
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>curl <span class="nt">-sL</span> https://run.NodeQuality.com<span class="o">)</span>
 </code></pre></div></div>
 
 <h2 id="5-科学上网脚本">5. 科学上网脚本</h2>
 
 <h3 id="51-八合一-v2ray-代理脚本">5.1 八合一 V2Ray 代理脚本</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" &amp;&amp; chmod 700 /root/install.sh &amp;&amp; /root/install.sh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-P</span> /root <span class="nt">-N</span> <span class="nt">--no-check-certificate</span> <span class="s2">"https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh"</span> <span class="o">&amp;&amp;</span> <span class="nb">chmod </span>700 /root/install.sh <span class="o">&amp;&amp;</span> /root/install.sh
 </code></pre></div></div>
 
 <h3 id="52-3x-ui-面板脚本">5.2 3X-UI 面板脚本</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>curl <span class="nt">-Ls</span> https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh<span class="o">)</span>
 </code></pre></div></div>
 
 <h2 id="6-warp-一键脚本二选一">6. Warp 一键脚本（二选一）</h2>
 
 <h3 id="61-fscarmen-版-warp-菜单脚本">6.1 fscarmen 版 Warp 菜单脚本</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-N</span> https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh <span class="o">&amp;&amp;</span> bash menu.sh
 </code></pre></div></div>
 
 <h3 id="62-misaka-blog-版-warp-脚本">6.2 Misaka-blog 版 Warp 脚本</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -N https://gitlab.com/Misaka-blog/warp-script/-/raw/main/warp.sh &amp;&amp; bash warp.sh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">-N</span> https://gitlab.com/Misaka-blog/warp-script/-/raw/main/warp.sh <span class="o">&amp;&amp;</span> bash warp.sh
 </code></pre></div></div>
 
 <h2 id="7-debian-12-配置-ssh-密钥登录禁用密码登录">7. Debian 12 配置 SSH 密钥登录（禁用密码登录）</h2>
 
 <h3 id="71-创建-ssh-密钥目录并添加公钥">7.1 创建 SSH 密钥目录并添加公钥</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 创建 .ssh 目录（若不存在）
-mkdir -p ~/.ssh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 创建 .ssh 目录（若不存在）</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> ~/.ssh
 
-# 编辑 authorized_keys 文件，粘贴你的 SSH 公钥
+<span class="c"># 编辑 authorized_keys 文件，粘贴你的 SSH 公钥</span>
 nano ~/.ssh/authorized_keys
 </code></pre></div></div>
 
@@ -1066,19 +1066,19 @@ nano ~/.ssh/authorized_keys
 
 <h3 id="72-修改-ssh-配置文件">7.2 修改 SSH 配置文件</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/ssh/sshd_config
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /etc/ssh/sshd_config
 </code></pre></div></div>
 
 <p>将以下配置项修改为：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PasswordAuthentication no  # 禁用密码登录（仅保留密钥登录时开启）
-PubkeyAuthentication yes   # 启用公钥认证
-AuthorizedKeysFile      %h/.ssh/authorized_keys  # 指定公钥文件路径
-</code></pre></div></div>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">PasswordAuthentication</span><span class="w"> </span><span class="na">no</span><span class="w">  </span><span class="c"># 禁用密码登录（仅保留密钥登录时开启）
+</span><span class="na">PubkeyAuthentication</span><span class="w"> </span><span class="na">yes</span><span class="w">   </span><span class="c"># 启用公钥认证
+</span><span class="na">AuthorizedKeysFile</span><span class="w">      </span><span class="na">%h/.ssh/authorized_keys</span><span class="w">  </span><span class="c"># 指定公钥文件路径
+</span></code></pre></div></div>
 
 <h3 id="73-重启-ssh-服务生效">7.3 重启 SSH 服务生效</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart sshd
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart sshd
 </code></pre></div></div>
 
 <p>注意：操作前确保公钥已正确配置，避免无法登录；如需临时恢复密码登录，将 <code class="language-plaintext highlighter-rouge">PasswordAuthentication</code> 改为 <code class="language-plaintext highlighter-rouge">yes</code> 并重启 sshd</p>
@@ -1087,17 +1087,17 @@ AuthorizedKeysFile      %h/.ssh/authorized_keys  # 指定公钥文件路径
 
 <h3 id="81-下载重装脚本">8.1 下载重装脚本</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -O https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.sh || wget -O ${_##*/} $_
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-O</span> https://raw.githubusercontent.com/bin456789/reinstall/main/reinstall.sh <span class="o">||</span> wget <span class="nt">-O</span> <span class="k">${</span><span class="nv">_</span><span class="p">##*/</span><span class="k">}</span> <span class="nv">$_</span>
 </code></pre></div></div>
 
 <h3 id="82-执行重装支持的系统版本">8.2 执行重装（支持的系统版本）</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash reinstall.sh
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash reinstall.sh
 </code></pre></div></div>
 
 <p>支持的系统及版本列表：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anolis      7|8|23
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>anolis      7|8|23
 rocky       8|9|10
 oracle      8|9|10
 almalinux   8|9|10
@@ -1124,33 +1124,33 @@ redhat      --img="http://access.cdn.redhat.com/xxx.qcow2"
 
 <h3 id="91-检查并加载-bbr-模块">9.1 检查并加载 BBR 模块</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 检查 BBR 模块是否加载，未加载则手动加载
-lsmod | grep tcp_bbr || modprobe tcp_bbr
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 检查 BBR 模块是否加载，未加载则手动加载</span>
+lsmod | <span class="nb">grep </span>tcp_bbr <span class="o">||</span> modprobe tcp_bbr
 
-# 设置开机自动加载 BBR 模块
-echo "tcp_bbr" &gt;&gt; /etc/modules-load.d/bbr.conf
+<span class="c"># 设置开机自动加载 BBR 模块</span>
+<span class="nb">echo</span> <span class="s2">"tcp_bbr"</span> <span class="o">&gt;&gt;</span> /etc/modules-load.d/bbr.conf
 </code></pre></div></div>
 
 <h3 id="92-清理原有重复配置避免冲突">9.2 清理原有重复配置（避免冲突）</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
-sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'/net.core.default_qdisc/d'</span> /etc/sysctl.conf
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'/net.ipv4.tcp_congestion_control/d'</span> /etc/sysctl.conf
 </code></pre></div></div>
 
 <h3 id="93-写入-bbr-永久配置">9.3 写入 BBR 永久配置</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "net.core.default_qdisc=fq" &gt;&gt; /etc/sysctl.conf
-echo "net.ipv4.tcp_congestion_control=bbr" &gt;&gt; /etc/sysctl.conf
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"net.core.default_qdisc=fq"</span> <span class="o">&gt;&gt;</span> /etc/sysctl.conf
+<span class="nb">echo</span> <span class="s2">"net.ipv4.tcp_congestion_control=bbr"</span> <span class="o">&gt;&gt;</span> /etc/sysctl.conf
 </code></pre></div></div>
 
 <h3 id="94-使配置立即生效">9.4 使配置立即生效</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl -p
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl <span class="nt">-p</span>
 </code></pre></div></div>
 
 <h3 id="95-验证-bbr-是否生效">9.5 验证 BBR 是否生效</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl net.ipv4.tcp_congestion_control net.core.default_qdisc
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysctl net.ipv4.tcp_congestion_control net.core.default_qdisc
 </code></pre></div></div>
 
 <blockquote>

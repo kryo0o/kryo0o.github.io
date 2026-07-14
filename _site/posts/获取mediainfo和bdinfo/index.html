@@ -946,31 +946,29 @@
   </div>
 
   <div class="article-content">
-    <p><code class="language-plaintext highlighter-rouge">Debian</code>安装</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt install mediainfo mediainfo-gui
+    <p>Debian 安装</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt <span class="nb">install </span>mediainfo mediainfo-gui
 </code></pre></div></div>
 
 <p>使用示例</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mediainfo &lt;path_to_media_file&gt;
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mediainfo &lt;path_to_media_file&gt;
 </code></pre></div></div>
 
-<p>bdinfo</p>
+<p>bdinfo 两种方法</p>
 
-<p>两种方法</p>
+<p>1、<a href="https://github.com/zoffline/BDInfoCLI-ng">BDInfoCLI-ng</a> 的方法，推荐直接 docker 运行获取，bdinfo 获取在原盘目录下</p>
 
-<p>1、<code class="language-plaintext highlighter-rouge">https://github.com/zoffline/BDInfoCLI-ng</code>的方法，推荐直接docker运行获取，bdinfo获取在原盘目录下</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --rm -it -v &lt;BD_PATH&gt;:/mnt/bd zoffline/bdinfocli-ng /mnt/bd
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="nt">-v</span> &lt;BD_PATH&gt;:/mnt/bd zoffline/bdinfocli-ng /mnt/bd
 </code></pre></div></div>
 
-<p>2、<code class="language-plaintext highlighter-rouge">https://github.com/Aniverse/bluray</code>
-这个脚本可以截图</p>
+<p>2、<a href="https://github.com/Aniverse/bluray">Aniverse/bluray</a>，这个脚本可以截图</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;(wget -qO- https://git.io/bluray) -u
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>wget <span class="nt">-qO-</span> https://git.io/bluray<span class="o">)</span> <span class="nt">-u</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bluray
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bluray
 </code></pre></div></div>
 
 <blockquote>

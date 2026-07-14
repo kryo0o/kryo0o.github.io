@@ -16,12 +16,12 @@
 <meta property="og:url" content="https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/" />
 <meta property="og:site_name" content="kryo" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-12-27T00:00:00+08:00" />
-<meta property="article:modified_time" content="2022-12-27T00:00:00+08:00" />
+<meta property="article:published_time" content="2023-12-27T00:00:00+08:00" />
+<meta property="article:modified_time" content="2023-12-27T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="ServerStatus中文版" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2022-12-27T00:00:00+08:00","datePublished":"2022-12-27T00:00:00+08:00","description":"ServerStatus中文版","headline":"ServerStatus中文版","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/"},"url":"https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"kryo"},"dateModified":"2023-12-27T00:00:00+08:00","datePublished":"2023-12-27T00:00:00+08:00","description":"ServerStatus中文版","headline":"ServerStatus中文版","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/"},"url":"https://blog.kryoo.de/posts/ServerStatus%E4%B8%AD%E6%96%87%E7%89%88/"}</script>
 <!-- End Jekyll SEO tag -->
 
   <link rel="alternate" type="application/rss+xml" title="kryo" href="/feed.xml">
@@ -940,60 +940,71 @@
   <h1 class="article-title">ServerStatus中文版</h1>
 
   <div class="article-meta">
-    <span><i class="fa-regular fa-calendar"></i> 2022-12-27</span>
+    <span><i class="fa-regular fa-calendar"></i> 2023-12-27</span>
     
-    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+    <span><i class="fa-regular fa-clock"></i> 2 分钟阅读</span>
   </div>
 
   <div class="article-content">
     <p>部署：
 【服务端】：</p>
 
-<p><code class="language-plaintext highlighter-rouge">Docker</code>:</p>
+<p>Docker:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --no-check-certificate -qO ~/serverstatus-config.json https://raw.githubusercontent.com/cppla/ServerStatus/master/server/config.json &amp;&amp; mkdir ~/serverstatus-monthtraffic
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">--no-check-certificate</span> <span class="nt">-qO</span> ~/serverstatus-config.json https://raw.githubusercontent.com/cppla/ServerStatus/master/server/config.json <span class="o">&amp;&amp;</span> <span class="nb">mkdir</span> ~/serverstatus-monthtraffic
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d --restart=always --name=serverstatus -v ~/serverstatus-config.json:/ServerStatus/server/config.json -v ~/serverstatus-monthtraffic:/usr/share/nginx/html/json -p 80:80 -p 35601:35601 cppla/serverstatus:latest 
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">--restart</span><span class="o">=</span>always <span class="nt">--name</span><span class="o">=</span>serverstatus <span class="nt">-v</span> ~/serverstatus-config.json:/ServerStatus/server/config.json <span class="nt">-v</span> ~/serverstatus-monthtraffic:/usr/share/nginx/html/json <span class="nt">-p</span> 80:80 <span class="nt">-p</span> 35601:35601 cppla/serverstatus:latest
 </code></pre></div></div>
 
 <p>【客户端】：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --no-check-certificate -qO client-linux.py 'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py' &amp;&amp; nohup python3 client-linux.py SERVER={$SERVER} USER={$USER} PASSWORD={$PASSWORD} &gt;/dev/null 2&gt;&amp;1 &amp;
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">--no-check-certificate</span> <span class="nt">-qO</span> client-linux.py <span class="s1">'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py'</span> <span class="o">&amp;&amp;</span> <span class="nb">nohup </span>python3 client-linux.py <span class="nv">SERVER</span><span class="o">={</span><span class="nv">$SERVER</span><span class="o">}</span> <span class="nv">USER</span><span class="o">={</span><span class="nv">$USER</span><span class="o">}</span> <span class="nv">PASSWORD</span><span class="o">={</span><span class="nv">$PASSWORD</span><span class="o">}</span> <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 &amp;
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --no-check-certificate -qO client-linux.py 'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py' &amp;&amp; nohup python3 client-linux.py SERVER=45.79.67.132 USER=s04  &gt;/dev/null 2&gt;&amp;1 &amp;
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="nt">--no-check-certificate</span> <span class="nt">-qO</span> client-linux.py <span class="s1">'https://raw.githubusercontent.com/cppla/ServerStatus/master/clients/client-linux.py'</span> <span class="o">&amp;&amp;</span> <span class="nb">nohup </span>python3 client-linux.py <span class="nv">SERVER</span><span class="o">=</span>45.79.67.132 <span class="nv">USER</span><span class="o">=</span>s04  <span class="o">&gt;</span>/dev/null 2&gt;&amp;1 &amp;
 </code></pre></div></div>
 
 <p>【客户端配置】</p>
 
 <p>客户端有两个版本，client-linux为普通linux，client-psutil为跨平台版，普通版不成功，换成跨平台版即可。</p>
 
-<p>一、client-linux版配置：
-1、<code class="language-plaintext highlighter-rouge">nano client-linux.py</code>, 修改SERVER地址，username帐号， password密码
-2、<code class="language-plaintext highlighter-rouge">python3 client-linux.py </code>运行即可。</p>
+<p>一、client-linux 版配置：</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">nano client-linux.py</code>，修改 SERVER 地址，username 帐号，password 密码</li>
+  <li><code class="language-plaintext highlighter-rouge">python3 client-linux.py</code> 运行即可</li>
+</ol>
 
-<p>二、client-psutil版配置:
-1、安装psutil跨平台依赖库</p>
+<p>二、client-psutil 版配置：</p>
+<ol>
+  <li>安装 psutil 跨平台依赖库</li>
+</ol>
 
 <p>Debian/Ubuntu</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt -y install python3-pip &amp;&amp; pip3 install psutil
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt <span class="nt">-y</span> <span class="nb">install </span>python3-pip <span class="o">&amp;&amp;</span> pip3 <span class="nb">install </span>psutil
 </code></pre></div></div>
+
 <p>Centos/Redhat</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum -y install python3-pip gcc python3-devel &amp;&amp; pip3 install psutil
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nt">-y</span> <span class="nb">install </span>python3-pip gcc python3-devel <span class="o">&amp;&amp;</span> pip3 <span class="nb">install </span>psutil
 </code></pre></div></div>
 
-<p>修改SERVER地址，username帐号， password密码</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano client-psutil.py
+<ol>
+  <li>修改 SERVER 地址，username 帐号，password 密码</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano client-psutil.py
 </code></pre></div></div>
 
-<p>3、<code class="language-plaintext highlighter-rouge">python3 client-psutil.py </code>运行即可。</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">python3 client-psutil.py</code> 运行即可</li>
+</ol>
 
-<p>服务器和客户端自行加入开机启动，或进程守护，或后台方式运行。 
-例如:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nohup python3 client-linux.py &amp;
+<p>服务器和客户端自行加入开机启动，或进程守护，或后台方式运行。
+例如：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">nohup </span>python3 client-linux.py &amp;
 </code></pre></div></div>
 
 <blockquote>

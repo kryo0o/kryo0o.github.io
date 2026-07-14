@@ -947,121 +947,135 @@
 
   <div class="article-content">
     <h1 id="rclone命令">Rclone命令</h1>
+
 <p>安装</p>
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
 unzip rclone-current-linux-amd64.zip
-chmod 0777 ./rclone-*/rclone
-cp ./rclone-*/rclone /usr/bin/
-rm -rf ./rclone-*
+<span class="nb">chmod </span>0777 ./rclone-<span class="k">*</span>/rclone
+<span class="nb">cp</span> ./rclone-<span class="k">*</span>/rclone /usr/bin/
+<span class="nb">rm</span> <span class="nt">-rf</span> ./rclone-<span class="k">*</span>
 </code></pre></div></div>
-<p>挂载
-全部完成后，现在新建一个你要挂载的目录，例如我要挂载到/home/drive</p>
 
-<p><code class="language-plaintext highlighter-rouge">mkdir -p /home/kryo</code>
-用screen创建一个新的会话：</p>
+<p>挂载</p>
 
-<p><code class="language-plaintext highlighter-rouge">screen -S rclone</code>
-执行如下命令：</p>
+<p>全部完成后，现在新建一个你要挂载的目录，例如我要挂载到 /home/drive</p>
 
-<p><code class="language-plaintext highlighter-rouge">./rclone mount kryo: /home/kryo --allow-other --allow-non-empty --vfs-cache-mode writes</code>
-挂载其实只要几秒钟，但终端不会返回成功信息，直接重连。
-重连后查看是否成功</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> /home/kryo
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">df -h</code>
-将本地文件上传到谷歌硬盘命令：</p>
+<p>用 screen 创建一个新的会话：</p>
 
-<p><code class="language-plaintext highlighter-rouge">rclone copy /home/sda3/kryo/ kryo:one</code>
-注释：googledrive这个是Rclone中配置绑定的谷歌账户对应信息，5yun是谷歌硬盘中的一个文件夹</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>screen <span class="nt">-S</span> rclone
+</code></pre></div></div>
+
+<p>执行如下命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./rclone mount kryo: /home/kryo <span class="nt">--allow-other</span> <span class="nt">--allow-non-empty</span> <span class="nt">--vfs-cache-mode</span> writes
+</code></pre></div></div>
+
+<p>挂载其实只要几秒钟，但终端不会返回成功信息，直接重连。</p>
+
+<p>重连后查看是否成功</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">df</span> <span class="nt">-h</span>
+</code></pre></div></div>
+
+<p>将本地文件上传到谷歌硬盘命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone copy /home/sda3/kryo/ kryo:one
+</code></pre></div></div>
+
+<p>注释：<code class="language-plaintext highlighter-rouge">kryo</code> 是 Rclone 中配置的谷歌账户对应名称，<code class="language-plaintext highlighter-rouge">one</code> 是谷歌硬盘中的一个文件夹</p>
 
 <p>下载谷歌硬盘文件到本地</p>
 
-<p><code class="language-plaintext highlighter-rouge">rclone sync kryo:one /home/sda3/kryo</code>
-查看谷歌硬盘文件夹内有哪些文件及大小</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone <span class="nb">sync </span>kryo:one /home/sda3/kryo
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">rclone ls kryo</code>
-返回信息：</p>
+<p>查看谷歌硬盘文件夹内有哪些文件及大小</p>
 
-<p>这四个文件就是刚刚我上传上去的</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone <span class="nb">ls </span>kryo
+</code></pre></div></div>
 
 <p>查看谷歌硬盘文件夹内有哪些文件及大小及上传时间</p>
 
-<p><code class="language-plaintext highlighter-rouge">rclone lsl kryo:one</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone lsl kryo:one
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">rclone mkdir googledrive:/5yun/wwwroot/</code>
-挂载挂在googledrive中的5yun文件夹到本地backup文件夹中：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone <span class="nb">mkdir </span>googledrive:/5yun/wwwroot/
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">rclone mount googledrive:5yun /root/backup &amp;</code>
-卸载上面挂载的本地目录</p>
+<p>挂载 googledrive 中的 5yun 文件夹到本地 backup 文件夹中：</p>
 
-<p><code class="language-plaintext highlighter-rouge">fusermount -u /root/backup</code>### 文件上传</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone mount googledrive:5yun /root/backup &amp;
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">rclone copy /home/backup gdrive:backup</code># 本地路径 配置名字:谷歌文件夹名字</p>
+<p>卸载上面挂载的本地目录</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fusermount <span class="nt">-u</span> /root/backup
+</code></pre></div></div>
+
+<h3 id="文件上传">文件上传</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone copy /home/backup gdrive:backup
+</code></pre></div></div>
 
 <h3 id="文件下载">文件下载</h3>
 
-<p><code class="language-plaintext highlighter-rouge">rclone copy /home/backup gdrive:backup</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone copy /home/backup gdrive:backup
+</code></pre></div></div>
 
 <h3 id="列表">列表</h3>
 
-<p><code class="language-plaintext highlighter-rouge">rclone ls gdrive:backup</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone <span class="nb">ls </span>gdrive:backup
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">rclone lsl gdrive:backup</code># 比上面多一个显示上传时间</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone lsl gdrive:backup
+</code></pre></div></div>
+
+<p>比上面多显示一个上传时间</p>
 
 <h3 id="新建文件夹">新建文件夹</h3>
 
-<p><code class="language-plaintext highlighter-rouge">rclone mkdir gdrive:backup</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone <span class="nb">mkdir </span>gdrive:backup
+</code></pre></div></div>
 
 <h3 id="挂载">挂载</h3>
 
-<p><code class="language-plaintext highlighter-rouge">rclone mount gdrive:mm /root/mm &amp;</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rclone mount gdrive:mm /root/mm &amp;
+</code></pre></div></div>
 
 <h3 id="卸载">卸载</h3>
 
-<p><code class="language-plaintext highlighter-rouge">fusermount -u /root/mm</code></p>
-
-<h4 id="其他">其他</h4>
-
-<p>####</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://softlns.github.io/2016/11/28/rclone-guide/
-
-rclone config - 以控制会话的形式添加rclone的配置，配置保存在.rclone.conf文件中。
-
-rclone copy - 将文件从源复制到目的地址，跳过已复制完成的。
-
-rclone sync - 将源数据同步到目的地址，只更新目的地址的数据。 –dry-run标志来检查要复制、删除的数据
-
-rclone move - 将源数据移动到目的地址。
-
-rclone delete - 删除指定路径下的文件内容。
-
-rclone purge - 清空指定路径下所有文件数据。
-
-rclone mkdir - 创建一个新目录。
-
-rclone rmdir - 删除空目录。
-
-rclone check - 检查源和目的地址数据是否匹配。
-
-rclone ls - 列出指定路径下所有的文件以及文件大小和路径。
-
-rclone lsd - 列出指定路径下所有的目录/容器/桶。
-
-rclone lsl - 列出指定路径下所有文件以及修改时间、文件大小和路径。
-
-rclone md5sum - 为指定路径下的所有文件产生一个md5sum文件。
-
-rclone sha1sum - 为指定路径下的所有文件产生一个sha1sum文件。
-
-rclone size - 获取指定路径下，文件内容的总大小。.
-
-rclone version - 查看当前版本。
-
-rclone cleanup - 清空remote。
-
-rclone dedupe - 交互式查找重复文件，进行删除/重命名操作。
-
-在VPS上，输入 rclone -h，找到rclone配置文件默认存放位置（default "/root/.config/rclone/rclone.conf"）
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fusermount <span class="nt">-u</span> /root/mm
 </code></pre></div></div>
+
+<h3 id="其他">其他</h3>
+
+<ul>
+  <li><a href="https://softlns.github.io/2016/11/28/rclone-guide/">rclone-guide</a></li>
+  <li><code class="language-plaintext highlighter-rouge">rclone config</code> - 以控制会话的形式添加 rclone 的配置，配置保存在 <code class="language-plaintext highlighter-rouge">.rclone.conf</code> 文件中</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone copy</code> - 将文件从源复制到目的地址，跳过已复制完成的</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone sync</code> - 将源数据同步到目的地址，只更新目的地址的数据。可用 <code class="language-plaintext highlighter-rouge">--dry-run</code> 标志来检查要复制、删除的数据</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone move</code> - 将源数据移动到目的地址</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone delete</code> - 删除指定路径下的文件内容</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone purge</code> - 清空指定路径下所有文件数据</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone mkdir</code> - 创建一个新目录</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone rmdir</code> - 删除空目录</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone check</code> - 检查源和目的地址数据是否匹配</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone ls</code> - 列出指定路径下所有的文件以及文件大小和路径</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone lsd</code> - 列出指定路径下所有的目录/容器/桶</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone lsl</code> - 列出指定路径下所有文件以及修改时间、文件大小和路径</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone md5sum</code> - 为指定路径下的所有文件产生一个 md5sum 文件</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone sha1sum</code> - 为指定路径下的所有文件产生一个 sha1sum 文件</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone size</code> - 获取指定路径下，文件内容的总大小</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone version</code> - 查看当前版本</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone cleanup</code> - 清空 remote</li>
+  <li><code class="language-plaintext highlighter-rouge">rclone dedupe</code> - 交互式查找重复文件，进行删除/重命名操作</li>
+</ul>
+
+<p>在 VPS 上输入 <code class="language-plaintext highlighter-rouge">rclone -h</code>，找到 rclone 配置文件默认存放位置（默认 <code class="language-plaintext highlighter-rouge">/root/.config/rclone/rclone.conf</code>）</p>
 
 <blockquote>
   <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>

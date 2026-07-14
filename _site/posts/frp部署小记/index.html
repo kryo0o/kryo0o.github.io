@@ -942,78 +942,113 @@
   <div class="article-meta">
     <span><i class="fa-regular fa-calendar"></i> 2020-08-27</span>
     
-    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+    <span><i class="fa-regular fa-clock"></i> 2 分钟阅读</span>
   </div>
 
   <div class="article-content">
     <h1 id="frp部署小记">frp部署小记</h1>
-<p>首先在<code class="language-plaintext highlighter-rouge">https://github.com/fatedier/frp/releases</code>页面找到自己使用的版本</p>
+
+<p>首先在 <a href="https://github.com/fatedier/frp/releases">frp releases</a> 页面找到自己使用的版本</p>
 
 <p>下载</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://github.com/fatedier/frp/releases/download/v0.27.0/frp_0.27.0_linux_amd64.tar.gz
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://github.com/fatedier/frp/releases/download/v0.27.0/frp_0.27.0_linux_amd64.tar.gz
 </code></pre></div></div>
+
 <p>解压</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tar -zxvf frp_0.27.0_linux_amd64.tar.gz
-</code></pre></div></div>
-<p>重命名文件夹
-<code class="language-plaintext highlighter-rouge">mv frp_0.27.0_linux_amd64 frp</code>
-使用cd指令进入解压出来的文件夹
-``
-cd frp</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>删除不必要的文件
-</code></pre></div></div>
-<p>rm -f frpc
-rm -f frpc.ini</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>习惯用nano编辑，主要是复制方便。
 
-   ```nano frps.ini```
-
-配置文件参考官方文档
-
-   ``` screen```
-   ``` ./frps -c ./frps.ini```
-
-就完成了
-也可以设置自动启动
-这个方法比较好用，很方便```nano /lib/systemd/system/frps.service ```
-
-在`frps.service`里写入以下内容
-</code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Unit]
-Description=fraps service
-After=network.target syslog.target
-Wants=network.target
- 
-[Service]
-Type=simple #启动服务的命令（此处写你的frps的实际安装目录）
-ExecStart=/root/frp/frps -c /root/frp/frps.ini
- 
-[Install]
-WantedBy=multi-user.target```
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tar</span> <span class="nt">-zxvf</span> frp_0.27.0_linux_amd64.tar.gz
 </code></pre></div></div>
 
-<p>然后就启动frps <code class="language-plaintext highlighter-rouge">sudo systemctl start frps</code></p>
+<p>重命名文件夹</p>
 
-<p>再打开自启动 <code class="language-plaintext highlighter-rouge">sudo systemctl enable frps</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mv </span>frp_0.27.0_linux_amd64 frp
+</code></pre></div></div>
 
-<p>如果要重启应用，可以这样，<code class="language-plaintext highlighter-rouge">sudo systemctl restart frps</code></p>
+<p>使用 cd 指令进入解压出来的文件夹</p>
 
-<p>如果要停止应用，可以输入，<code class="language-plaintext highlighter-rouge">sudo systemctl stop frps</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>frp
+</code></pre></div></div>
 
-<p>使用supervisor来控制
-创建 <code class="language-plaintext highlighter-rouge">supervisor frps</code> 配置文件,在<code class="language-plaintext highlighter-rouge"> /etc/supervisor/conf.d 创建 frp.conf</code>
-<code class="language-plaintext highlighter-rouge">
-[program:frp]
-command = /root/frp/frps -c /root/frp/frps.ini
-autostart = true
-</code><code class="language-plaintext highlighter-rouge">
-同样是你的绝对路径。
-写完以后，要重新加载一下supervisor
- 重启supervisor
-</code>systemctl restart supervisor<code class="language-plaintext highlighter-rouge">
-查看supervisor运行状态
-</code>supervisorctl status`</p>
+<p>删除不必要的文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> <span class="nt">-f</span> frpc
+<span class="nb">rm</span> <span class="nt">-f</span> frpc.ini
+</code></pre></div></div>
+
+<p>习惯用 nano 编辑，主要是复制方便。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano frps.ini
+</code></pre></div></div>
+
+<p>配置文件参考官方文档</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>screen
+./frps <span class="nt">-c</span> ./frps.ini
+</code></pre></div></div>
+
+<p>就完成了</p>
+
+<p>也可以设置自动启动，这个方法比较好用，很方便</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano /lib/systemd/system/frps.service
+</code></pre></div></div>
+
+<p>在 <code class="language-plaintext highlighter-rouge">frps.service</code> 里写入以下内容</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[Unit]</span><span class="w">
+</span><span class="py">Description</span><span class="p">=</span><span class="s">fraps service</span>
+<span class="py">After</span><span class="p">=</span><span class="s">network.target syslog.target</span>
+<span class="py">Wants</span><span class="p">=</span><span class="s">network.target</span>
+<span class="w">
+</span><span class="nn">[Service]</span><span class="w">
+</span><span class="py">Type</span><span class="p">=</span><span class="s">simple</span>
+<span class="py">ExecStart</span><span class="p">=</span><span class="s">/root/frp/frps -c /root/frp/frps.ini</span>
+<span class="w">
+</span><span class="nn">[Install]</span><span class="w">
+</span><span class="py">WantedBy</span><span class="p">=</span><span class="s">multi-user.target</span>
+</code></pre></div></div>
+
+<p>然后就启动 frps</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start frps
+</code></pre></div></div>
+
+<p>再打开自启动</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl <span class="nb">enable </span>frps
+</code></pre></div></div>
+
+<p>如果要重启应用</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl restart frps
+</code></pre></div></div>
+
+<p>如果要停止应用</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl stop frps
+</code></pre></div></div>
+
+<p>使用 supervisor 来控制</p>
+
+<p>创建 supervisor frps 配置文件，在 <code class="language-plaintext highlighter-rouge">/etc/supervisor/conf.d</code> 创建 <code class="language-plaintext highlighter-rouge">frp.conf</code></p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[program:frp]</span><span class="w">
+</span><span class="py">command</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/root/frp/frps -c /root/frp/frps.ini</span>
+<span class="py">autostart</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">true</span>
+</code></pre></div></div>
+
+<p>同样是你的绝对路径。写完后要重新加载 supervisor</p>
+
+<p>重启 supervisor</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart supervisor
+</code></pre></div></div>
+
+<p>查看 supervisor 运行状态</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supervisorctl status
+</code></pre></div></div>
 
 <blockquote>
   <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>

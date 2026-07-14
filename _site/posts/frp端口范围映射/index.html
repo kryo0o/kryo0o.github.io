@@ -952,15 +952,16 @@
 
 <p>下面的示例，应用运行后会创建 8 个代理，名称为 <code class="language-plaintext highlighter-rouge">test-6000, test-6001 ... test-6007</code>，分别将远端的端口映射到本地。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    [[proxies]]
-    name = "tcp-"
-    type = "tcp"
-    localPort = 
-    remotePort =  
-
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">{{</span><span class="n">-</span> <span class="n">range</span> <span class="err">$</span><span class="n">_</span><span class="err">,</span> <span class="err">$</span><span class="n">v</span> <span class="err">:</span><span class="o">=</span><span class="w"> </span><span class="err">parseNumberRangePair </span><span class="s">"6000-6006,6007"</span> <span class="s">"6000-6006,6007"</span> <span class="err">}}</span>
+    <span class="k">[[</span><span class="n">proxies</span><span class="k">]]</span>
+    <span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"tcp-{{ $v.First }}"</span>
+    <span class="n">type</span> <span class="o">=</span><span class="w"> </span><span class="s">"tcp"</span>
+    <span class="n">localPort</span> <span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"> </span><span class="err">$</span><span class="n">v</span><span class="p">.</span><span class="n">First</span><span class="w"> </span><span class="p">}</span><span class="err">}</span>
+    <span class="n">remotePort</span> <span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"> </span><span class="err">$</span><span class="n">v</span><span class="p">.</span><span class="n">Second</span><span class="w"> </span><span class="p">}</span><span class="err">}</span>
+<span class="err">{{</span><span class="n">-</span> <span class="n">end</span> <span class="err">}}</span>
 </code></pre></div></div>
 
-<p>frp文档链接<code class="language-plaintext highlighter-rouge">https://gofrp.org/zh-cn/docs/features/common/range/</code></p>
+<p>frp 文档链接：<a href="https://gofrp.org/zh-cn/docs/features/common/range/">gofrp.org</a></p>
 
 <blockquote>
   <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>

@@ -942,76 +942,83 @@
   <div class="article-meta">
     <span><i class="fa-regular fa-calendar"></i> 2020-08-27</span>
     
-    <span><i class="fa-regular fa-clock"></i> 1 分钟阅读</span>
+    <span><i class="fa-regular fa-clock"></i> 2 分钟阅读</span>
   </div>
 
   <div class="article-content">
-    <h1 id="宝塔面板实现tls分流">宝塔面板实现tls分流</h1>
-<p>1.搭建宝塔面板</p>
+    <h1 id="宝塔面板实现-tls-分流">宝塔面板实现 tls 分流</h1>
 
-<p>2.登录面板安装Nginx1.14软件，其他软件随意。</p>
+<ol>
+  <li>搭建宝塔面板</li>
+  <li>登录面板安装 Nginx 1.14 软件，其他软件随意</li>
+  <li>添加网站输入已解析的域名，进入 网站 → 设置 → SSL，生成 Let’s Encrypt 免费证书（邮箱可随意填写）</li>
+  <li>点击 设置 → 配置文件，在最后一个 <code class="language-plaintext highlighter-rouge">}</code> 前加入如下代码</li>
+</ol>
 
-<p>3.添加网站输入已解析的域名，进入 网站-设置-SSL，生成Let’s Encrypt免费证书（邮箱可随意填写）。
-4.点击 设置-配置文件 最后一个｝前加入如下代码</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    location /ray{
-proxy_redirect off;
-proxy_pass http://127.0.0.1:10000;#10000需要替换为第三步第2步的端口号
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $http_host;
-} 
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">location</span> <span class="n">/ray</span> <span class="p">{</span>
+    <span class="kn">proxy_redirect</span> <span class="no">off</span><span class="p">;</span>
+    <span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:10000</span><span class="p">;</span>
+    <span class="kn">proxy_http_version</span> <span class="mf">1.1</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">"upgrade"</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$http_host</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
-<p>1.V2Ray官网，可打开参考。使用Linux一键安装脚本</p>
+<ol>
+  <li>安装 V2Ray。使用 Linux 一键安装脚本</li>
+</ol>
 
-<p><code class="language-plaintext highlighter-rouge">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</code></p>
-
-<p>2.安装完之后，使用以下命令启动或暂停 V2Ray</p>
-
-<p><code class="language-plaintext highlighter-rouge">systemctl start v2ray</code></p>
-
-<p><code class="language-plaintext highlighter-rouge">systemctl stop v2ray</code></p>
-
-<p><code class="language-plaintext highlighter-rouge">systemctl enable v2ray</code></p>
-
-<p>3.编辑config.json文件</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "inbounds": [
-    {
-      "port": 10000,
-      "listen":"127.0.0.1",//只监听 127.0.0.1，避免除本机外的机器探测到开放了 10000 端口
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
-            "alterId": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-        "path": "/ray"
-        }
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    }
-  ]
-}  
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash &lt;<span class="o">(</span>curl <span class="nt">-L</span> https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh<span class="o">)</span>
 </code></pre></div></div>
 
-<p>删除原内容，并复制上面代码，这就是V2服务端配置。</p>
+<ol>
+  <li>安装完之后，使用以下命令启动或暂停 V2Ray</li>
+</ol>
 
-<p>说明：mux为开启状态。另外，path:/ray可替换成其他任意，如/PPP,/YRF，只需上面几处代码统一填写即可。客户端加密推荐使用aes-128-gcm了</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl start v2ray
+systemctl stop v2ray
+systemctl <span class="nb">enable </span>v2ray
+</code></pre></div></div>
+
+<ol>
+  <li>编辑 config.json 文件</li>
+</ol>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"inbounds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"listen"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vmess"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"clients"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b831381d-6324-4d53-ad4f-8cda48b30811"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"alterId"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"streamSettings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"network"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ws"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"wsSettings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ray"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"outbounds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"freedom"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>删除原内容，并复制上面代码，这就是 V2 服务端配置。</p>
+
+<p>说明：mux 为开启状态。另外 <code class="language-plaintext highlighter-rouge">path: /ray</code> 可替换成其他任意，如 <code class="language-plaintext highlighter-rouge">/PPP</code>、<code class="language-plaintext highlighter-rouge">/YRF</code>，只需上面几处代码统一填写即可。客户端加密推荐使用 <code class="language-plaintext highlighter-rouge">aes-128-gcm</code>。</p>
 <blockquote>
   <p>如有任何知识产权、版权问题或理论错误，还请指正。</p>
 

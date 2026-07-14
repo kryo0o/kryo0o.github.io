@@ -948,30 +948,30 @@
   <div class="article-content">
     <p>编写 <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> 文件来定义服务并设置资源限制</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
-  my_service:
-    image: some/image
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5' # 最多使用50%的CPU资源
-          memory: 512M # 限制内存最大为512MB
-        reservations:
-          cpus: '0.25' # 确保至少有25%的CPU资源可用
-          memory: 256M # 至少预留256MB内存给该容器
-    # 其他服务配置...
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">my_service</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">some/image</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">resources</span><span class="pi">:</span>
+        <span class="na">limits</span><span class="pi">:</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0.5'</span> <span class="c1"># 最多使用50%的CPU资源</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">512M</span> <span class="c1"># 限制内存最大为512MB</span>
+        <span class="na">reservations</span><span class="pi">:</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0.25'</span> <span class="c1"># 确保至少有25%的CPU资源可用</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">256M</span> <span class="c1"># 至少预留256MB内存给该容器</span>
+    <span class="c1"># 其他服务配置...</span>
 </code></pre></div></div>
 
 <p>请注意，在 <code class="language-plaintext highlighter-rouge">docker-compose</code> v3 及以上版本中，为了应用这些资源限制，您可能需要在 Swarm 模式下部署服务。如果仅在单机环境或非 Swarm 模式下运行，直接在服务配置中设置资源限制可能不会生效。在这种情况下，可以直接在服务容器级别设置资源限制，如下所示：</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
-  my_service:
-    image: some/image
-    container_name: my_container
-    mem_limit: 512M # 单纯设置内存限制，适用于非Swarm模式部署
-    mem_reservation: 256M # 设置内存预留量，同样适用于非Swarm模式
-    cpu_shares: 512 # 在非Swarm模式下设置相对CPU权重（不是严格的CPU限制）
-    # （严格CPU核心数限制在非Swarm模式下难以实现，需借助其他手段如使用约束或使用较新版本的Docker）
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">my_service</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">some/image</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">my_container</span>
+    <span class="na">mem_limit</span><span class="pi">:</span> <span class="s">512M</span> <span class="c1"># 单纯设置内存限制，适用于非Swarm模式部署</span>
+    <span class="na">mem_reservation</span><span class="pi">:</span> <span class="s">256M</span> <span class="c1"># 设置内存预留量，同样适用于非Swarm模式</span>
+    <span class="na">cpu_shares</span><span class="pi">:</span> <span class="m">512</span> <span class="c1"># 在非Swarm模式下设置相对CPU权重（不是严格的CPU限制）</span>
+    <span class="c1"># （严格CPU核心数限制在非Swarm模式下难以实现，需借助其他手段如使用约束或使用较新版本的Docker）</span>
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">cpu_shares</code> 是一个相对权重值，而不是绝对的CPU使用率百分比。要实现更精确的CPU限制，尤其是硬性限制，通常需要在Swarm模式下部署或者在较新的Docker版本中使用类似 <code class="language-plaintext highlighter-rouge">cpus:</code> 的配置。</p>

@@ -946,46 +946,45 @@
   </div>
 
   <div class="article-content">
-    <p>官方教程：<code class="language-plaintext highlighter-rouge">https://www.scaleway.com/en/docs/compute/instances/api-cli/creating-managing-instances-with-cliv2</code></p>
+    <p>官方教程：<a href="https://www.scaleway.com/en/docs/compute/instances/api-cli/creating-managing-instances-with-cliv2">Scaleway CLI</a></p>
 
 <p>建议在网页后台直接添加个SSH KEY，避免后续无法登陆。</p>
 
-<p>首先获取官方文件，此处环境是在Debian 10 X86系统下创建，其他系统和架构可再官方Github处获取。
-` https://github.com/scaleway/scaleway-cli/releases`</p>
+<p>首先获取官方文件，此处环境是在 Debian 10 X86 系统下创建，其他系统和架构可在官方 Github 处获取：<a href="https://github.com/scaleway/scaleway-cli/releases">scaleway-cli/releases</a></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.16.1/scaleway-cli_2.16.1_linux_amd64"
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-o</span> /usr/local/bin/scw <span class="nt">-L</span> <span class="s2">"https://github.com/scaleway/scaleway-cli/releases/download/v2.16.1/scaleway-cli_2.16.1_linux_amd64"</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> chmod +x /usr/local/bin/scw
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x /usr/local/bin/scw
 </code></pre></div></div>
 
-<p>然后登陆并创建stardust服务器</p>
+<p>然后登陆并创建 stardust 服务器</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw init  
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw init
 </code></pre></div></div>
 
-<p>登陆并查看账号UUID，或者在网页中创建实例的下方查看账号UUID。</p>
+<p>登陆并查看账号 UUID，或者在网页中创建实例的下方查看账号 UUID。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server create type=STARDUST1-S zone=fr-par-1 image=debian_bullseye root-volume=l:10G name=Denian ip=none ipv6=true project-id=账号UUID
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server create <span class="nb">type</span><span class="o">=</span>STARDUST1-S <span class="nv">zone</span><span class="o">=</span>fr-par-1 <span class="nv">image</span><span class="o">=</span>debian_bullseye root-volume<span class="o">=</span>l:10G <span class="nv">name</span><span class="o">=</span>Denian <span class="nv">ip</span><span class="o">=</span>none <span class="nv">ipv6</span><span class="o">=</span><span class="nb">true </span>project-id<span class="o">=</span>账号UUID
 </code></pre></div></div>
 
 <p>需要安装其他镜像的话把image=自行改为debian_buster，ubuntu_jammy，ubuntu_focal，centos_stream_9，centos_stream_8，centos_7.9。也可自行dd。地区zone=也可以选择荷兰nl-ams-1。
-获取机器UUID</p>
+获取机器 UUID</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server list 
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server list
 </code></pre></div></div>
 
 <p>开机</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server start 机器UUID 
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scw instance server start 机器UUID
 </code></pre></div></div>
 
-<p>若想直接使用root密码登录，在网页中找到Advanced Setting ，Cloud-init处添加下列配置，保存完成后重启服务器即可。</p>
+<p>若想直接使用 root 密码登录，在网页中找到 Advanced Setting，Cloud-init 处添加下列配置，保存完成后重启服务器即可。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>users:
-  - name: root
-    plain_text_passwd: 'yourpasswd'
-    lock_passwd: false
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">users</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">root</span>
+    <span class="na">plain_text_passwd</span><span class="pi">:</span> <span class="s1">'</span><span class="s">yourpasswd'</span>
+    <span class="na">lock_passwd</span><span class="pi">:</span> <span class="kc">false</span>
 </code></pre></div></div>
 
 <blockquote>
