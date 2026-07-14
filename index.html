@@ -26,6 +26,7 @@ title: 首页
         </div>
         <p class="post-excerpt">
           {{ post.content | strip_html | truncate: 200, "..." }}
+          <a href="{{ post.url | relative_url }}" class="read-more">阅读全文 &rarr;</a>
         </p>
       </div>
     {% endfor %}
