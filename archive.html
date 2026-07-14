@@ -1,0 +1,27 @@
+---
+layout: default
+title: 归档
+---
+
+<div class="archive">
+  <h1 style="font-size:28px;font-weight:700;margin-bottom:32px;">归档</h1>
+
+  {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+
+  {% for year_group in posts_by_year %}
+    <div class="archive-year">
+      <h2 class="archive-year-header">
+        {{ year_group.name }}
+        <span>{{ year_group.items.size }} 篇</span>
+      </h2>
+      <ul class="archive-list">
+        {% for post in year_group.items %}
+          <li class="archive-item">
+            <span class="archive-date">{{ post.date | date: "%m-%d" }}</span>
+            <a href="{{ post.url | relative_url }}" class="archive-title">{{ post.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+</div>

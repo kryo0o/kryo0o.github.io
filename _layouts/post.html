@@ -14,7 +14,33 @@ layout: default
   <div class="article-content">
     {{ content }}
   </div>
+
+  {% if page.categories.size > 0 %}
+    <div class="article-tags">
+      {% for category in page.categories %}
+        <span class="article-tag"><i class="fa-regular fa-folder"></i>{{ category }}</span>
+      {% endfor %}
+    </div>
+  {% endif %}
 </article>
+
+<div class="post-nav">
+  {% if page.previous %}
+    <a href="{{ page.previous.url | relative_url }}" class="post-nav-link">
+      <span class="post-nav-label"><i class="fa-solid fa-chevron-left"></i> 上一篇</span>
+      <span class="post-nav-title">{{ page.previous.title }}</span>
+    </a>
+  {% else %}
+    <div></div>
+  {% endif %}
+
+  {% if page.next %}
+    <a href="{{ page.next.url | relative_url }}" class="post-nav-link post-nav-next">
+      <span class="post-nav-label">下一篇 <i class="fa-solid fa-chevron-right"></i></span>
+      <span class="post-nav-title">{{ page.next.title }}</span>
+    </a>
+  {% endif %}
+</div>
 
 <div class="back-link">
   <a href="{{ '/' | relative_url }}">
